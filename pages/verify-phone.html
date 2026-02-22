@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -377,16 +377,16 @@
         if (response.ok && data.success) {
           // In dev mode, show OTP if provided
           if (data.otp) {
-            console.log('≡ƒô▒ Development OTP:', data.otp);
-            showSuccessMessage(`Γ£ô OTP sent! DEV MODE: ${data.otp}`);
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ OTP sent! DEV MODE: ${data.otp}`);
           } else {
-            showSuccessMessage('Γ£ô OTP sent to your phone!');
+            showSuccessMessage('✓ OTP sent to your phone!');
           }
         } else {
           // Always check for OTP in development mode, even on error
           if (data.otp) {
-            console.log('≡ƒô▒ Development OTP:', data.otp);
-            showSuccessMessage(`Γ£ô OTP generated! DEV MODE: ${data.otp}`);
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ OTP generated! DEV MODE: ${data.otp}`);
           } else {
             showErrorMessage(data.message || 'Failed to send OTP');
           }
@@ -432,7 +432,7 @@
         const data = await response.json();
 
         if (response.ok && data.success) {
-          showSuccessMessage('Γ£ô Phone number verified successfully!');
+          showSuccessMessage('✓ Phone number verified successfully!');
           
           // Clear session storage
           sessionStorage.removeItem('pendingPhoneVerification');
@@ -485,8 +485,8 @@
         } else {
           // Always check for OTP in development mode, even on error
           if (data.otp) {
-            console.log('≡ƒô▒ Development OTP:', data.otp);
-            showSuccessMessage(`Γ£ô New OTP: ${data.otp}`);
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ New OTP: ${data.otp}`);
             clearOTPInputs();
             startResendTimer();
           } else {
