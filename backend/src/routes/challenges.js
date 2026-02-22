@@ -8,6 +8,32 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 
+// Create a custom challenge (saved to DB)
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const { title, description, challenge_type, target_amount, target_days, xp_reward, difficulty } = req.body;
+    if (!title) return res.status(400).json({ success: false, message: 'Title is required' });
+
+    const result = await query(
+      `INSERT INTO savings_challenges (title, description, challenge_type, target_amount, target_days, xp_reward, difficulty)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [
+        title,
+        description || '',
+        challenge_type || 'custom',
+        target_amount || null,
+        target_days || 30,
+        xp_reward || 100,
+        difficulty || 'medium'
+      ]
+    );
+    res.status(201).json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.error('Error creating challenge:', error);
+    res.status(500).json({ success: false, message: 'Failed to create challenge' });
+  }
+});
+
 // Get all available challenges
 router.get('/', authenticateToken, async (req, res) => {
   try {

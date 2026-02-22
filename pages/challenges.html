@@ -832,75 +832,48 @@
     utils.requireAuth();
     lucide.createIcons();
 
-    // Challenge icons mapping
     const challengeIcons = {
-      'no-spend': '🚫',
-      'savings': '💰',
-      'budget': '📊',
-      'streak': '🔥',
-      'goal': '🎯',
-      'default': '⭐'
+      'no_spend': '🚫', 'no-spend': '🚫',
+      'save_amount': '💰', 'savings': '💰',
+      'reduce_category': '📉', 'budget': '📊',
+      'streak': '🔥', 'goal': '🎯', 'custom': '⭐'
     };
 
-    // Default challenges
-    const defaultChallenges = [
-      { id: 1, name: 'No-Spend Day', type: 'no-spend', description: 'Go 24 hours without spending any money', difficulty: 'easy', target: 1, duration: 1, xp: 50 },
-      { id: 2, name: 'Save ₵100', type: 'savings', description: 'Save at least ₵100 this week', difficulty: 'easy', target: 100, duration: 7, xp: 100 },
-      { id: 3, name: 'Budget Master', type: 'budget', description: 'Stay under budget for all categories this month', difficulty: 'medium', target: 30, duration: 30, xp: 300 },
-      { id: 4, name: '7-Day Streak', type: 'streak', description: 'Track expenses for 7 days straight', difficulty: 'easy', target: 7, duration: 7, xp: 75 },
-      { id: 5, name: 'Weekend Warrior', type: 'no-spend', description: 'No spending on Saturday and Sunday', difficulty: 'medium', target: 2, duration: 2, xp: 150 },
-      { id: 6, name: 'Save ₵500', type: 'savings', description: 'Save ₵500 in one month', difficulty: 'medium', target: 500, duration: 30, xp: 250 },
-      { id: 7, name: '30-Day Tracker', type: 'streak', description: 'Track every expense for 30 days', difficulty: 'hard', target: 30, duration: 30, xp: 400 },
-      { id: 8, name: 'Save ₵1000', type: 'savings', description: 'Save ₵1000 in two months', difficulty: 'hard', target: 1000, duration: 60, xp: 500 },
-      { id: 9, name: 'Super Saver', type: 'savings', description: 'Save ₵5000 in 6 months', difficulty: 'extreme', target: 5000, duration: 180, xp: 1000 },
-      { id: 10, name: 'No Coffee Week', type: 'no-spend', description: 'Skip buying coffee for a week', difficulty: 'easy', target: 7, duration: 7, xp: 60 }
-    ];
-
-    // State
-    let challenges = [];
-    let activeChallenges = [];
+    let challenges = [];      // available from DB
+    let activeChallenges = []; // user's active from DB
     let selectedChallenge = null;
-    let currentProgressChallenge = null;
+    let currentProgressId = null; // user_challenges.id
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      loadChallenges();
-      lucide.createIcons();
-    });
+    document.addEventListener('DOMContentLoaded', loadChallenges);
 
-    function loadChallenges() {
-      // Load from localStorage
-      let storedChallenges = JSON.parse(localStorage.getItem('kudisave_challenges')) || [];
-      let storedActive = JSON.parse(localStorage.getItem('kudisave_active_challenges')) || [];
+    async function loadChallenges() {
+      try {
+        const [availRes, activeRes, statsRes] = await Promise.all([
+          api.get('/challenges'),
+          api.get('/challenges/active'),
+          api.get('/challenges/stats')
+        ]);
 
-      // Merge with defaults
-      challenges = [...defaultChallenges];
-      storedChallenges.forEach(sc => {
-        if (!challenges.find(c => c.id === sc.id)) {
-          challenges.push(sc);
+        challenges = availRes.success ? availRes.data : [];
+        activeChallenges = activeRes.success ? activeRes.data : [];
+
+        if (statsRes.success) {
+          const s = statsRes.data;
+          document.getElementById('completedCount').textContent = s.completed_count || 0;
+          document.getElementById('activeCount').textContent = s.active_count || 0;
+          document.getElementById('totalXP').textContent = s.total_xp_from_challenges || 0;
         }
-      });
 
-      activeChallenges = storedActive;
+        const activeIds = activeChallenges.map(ac => ac.challenge_id);
+        document.getElementById('availableCount').textContent =
+          challenges.filter(c => !activeIds.includes(c.id)).length;
 
-      // Update stats from badges data
-      const badgesData = JSON.parse(localStorage.getItem('kudisave_badges')) || { xp: 0 };
-      document.getElementById('totalXP').textContent = badgesData.xp || 0;
-
-      updateStats();
-      renderActiveChallenges();
-      renderAvailableChallenges();
-    }
-
-    function updateStats() {
-      const completed = activeChallenges.filter(c => c.status === 'completed').length;
-      const active = activeChallenges.filter(c => c.status === 'active').length;
-      const activeIds = activeChallenges.map(c => c.challengeId);
-      const available = challenges.filter(c => !activeIds.includes(c.id)).length;
-
-      document.getElementById('completedCount').textContent = completed;
-      document.getElementById('activeCount').textContent = active;
-      document.getElementById('availableCount').textContent = available;
+        renderActiveChallenges();
+        renderAvailableChallenges();
+      } catch (e) {
+        console.error('Error loading challenges:', e);
+        showToast('Could not load challenges', 'error');
+      }
     }
 
     function renderActiveChallenges() {
@@ -912,84 +885,72 @@
           <div class="empty-state">
             <i data-lucide="flame" style="width:48px;height:48px"></i>
             <p>No active challenges.<br>Start one from below!</p>
-          </div>
-        `;
-        const activeEl = document.getElementById('activeChallenges');
-        if (activeEl) lucide.createIcons({ node: activeEl });
+          </div>`;
+        lucide.createIcons({ node: container });
         return;
       }
 
       container.innerHTML = active.map(ac => {
-        const challenge = challenges.find(c => c.id === ac.challengeId) || {};
-        const progress = challenge.target > 0 ? (ac.progress / challenge.target) * 100 : 0;
-        const daysLeft = Math.max(0, Math.ceil((new Date(ac.endDate) - new Date()) / (1000 * 60 * 60 * 24)));
-
+        const progress = ac.target_progress > 0
+          ? (ac.current_progress / ac.target_progress) * 100 : 0;
+        const daysLeft = Math.max(0, Math.ceil(
+          (new Date(ac.end_date) - new Date()) / (1000 * 60 * 60 * 24)
+        ));
+        const icon = challengeIcons[ac.challenge_type] || '⭐';
         return `
           <div class="challenge-card">
             <div class="challenge-header">
-              <div class="challenge-icon ${challenge.difficulty || 'easy'}">
-                ${challengeIcons[challenge.type] || '⭐'}
-              </div>
+              <div class="challenge-icon ${ac.difficulty || 'easy'}">${icon}</div>
               <div class="challenge-info">
-                <div class="challenge-name">${escapeHtml(challenge.name || 'Unknown')}</div>
-                <div class="challenge-desc">${escapeHtml(challenge.description || '')}</div>
+                <div class="challenge-name">${escapeHtml(ac.title)}</div>
+                <div class="challenge-desc">${escapeHtml(ac.description || '')}</div>
               </div>
-              <span class="xp-badge">+${challenge.xp || 0} XP</span>
+              <span class="xp-badge">+${ac.xp_reward || 0} XP</span>
             </div>
-            
             <div class="progress-section">
               <div class="progress-header">
                 <span class="progress-label">Progress</span>
-                <span class="progress-value">${ac.progress || 0}/${challenge.target || 0}</span>
+                <span class="progress-value">${ac.current_progress || 0}/${ac.target_progress || 0}</span>
               </div>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: ${Math.min(100, progress)}%"></div>
+                <div class="progress-fill" style="width:${Math.min(100, progress)}%"></div>
               </div>
             </div>
-
             <div class="challenge-meta">
-              <span class="difficulty-badge ${challenge.difficulty || 'easy'}">${challenge.difficulty || 'easy'}</span>
+              <span class="difficulty-badge ${ac.difficulty || 'easy'}">${ac.difficulty || 'easy'}</span>
               <span class="meta-item">📅 ${daysLeft} days left</span>
             </div>
-
             <div class="challenge-actions">
-              <button class="challenge-btn btn-secondary" onclick="openProgressModal('${ac.id}')">
-                Log Progress
-              </button>
-              <button class="challenge-btn btn-danger" onclick="abandonChallenge('${ac.id}')">
-                Abandon
-              </button>
+              <button class="challenge-btn btn-secondary" onclick="openProgressModal('${ac.id}','${escapeHtml(ac.title)}')">Log Progress</button>
+              <button class="challenge-btn btn-danger" onclick="abandonChallenge('${ac.id}')">Abandon</button>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('');
       lucide.createIcons({ node: container });
     }
 
     function renderAvailableChallenges() {
       const container = document.getElementById('availableChallenges');
-      const activeIds = activeChallenges.map(c => c.challengeId);
+      const activeIds = activeChallenges.map(ac => ac.challenge_id);
       const available = challenges.filter(c => !activeIds.includes(c.id));
 
       if (available.length === 0) {
         container.innerHTML = `
-          <div class="empty-state" style="grid-column: span 2;">
+          <div class="empty-state" style="grid-column:span 2;">
             <i data-lucide="check-circle" style="width:48px;height:48px"></i>
             <p>You've joined all available challenges!<br>Create a custom one.</p>
-          </div>
-        `;
+          </div>`;
         lucide.createIcons({ node: container });
         return;
       }
 
-      container.innerHTML = available.map(challenge => `
-        <div class="available-card" onclick="showChallengeDetail(${challenge.id})">
-          <div class="available-icon">${challengeIcons[challenge.type] || '⭐'}</div>
-          <div class="available-name">${escapeHtml(challenge.name)}</div>
-          <div class="available-xp">+${challenge.xp} XP</div>
-          <span class="difficulty-badge ${challenge.difficulty}">${challenge.difficulty}</span>
-        </div>
-      `).join('');
+      container.innerHTML = available.map(c => `
+        <div class="available-card" onclick="showChallengeDetail('${c.id}')">
+          <div class="available-icon">${challengeIcons[c.challenge_type] || '⭐'}</div>
+          <div class="available-name">${escapeHtml(c.title)}</div>
+          <div class="available-xp">+${c.xp_reward} XP</div>
+          <span class="difficulty-badge ${c.difficulty}">${c.difficulty}</span>
+        </div>`).join('');
       lucide.createIcons({ node: container });
     }
 
@@ -997,95 +958,90 @@
       selectedChallenge = challenges.find(c => c.id === id);
       if (!selectedChallenge) return;
 
-      document.getElementById('modalIcon').textContent = challengeIcons[selectedChallenge.type] || '⭐';
-      document.getElementById('modalTitle').textContent = selectedChallenge.name;
-      document.getElementById('modalDesc').textContent = selectedChallenge.description;
-      document.getElementById('modalXP').textContent = `+${selectedChallenge.xp} XP`;
-      document.getElementById('modalDifficulty').textContent = selectedChallenge.difficulty;
-      document.getElementById('modalDifficulty').className = `difficulty-badge ${selectedChallenge.difficulty}`;
-      document.getElementById('modalDuration').textContent = `📅 ${selectedChallenge.duration} days`;
-      document.getElementById('modalTarget').textContent = `🎯 Target: ${selectedChallenge.type === 'savings' ? '₵' : ''}${selectedChallenge.target}`;
-
+      const sc = selectedChallenge;
+      const target = sc.target_amount || sc.target_days || 0;
+      const prefix = sc.challenge_type === 'save_amount' ? '₵' : '';
+      document.getElementById('modalIcon').textContent = challengeIcons[sc.challenge_type] || '⭐';
+      document.getElementById('modalTitle').textContent = sc.title;
+      document.getElementById('modalDesc').textContent = sc.description || '';
+      document.getElementById('modalXP').textContent = `+${sc.xp_reward} XP`;
+      document.getElementById('modalDifficulty').textContent = sc.difficulty;
+      document.getElementById('modalDifficulty').className = `difficulty-badge ${sc.difficulty}`;
+      document.getElementById('modalDuration').textContent = `📅 ${sc.target_days || 30} days`;
+      document.getElementById('modalTarget').textContent = `🎯 Target: ${prefix}${target}`;
       document.getElementById('challengeModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    function joinChallenge() {
+    async function joinChallenge() {
       if (!selectedChallenge) return;
-
-      const startDate = new Date();
-      const endDate = new Date();
-      endDate.setDate(endDate.getDate() + selectedChallenge.duration);
-
-      const activeChallenge = {
-        id: Date.now().toString(),
-        challengeId: selectedChallenge.id,
-        progress: 0,
-        status: 'active',
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString()
-      };
-
-      activeChallenges.push(activeChallenge);
-      localStorage.setItem('kudisave_active_challenges', JSON.stringify(activeChallenges));
-
-      closeModal('challengeModal');
-      loadChallenges();
-      showToast('Challenge started! Good luck!');
+      const btn = document.getElementById('joinBtn');
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+      try {
+        const res = await api.post(`/challenges/${selectedChallenge.id}/join`, {});
+        if (res.success) {
+          closeModal('challengeModal');
+          showToast('Challenge started! Good luck! 🔥');
+          await loadChallenges();
+        } else {
+          showToast(res.message || 'Could not join challenge', 'error');
+        }
+      } catch (e) {
+        showToast('Could not join challenge', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Start Challenge';
+      }
     }
 
-    function openProgressModal(id) {
-      currentProgressChallenge = activeChallenges.find(c => c.id === id);
-      if (!currentProgressChallenge) return;
-
-      const challenge = challenges.find(c => c.id === currentProgressChallenge.challengeId);
-      document.getElementById('progressChallengeTitle').textContent = challenge?.name || 'Challenge';
+    function openProgressModal(userChallengeId, title) {
+      currentProgressId = userChallengeId;
+      document.getElementById('progressChallengeTitle').textContent = title;
       document.getElementById('progressAmount').value = '';
-
       document.getElementById('progressModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    function submitProgress() {
-      if (!currentProgressChallenge) return;
-
+    async function submitProgress() {
+      if (!currentProgressId) return;
       const amount = parseFloat(document.getElementById('progressAmount').value);
-      if (isNaN(amount) || amount < 0) {
+      if (isNaN(amount) || amount <= 0) {
         showToast('Please enter a valid amount', 'error');
         return;
       }
-
-      const challenge = challenges.find(c => c.id === currentProgressChallenge.challengeId);
-      currentProgressChallenge.progress += amount;
-
-      // Check if completed
-      if (currentProgressChallenge.progress >= (challenge?.target || 0)) {
-        currentProgressChallenge.status = 'completed';
-        currentProgressChallenge.completedDate = new Date().toISOString();
-
-        // Award XP
-        const badgesData = JSON.parse(localStorage.getItem('kudisave_badges')) || { xp: 0, unlocked: [], recentUnlocks: [] };
-        badgesData.xp += challenge?.xp || 0;
-        localStorage.setItem('kudisave_badges', JSON.stringify(badgesData));
-
-        showToast(`🎉 Challenge completed! +${challenge?.xp || 0} XP`);
-      } else {
-        showToast('Progress updated!');
+      try {
+        const res = await api.post(`/challenges/${currentProgressId}/progress`, { progress_increment: amount });
+        if (res.success) {
+          closeModal('progressModal');
+          if (res.data && res.data.status === 'completed') {
+            showToast(`🎉 Challenge completed! +${res.data.xp_earned || 0} XP`);
+          } else {
+            showToast('Progress updated!');
+          }
+          await loadChallenges();
+        } else {
+          showToast(res.message || 'Could not update progress', 'error');
+        }
+      } catch (e) {
+        showToast('Could not update progress', 'error');
       }
-
-      localStorage.setItem('kudisave_active_challenges', JSON.stringify(activeChallenges));
-      closeModal('progressModal');
-      loadChallenges();
-      currentProgressChallenge = null;
+      currentProgressId = null;
     }
 
-    function abandonChallenge(id) {
-      if (!confirm('Are you sure you want to abandon this challenge?')) return;
-
-      activeChallenges = activeChallenges.filter(c => c.id !== id);
-      localStorage.setItem('kudisave_active_challenges', JSON.stringify(activeChallenges));
-      loadChallenges();
-      showToast('Challenge abandoned');
+    async function abandonChallenge(userChallengeId) {
+      if (!confirm('Abandon this challenge?')) return;
+      try {
+        const res = await api.post(`/challenges/${userChallengeId}/abandon`, {});
+        if (res.success) {
+          showToast('Challenge abandoned');
+          await loadChallenges();
+        } else {
+          showToast(res.message || 'Could not abandon', 'error');
+        }
+      } catch (e) {
+        showToast('Could not abandon challenge', 'error');
+      }
     }
 
     function openAddModal() {
@@ -1094,28 +1050,31 @@
       document.body.style.overflow = 'hidden';
     }
 
-    function saveChallenge(e) {
+    async function saveChallenge(e) {
       e.preventDefault();
-
-      const newChallenge = {
-        id: Date.now(),
-        name: document.getElementById('challengeName').value,
+      const typeMap = { 'savings': 'save_amount', 'no-spend': 'no_spend', 'budget': 'custom', 'streak': 'streak', 'goal': 'custom' };
+      const rawType = document.getElementById('challengeType').value;
+      const payload = {
+        title: document.getElementById('challengeName').value,
         description: document.getElementById('challengeDesc').value,
-        type: document.getElementById('challengeType').value,
-        difficulty: document.getElementById('challengeDifficulty').value,
-        target: parseInt(document.getElementById('challengeTarget').value) || 1,
-        duration: parseInt(document.getElementById('challengeDuration').value) || 30,
-        xp: parseInt(document.getElementById('challengeXP').value) || 100,
-        custom: true
+        challenge_type: typeMap[rawType] || rawType,
+        target_amount: parseFloat(document.getElementById('challengeTarget').value) || null,
+        target_days: parseInt(document.getElementById('challengeDuration').value) || 30,
+        xp_reward: parseInt(document.getElementById('challengeXP').value) || 100,
+        difficulty: document.getElementById('challengeDifficulty').value
       };
-
-      const customChallenges = JSON.parse(localStorage.getItem('kudisave_challenges')) || [];
-      customChallenges.push(newChallenge);
-      localStorage.setItem('kudisave_challenges', JSON.stringify(customChallenges));
-
-      closeModal('addModal');
-      loadChallenges();
-      showToast('Challenge created!');
+      try {
+        const res = await api.post('/challenges', payload);
+        if (res.success) {
+          closeModal('addModal');
+          showToast('Challenge created!');
+          await loadChallenges();
+        } else {
+          showToast(res.message || 'Could not create challenge', 'error');
+        }
+      } catch (e) {
+        showToast('Could not create challenge', 'error');
+      }
     }
 
     function closeModal(id) {
@@ -1124,7 +1083,6 @@
       selectedChallenge = null;
     }
 
-    // Backdrop click to close modals
     document.querySelectorAll('.modal').forEach(modal => {
       modal.addEventListener('click', function(e) {
         if (e.target === this) closeModal(this.id);
@@ -1143,17 +1101,8 @@
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '../index.html';
+      api.logout();
     }
-
-    // Close modal on overlay click
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', function(e) {
-        if (e.target === this) closeModal(this.id);
-      });
-    });
   </script>
 </body>
 </html>
