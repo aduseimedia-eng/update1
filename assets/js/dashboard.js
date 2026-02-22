@@ -49,6 +49,14 @@ async function initDashboard() {
     
     document.getElementById('userName').textContent = userData.name || 'Welcome!';
     
+    // Sync menu profile
+    const menuName = document.getElementById('menuUserName');
+    const menuInitials = document.getElementById('menuAvatarInitials');
+    const menuEmail = document.getElementById('menuUserEmail');
+    if (menuName) menuName.textContent = userData.name || 'Welcome!';
+    if (menuInitials) menuInitials.textContent = getInitials(userData.name);
+    if (menuEmail) menuEmail.textContent = userData.email || 'Manage your finances';
+    
     // Load profile picture from profile data or localStorage
     const avatarEl = document.getElementById('userAvatar');
     const initialsEl = document.getElementById('avatarInitials');
@@ -62,16 +70,22 @@ async function initDashboard() {
       initialsEl.textContent = getInitials(userData.name);
     }
     
-    // Listen for profile picture updates from other tabs/windows
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'profilePicture' && avatarEl) {
-        if (event.newValue) {
-          avatarEl.innerHTML = `<img src="${event.newValue}" alt="Profile">`;
-        } else {
-          avatarEl.innerHTML = `<span id="avatarInitials">${getInitials(userData.name)}</span>`;
+    // Storage listener setup (only once)
+    if (!window._dashboardStorageListenerAdded) {
+      window._dashboardStorageListenerAdded = true;
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'profilePicture') {
+          const av = document.getElementById('userAvatar');
+          if (av) {
+            if (event.newValue) {
+              av.innerHTML = `<img src="${event.newValue}" alt="Profile">`;
+            } else {
+              av.innerHTML = `<span id="avatarInitials">${getInitials(userData ? userData.name : '')}</span>`;
+            }
+          }
         }
-      }
-    });
+      });
+    }
 
     // Update streak on first open of the day
     const today = new Date().toISOString().split('T')[0];
@@ -101,12 +115,13 @@ async function loadFinancialSummary() {
   try {
     const summaryResponse = await api.getExpenseSummary('month');
     const summary = summaryResponse.data.summary || summaryResponse.data;
-    const totalExpenses = summary.total_amount || summary.total || 0;
+    const totalExpenses = parseFloat(summary.total_amount || summary.total || 0);
 
     // Get income for the month
     const dateRange = utils.getDateRange ? utils.getDateRange('month') : {};
     const incomeResponse = await api.getIncome(dateRange);
-    const totalIncome = incomeResponse.data.reduce((sum, inc) => sum + parseFloat(inc.amount), 0);
+    const incomeData = Array.isArray(incomeResponse.data) ? incomeResponse.data : [];
+    const totalIncome = incomeData.reduce((sum, inc) => sum + parseFloat(inc.amount || 0), 0);
 
     // Update balance card
     const balance = totalIncome - totalExpenses;
@@ -158,8 +173,9 @@ async function loadRecentExpenses() {
       </div>
     `).join('');
     
-    // Render lucide icons
-    lucide.createIcons();
+    // Render lucide icons (scoped to list container only)
+    const listEl = document.getElementById('recentExpensesList');
+    if (listEl) lucide.createIcons({ node: listEl });
 
   } catch (error) {
     console.error('Load expenses error:', error);
@@ -271,13 +287,22 @@ async function loadGamificationData() {
       celebrateStreak(streak.current_streak);
     }
 
-    // Load XP
+    // Load XP with level-up detection
     const xpResponse = await api.getXP();
     const xp = xpResponse.data;
     
     const level = xp.level || Math.floor((xp.total_xp || 0) / 100) + 1;
     const nextLevelXp = xp.next_level_xp || (level * 100);
-    const progressPercent = xp.progress_percentage || ((xp.total_xp || 0) % 100) / 100 * 100;
+    const progressPercent = (xp.progress_percentage != null ? xp.progress_percentage : ((xp.total_xp || 0) % 100));
+    
+    // Check for level up
+    const previousLevel = parseInt(localStorage.getItem('userLevel') || '1');
+    if (level > previousLevel) {
+      localStorage.setItem('userLevel', level.toString());
+      celebrateLevelUp(level);
+    } else {
+      localStorage.setItem('userLevel', level.toString());
+    }
     
     document.getElementById('userLevel').textContent = `Level ${level}`;
     document.getElementById('levelBadge').textContent = level;
@@ -339,22 +364,35 @@ function openExpenseModal() {
   populateSelectOptions();
   document.getElementById('expenseDate').value = utils.getTodayDate();
   document.getElementById('expenseModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function openIncomeModal() {
   populateIncomeOptions();
   document.getElementById('incomeDate').value = utils.getTodayDate();
   document.getElementById('incomeModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function openBudgetModal() {
   document.getElementById('budgetStartDate').value = utils.getTodayDate();
   document.getElementById('budgetModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
+  document.body.style.overflow = '';
 }
+
+// Backdrop click to close modals
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) closeModal(this.id);
+    });
+  });
+});
 
 function populateSelectOptions() {
   const categorySelect = document.getElementById('expenseCategory');
@@ -429,17 +467,16 @@ async function handleAddExpense(event) {
     utils.hideLoading();
     
     // Award XP for expense tracking
-    if (typeof addXP === 'function') {
-      addXP(10); // Award 10 XP for tracking expense
-    }
+    celebrateXPGain(10); // Award 10 XP for tracking expense
     
     showFunToast('Expense added successfully! +10 XP earned! 🎉', '💸', 'success');
     
     closeModal('expenseModal');
     document.getElementById('expenseForm').reset();
     
-    // Reload data
+    // Reload data and check for new achievements
     await initDashboard();
+    await checkNewAchievements();
   } catch (error) {
     utils.hideLoading();
     utils.showAlert(error.message || 'Failed to add expense', 'error');
@@ -493,6 +530,7 @@ async function handleAddIncome(event) {
     document.getElementById('incomeForm').reset();
     
     await loadFinancialSummary();
+    await checkNewAchievements();
   } catch (error) {
     utils.hideLoading();
     utils.showAlert(error.message || 'Failed to add income', 'error');
@@ -615,10 +653,10 @@ async function loadWidgets() {
     // Load bills summary
     try {
       const billsResponse = await api.get('/bills/summary');
-      if (billsResponse.success) {
-        const dueBills = (billsResponse.data.overdue || 0) + (billsResponse.data.due_soon || 0);
+      if (billsResponse.success && billsResponse.data) {
+        const dueBills = (billsResponse.data.overdue_count || billsResponse.data.overdue || 0) + (billsResponse.data.due_soon_count || billsResponse.data.due_soon || 0);
         const billsCountEl = document.getElementById('billsDueCount');
-        if (billsCountEl) billsCountEl.textContent = dueBills;
+        if (billsCountEl) billsCountEl.textContent = dueBills > 0 ? dueBills : '–';
       }
     } catch (e) { /* Bills API not available */ }
 
@@ -627,7 +665,8 @@ async function loadWidgets() {
       const challengesResponse = await api.get('/challenges/stats');
       if (challengesResponse.success) {
         const challengesEl = document.getElementById('activeChallenges');
-        if (challengesEl) challengesEl.textContent = challengesResponse.data.active_challenges || 0;
+        const n = challengesResponse.data.active_challenges || 0;
+        if (challengesEl) challengesEl.textContent = n > 0 ? n : '–';
       }
     } catch (e) { /* Challenges API not available */ }
 
@@ -636,15 +675,23 @@ async function loadWidgets() {
       const achievementsResponse = await api.get('/achievements/stats');
       if (achievementsResponse.success) {
         const achievementsEl = document.getElementById('achievementsEarned');
-        if (achievementsEl) achievementsEl.textContent = achievementsResponse.data.earned_achievements || 0;
+        const n = achievementsResponse.data.earned_achievements || 0;
+        if (achievementsEl) achievementsEl.textContent = n > 0 ? n : '–';
       }
     } catch (e) { /* Achievements API not available */ }
 
-    // Load spending insights slider
+    // Load spending insights
     loadSpendingInsights();
 
   } catch (error) {
     console.log('Widgets loading skipped:', error.message);
+  }
+}
+
+// Close modal on outside click
+window.onclick = function(event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.classList.remove('active');
   }
 }
 
@@ -662,18 +709,31 @@ async function loadSpendingInsights() {
 
   if (!container) return;
 
+  // Fun loading messages
   const loadingMsgs = [
-    'Crunching your numbers... 🧮', 'Analyzing your spending brain... 🧠',
-    'Consulting the money oracle... 🔮', 'Summoning 30 insights... 🪄',
+    'Crunching your numbers... 🧮',
+    'Analyzing your spending brain... 🧠',
+    'Consulting the money oracle... 🔮',
+    'Teaching your cedis some tricks... 🎪',
+    'Reading your financial fortune... ⭐',
+    'Summoning 30 insights... 🪄',
     'Scanning every cedi and pesewa... 💰'
   ];
-  if (greetingEl) greetingEl.textContent = loadingMsgs[Math.floor(Math.random() * loadingMsgs.length)];
 
-  container.innerHTML = '<div class="insight-shimmer"></div><div class="insight-shimmer"></div>';
+  if (greetingEl) {
+    greetingEl.textContent = loadingMsgs[Math.floor(Math.random() * loadingMsgs.length)];
+  }
+
+  // Show loading shimmer
+  container.innerHTML = `
+    <div class="insight-shimmer"></div>
+    <div class="insight-shimmer"></div>
+  `;
   if (countBadge) countBadge.textContent = '';
   if (footer) footer.style.display = 'none';
 
   try {
+    // Fetch ALL insights (up to 30)
     const response = await api.get('/comparisons/insights?limit=30&all=true');
 
     if (response.success && response.data && response.data.length > 0) {
@@ -683,24 +743,28 @@ async function loadSpendingInsights() {
 
       if (countBadge) countBadge.textContent = `${insights.length} 🎯`;
 
+      // Fun greeting based on insight count & mix
       if (greetingEl) {
         const hasPositive = insights.some(i => i.type === 'positive');
         const hasAlert = insights.some(i => i.type === 'alert');
         const count = insights.length;
         const greetings = count >= 10
-          ? [`${count} insights about YOUR money! Swipe to explore 👉`, `${count} smart insights ready! Your money has STORIES 📖`]
+          ? [`${count} insights about YOUR money! Swipe to explore 👉`, `Loaded ${count} smart insights! Your money has STORIES 📖`, `${count} insights ready! Slide through your financial storybook ✨`]
           : hasPositive && !hasAlert
-          ? ['You\'re doing amazing! Here\'s why 👇', 'Your money game is strong! 💪']
+          ? ['You\'re doing amazing! Here\'s why 👇', 'Look at you go! 🌟 Your highlights:', 'Your money game is strong! 💪 Check it:']
           : hasAlert
-          ? ['Heads up! Some things need your attention 👀', 'A few things to keep an eye on 🔍']
-          : ['Here\'s what your money has been up to 👇', 'Fresh insights just for you ✨'];
+          ? ['Heads up! Some things need your attention 👀', 'Let\'s talk about your money moves 💬', 'A few things to keep an eye on 🔍']
+          : ['Here\'s what your money has been up to 👇', 'Your spending story this week 📖', 'Fresh insights just for you ✨'];
         greetingEl.textContent = greetings[Math.floor(Math.random() * greetings.length)];
       }
 
+      // Render all cards
       container.innerHTML = insights.map((insight, i) => `
         <div class="insight-card ${insight.type || 'info'}" data-mood="${insight.mood || 'chill'}" data-index="${i}" style="transition-delay: ${Math.min(i, 3) * 100}ms;">
           <div class="insight-card-top">
-            <div class="insight-icon-wrap"><i data-lucide="${insight.icon}"></i></div>
+            <div class="insight-icon-wrap">
+              <i data-lucide="${insight.icon}"></i>
+            </div>
             <div class="insight-title">${insight.title}</div>
           </div>
           <div class="insight-msg">${insight.message}</div>
@@ -709,124 +773,179 @@ async function loadSpendingInsights() {
         </div>
       `).join('');
 
+      // Initialize Lucide icons inside insight cards
       if (typeof lucide !== 'undefined') lucide.createIcons();
 
+      // Animate first visible cards in
       requestAnimationFrame(() => {
         const cards = container.querySelectorAll('.insight-card');
-        cards.forEach((card, i) => { if (i < 3) setTimeout(() => card.classList.add('visible'), i * 120); });
+        cards.forEach((card, i) => {
+          if (i < 3) setTimeout(() => card.classList.add('visible'), i * 120);
+        });
       });
 
+      // Show footer with dots only
       if (footer && insights.length > 1) {
         footer.style.display = 'flex';
-        insightsBuildDots(insights.length);
-        insightsSetupSlider(container, insights.length);
+        buildInsightsDots(insights.length);
+        setupInsightsSlider(container, insights.length);
       }
+
     } else {
+      // Fun empty state
       if (greetingEl) greetingEl.textContent = '';
       if (footer) footer.style.display = 'none';
-      const msgs = [
+      const emptyMsgs = [
         { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
-        { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights!' }
+        { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
+        { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
+        { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
       ];
-      const msg = msgs[Math.floor(Math.random() * msgs.length)];
-      container.innerHTML = `<div class="insights-empty" style="width:100%;"><div class="insights-empty-icon"><i data-lucide="${msg.icon}" style="width:32px;height:32px;"></i></div><div class="insights-empty-title">${msg.title}</div><div class="insights-empty-desc">${msg.desc}</div></div>`;
+      const msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+      container.innerHTML = `
+        <div class="insights-empty" style="width: 100%;">
+          <div class="insights-empty-icon"><i data-lucide="${msg.icon}" style="width:32px;height:32px;"></i></div>
+          <div class="insights-empty-title">${msg.title}</div>
+          <div class="insights-empty-desc">${msg.desc}</div>
+        </div>
+      `;
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
   } catch (e) {
     console.log('Insights loading:', e.message);
     if (greetingEl) greetingEl.textContent = '';
     if (footer) footer.style.display = 'none';
-    container.innerHTML = '<div class="insights-empty" style="width:100%;"><div class="insights-empty-icon"><i data-lucide="bot" style="width:32px;height:32px;"></i></div><div class="insights-empty-title">Insights are napping</div><div class="insights-empty-desc">Add some expenses and check back soon!</div></div>';
+    container.innerHTML = `
+      <div class="insights-empty" style="width: 100%;">
+        <div class="insights-empty-icon"><i data-lucide="bot" style="width:32px;height:32px;"></i></div>
+        <div class="insights-empty-title">Insights are napping</div>
+        <div class="insights-empty-desc">Our insight engine is taking a quick break. Add some expenses and check back soon!</div>
+      </div>
+    `;
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 }
 
-function insightsBuildDots(total) {
-  const dc = document.getElementById('insightsDots');
-  if (!dc) return;
+function buildInsightsDots(total) {
+  const dotsContainer = document.getElementById('insightsDots');
+  if (!dotsContainer) return;
+  // Show max 8 dots, collapse the rest
   const maxDots = Math.min(total, 8);
-  dc.innerHTML = Array.from({ length: maxDots }, (_, i) => `<div class="insights-dot${i === 0 ? ' active' : ''}" data-dot="${i}"></div>`).join('');
-  dc.querySelectorAll('.insights-dot').forEach(d => d.addEventListener('click', () => {
-    const idx = parseInt(d.dataset.dot);
-    insightsScrollTo(total > 8 ? Math.round(idx / 7 * (total - 1)) : idx);
-  }));
+  dotsContainer.innerHTML = Array.from({ length: maxDots }, (_, i) =>
+    `<div class="insights-dot${i === 0 ? ' active' : ''}" data-dot="${i}"></div>`
+  ).join('');
+  // Click on dot to navigate
+  dotsContainer.querySelectorAll('.insights-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const dotIdx = parseInt(dot.dataset.dot);
+      const mappedIdx = total > 8 ? Math.round(dotIdx / 7 * (total - 1)) : dotIdx;
+      scrollToInsight(mappedIdx);
+    });
+  });
 }
 
-function insightsUpdateDots(cur, total) {
-  const dc = document.getElementById('insightsDots');
-  if (!dc) return;
-  const dots = dc.querySelectorAll('.insights-dot');
-  const active = total > 8 ? Math.round(cur / (total - 1) * 7) : cur;
-  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+function updateInsightsDots(current, total) {
+  const dotsContainer = document.getElementById('insightsDots');
+  if (!dotsContainer) return;
+  const dots = dotsContainer.querySelectorAll('.insights-dot');
+  const maxDots = dots.length;
+  const activeDot = total > 8 ? Math.round(current / (total - 1) * 7) : current;
+  dots.forEach((d, i) => d.classList.toggle('active', i === activeDot));
 }
 
-function insightsScrollTo(index) {
-  const c = document.getElementById('spendingInsights');
-  if (!c) return;
-  const cards = c.querySelectorAll('.insight-card');
+function scrollToInsight(index) {
+  const container = document.getElementById('spendingInsights');
+  if (!container) return;
+  const cards = container.querySelectorAll('.insight-card');
   if (index < 0 || index >= cards.length) return;
+
   insightsSliderState.index = index;
   cards[index].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-  if (!cards[index].classList.contains('visible')) cards[index].classList.add('visible');
-  insightsUpdateDots(index, insightsSliderState.total);
+
+  // Make card visible if not already
+  if (!cards[index].classList.contains('visible')) {
+    cards[index].classList.add('visible');
+  }
+
+  updateInsightsDots(index, insightsSliderState.total);
 }
 
-function insightsSetupSlider(container, total) {
-  let st;
-  container.addEventListener('scroll', () => { clearTimeout(st); st = setTimeout(() => {
-    const cards = container.querySelectorAll('.insight-card'), cr = container.getBoundingClientRect();
-    let closest = 0, min = Infinity;
-    cards.forEach((card, i) => { const r = card.getBoundingClientRect(); const d = Math.abs(r.left - cr.left); if (d < min) { min = d; closest = i; } if (r.left < cr.right && r.right > cr.left) card.classList.add('visible'); });
-    insightsSliderState.index = closest;
-    insightsUpdateDots(closest, total);
-  }, 60); }, { passive: true });
+function setupInsightsSlider(container, total) {
+  // Scroll-based index tracking
+  let scrollTimeout;
+  container.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const cards = container.querySelectorAll('.insight-card');
+      const containerRect = container.getBoundingClientRect();
+      let closest = 0, minDist = Infinity;
+      cards.forEach((card, i) => {
+        const rect = card.getBoundingClientRect();
+        const dist = Math.abs(rect.left - containerRect.left);
+        if (dist < minDist) { minDist = dist; closest = i; }
+        if (rect.left < containerRect.right && rect.right > containerRect.left) {
+          card.classList.add('visible');
+        }
+      });
+      insightsSliderState.index = closest;
+      updateInsightsDots(closest, total);
+    }, 60);
+  }, { passive: true });
 
-  container.addEventListener('touchstart', () => insightsPauseAuto(), { passive: true });
-  container.addEventListener('touchend', () => setTimeout(() => insightsResumeAuto(), 5000), { passive: true });
-  insightsStartAuto(total);
+  // Touch pause (pause on touch, resume after)
+  container.addEventListener('touchstart', () => pauseAutoPlay(), { passive: true });
+  container.addEventListener('touchend', () => {
+    setTimeout(() => resumeAutoPlay(), 5000);
+  }, { passive: true });
+
+  // Start auto-play (every 4 seconds)
+  startAutoPlay(total);
 }
 
-function insightsStartAuto(total) {
-  insightsStopAuto();
+function startAutoPlay(total) {
+  stopAutoPlayTimer();
   insightsSliderState.paused = false;
+
   insightsSliderState.autoPlay = setInterval(() => {
     if (insightsSliderState.paused) return;
-    insightsScrollTo((insightsSliderState.index + 1) % total);
+    const newIdx = (insightsSliderState.index + 1) % total;
+    scrollToInsight(newIdx);
   }, 4000);
 }
 
-function insightsPauseAuto() {
+function pauseAutoPlay() {
   insightsSliderState.paused = true;
 }
 
-function insightsResumeAuto() {
+function resumeAutoPlay() {
   insightsSliderState.paused = false;
-  if (!insightsSliderState.autoPlay) insightsStartAuto(insightsSliderState.total);
-}
-
-function insightsStopAuto() {
-  if (insightsSliderState.autoPlay) { clearInterval(insightsSliderState.autoPlay); insightsSliderState.autoPlay = null; }
-}
-
-// Refresh insights
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('insightsRefreshBtn');
-  if (btn) btn.addEventListener('click', async () => {
-    btn.classList.add('spinning');
-    insightsStopAuto();
-    const g = document.getElementById('insightsGreeting');
-    if (g) g.textContent = 'Reloading money wisdom... 🧠✨';
-    await loadSpendingInsights();
-    setTimeout(() => btn.classList.remove('spinning'), 600);
-  });
-});
-
-// Close modal on outside click
-window.onclick = function(event) {
-  if (event.target.classList.contains('modal')) {
-    event.target.classList.remove('active');
+  if (!insightsSliderState.autoPlay) {
+    startAutoPlay(insightsSliderState.total);
   }
 }
+
+function stopAutoPlayTimer() {
+  if (insightsSliderState.autoPlay) {
+    clearInterval(insightsSliderState.autoPlay);
+    insightsSliderState.autoPlay = null;
+  }
+}
+
+// Refresh insights button handler
+document.addEventListener('DOMContentLoaded', () => {
+  const refreshBtn = document.getElementById('insightsRefreshBtn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+      refreshBtn.classList.add('spinning');
+      stopAutoPlayTimer();
+      const greetingEl = document.getElementById('insightsGreeting');
+      const refreshMsgs = ['Shuffling your insights... 🎲', 'Getting fresh data... 🍃', 'Recalculating genius... 🧠✨', 'Reloading 30 money wisdom bombs... 💣'];
+      if (greetingEl) greetingEl.textContent = refreshMsgs[Math.floor(Math.random() * refreshMsgs.length)];
+      await loadSpendingInsights();
+      setTimeout(() => refreshBtn.classList.remove('spinning'), 600);
+    });
+  }
+});
 
 // ================================
 // FUN & LIVELY INTERACTIONS 🎉
@@ -996,6 +1115,113 @@ function celebrateStreak(days) {
   }
 }
 
+// XP gain celebration
+function celebrateXPGain(amount) {
+  showFunToast(`+${amount} XP earned! 🌟`, '⭐');
+  
+  // Animate the XP bar
+  const xpBar = document.getElementById('xpProgress');
+  if (xpBar) {
+    xpBar.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
+}
+
+// Level up celebration
+function celebrateLevelUp(newLevel) {
+  // Show confetti
+  showConfetti();
+  
+  // Create level-up overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 107, 63, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s;
+  `;
+  
+  overlay.innerHTML = `
+    <div style="
+      text-align: center;
+      color: white;
+      animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    ">
+      <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
+      <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Level Up!</h1>
+      <div style="
+        font-size: 64px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+      ">Level ${newLevel}</div>
+      <p style="font-size: 18px; opacity: 0.9;">You're getting better at managing your money!</p>
+      <button onclick="this.parentElement.parentElement.remove()" style="
+        margin-top: 30px;
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        padding: 12px 32px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      ">Continue</button>
+    </div>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Add animation styles if not exists
+  if (!document.getElementById('levelup-animations')) {
+    const style = document.createElement('style');
+    style.id = 'levelup-animations';
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes bounceIn {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Play level-up sound
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
+    
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.4);
+      osc.start(audioCtx.currentTime + i * 0.1);
+      osc.stop(audioCtx.currentTime + i * 0.1 + 0.4);
+    });
+  } catch (e) { /* Audio not supported */ }
+  
+  // Auto-dismiss after 5 seconds
+  setTimeout(() => overlay.remove(), 5000);
+}
+
 // Add bounce to navigation items on tap
 document.querySelectorAll('.bottom-nav-item').forEach(item => {
   item.addEventListener('touchstart', function() {
@@ -1084,6 +1310,134 @@ function getDailyQuote() {
   return quotes[dayOfYear % quotes.length];
 }
 
+// Check for new achievements (global function accessible from all pages)
+async function checkNewAchievements() {
+  try {
+    const response = await api.post('/achievements/check');
+    if (response.success && response.data.newly_earned && response.data.newly_earned.length > 0) {
+      // Show achievement unlock for each new achievement (max 3 to avoid spam)
+      const achievements = response.data.newly_earned.slice(0, 3);
+      achievements.forEach((achievement, index) => {
+        setTimeout(() => {
+          showAchievementUnlockNotification(achievement);
+        }, index * 1000); // Stagger notifications by 1 second each
+      });
+      
+      // Reload gamification data to update badges/XP
+      await loadGamificationData();
+    }
+  } catch (error) {
+    console.warn('Achievement check error:', error);
+  }
+}
+
+// Show achievement unlock notification (global popup)
+function showAchievementUnlockNotification(achievement) {
+  // Play celebration sound
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 (achievement jingle)
+    
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.3);
+      osc.start(audioCtx.currentTime + i * 0.1);
+      osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+    });
+  } catch (e) { /* Audio not supported */ }
+  
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'achievement-unlock-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s;
+  `;
+  
+  overlay.innerHTML = `
+    <div style="
+      background: linear-gradient(135deg, #006B3F 0%, #004d2c 100%);
+      border-radius: 24px;
+      padding: 2.5rem;
+      text-align: center;
+      max-width: 340px;
+      width: 90%;
+      animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border: 2px solid rgba(255,255,255,0.1);
+    ">
+      <div style="font-size: 4.5rem; margin-bottom: 1.2rem; animation: pulse 1s infinite;">🎉</div>
+      <h2 style="color: #FFD700; margin-bottom: 0.8rem; font-size: 22px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+        Achievement Unlocked!
+      </h2>
+      <div style="font-size: 3.5rem; margin: 1.2rem 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">
+        ${achievement.icon || '⭐'}
+      </div>
+      <h3 style="color: white; margin-bottom: 0.6rem; font-size: 20px; font-weight: 600;">
+        ${achievement.name || 'New Achievement'}
+      </h3>
+      <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.5; margin-bottom: 1.2rem;">
+        ${achievement.description || 'You did something amazing!'}
+      </p>
+      <div style="
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #004d2c;
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 1rem;
+        font-weight: 700;
+        font-size: 15px;
+        box-shadow: 0 4px 12px rgba(255,215,0,0.4);
+      ">
+        <span style="font-size: 18px;">⭐</span>
+        +${achievement.xp_reward || 0} XP
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Add animation styles if not exists
+  if (!document.getElementById('achievement-animations')) {
+    const style = document.createElement('style');
+    style.id = 'achievement-animations';
+    style.textContent = `
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Show confetti
+  showConfetti();
+  
+  // Click to dismiss
+  overlay.addEventListener('click', () => overlay.remove());
+  
+  // Auto-dismiss after 5 seconds
+  setTimeout(() => overlay.remove(), 5000);
+}
+
 // Initialize currency display with correct symbol
 function initCurrencyDisplay() {
   const symbol = utils.getCurrencySymbol();
@@ -1112,7 +1466,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Add fun entrance animations
   setTimeout(() => {
-    document.querySelector('.greeting-banner')?.classList.add('animate-slide-up');
+    document.querySelector('.mtn-profile-section')?.classList.add('animate-slide-up');
     document.querySelector('.balance-card')?.classList.add('animate-zoom');
   }, 100);
   
