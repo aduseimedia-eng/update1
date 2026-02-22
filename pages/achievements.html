@@ -526,12 +526,14 @@
 
         if (achievementsRes.success) {
           allAchievements = achievementsRes.data;
+          // normalise field: API returns is_earned, ensure .earned is also set
+          allAchievements.forEach(a => { a.earned = a.earned || a.is_earned; });
           renderAchievements();
         }
 
         if (statsRes.success) {
           updateStats(statsRes.data);
-          updateLevel(statsRes.data.total_xp || 0);
+          updateLevel(statsRes.data.total_xp_from_achievements || statsRes.data.total_xp || 0);
         }
       } catch (error) {
         console.error('Error loading achievements:', error);
@@ -539,7 +541,7 @@
     }
 
     function updateStats(stats) {
-      const earned = stats.earned_achievements || 0;
+      const earned = stats.earned_count || stats.earned_achievements || 0;
       const total = stats.total_achievements || 0;
       
       document.getElementById('earnedCount').textContent = earned;

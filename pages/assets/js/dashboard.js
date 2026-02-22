@@ -664,18 +664,16 @@ async function loadWidgets() {
       }
     } catch (e) { /* Bills API not available */ }
 
-    // Load active challenges
+    // Load active challenges — read from localStorage (challenges page is localStorage-based)
     try {
-      const challengesResponse = await api.get('/challenges/stats');
-      if (challengesResponse.success) {
-        const challengesEl = document.getElementById('activeChallenges');
-        const n = parseInt(challengesResponse.data.active_count) || 0;
-        if (challengesEl) {
-          challengesEl.textContent = n;
-          challengesEl.classList.toggle('challenges-active', n > 0);
-        }
+      const storedActive = JSON.parse(localStorage.getItem('kudisave_active_challenges')) || [];
+      const n = storedActive.filter(c => c.status === 'active').length;
+      const challengesEl = document.getElementById('activeChallenges');
+      if (challengesEl) {
+        challengesEl.textContent = n;
+        challengesEl.classList.toggle('challenges-active', n > 0);
       }
-    } catch (e) { /* Challenges API not available */ }
+    } catch (e) { /* ignore */ }
 
     // Load achievements count
     try {
