@@ -1152,7 +1152,8 @@
     }
 
     // ===== Google Sign-In =====
-    const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+    const GOOGLE_CLIENT_ID = window.KUDISAVE_GOOGLE_CLIENT_ID ||
+      '760162537864-49c7509k9sdk3hf57d2at16anhv74cul.apps.googleusercontent.com';
 
     function initGoogleSignIn() {
       if (typeof google !== 'undefined' && google.accounts) {
@@ -1168,60 +1169,45 @@
     function signInWithGoogle() {
       if (typeof google !== 'undefined' && google.accounts) {
         google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed()) {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // One Tap blocked — fall back to OAuth2 token flow
             google.accounts.oauth2.initTokenClient({
               client_id: GOOGLE_CLIENT_ID,
               scope: 'email profile',
-              callback: (response) => {
-                if (response.access_token) fetchGoogleUserInfo(response.access_token);
+              callback: async (response) => {
+                if (response.access_token) {
+                  await sendGoogleToken(null, response.access_token);
+                }
               }
             }).requestAccessToken();
           }
         });
       } else {
-        console.log('Google SDK not loaded');
-        showToast('Google Sign-In is not available right now', 'error');
+        showToast('Google Sign-In is not available right now. Try refreshing.', 'error');
       }
     }
 
-    async function fetchGoogleUserInfo(accessToken) {
-      try {
-        const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        const userInfo = await response.json();
-        completeGoogleLogin(userInfo);
-      } catch (error) {
-        console.error('Error fetching Google user info:', error);
-        showToast('Failed to get Google account info', 'error');
-      }
-    }
-
-    function handleGoogleCallback(response) {
+    async function handleGoogleCallback(response) {
       if (response.credential) {
-        const userInfo = parseJwt(response.credential);
-        completeGoogleLogin(userInfo);
+        await sendGoogleToken(response.credential, null);
       }
     }
 
-    function parseJwt(token) {
+    async function sendGoogleToken(credential, accessToken) {
+      const googleBtn = document.querySelectorAll('.google-btn');
+      googleBtn.forEach(b => { b.disabled = true; b.style.opacity = '0.7'; });
       try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(window.atob(base64));
-      } catch (e) { return {}; }
+        const result = await api.googleAuth(credential, accessToken);
+        completeGoogleLogin(result.data);
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+        showToast(error.message || 'Google sign-in failed. Please try again.', 'error');
+      } finally {
+        googleBtn.forEach(b => { b.disabled = false; b.style.opacity = ''; });
+      }
     }
 
-    function completeGoogleLogin(userInfo) {
-      const user = {
-        name: userInfo.name || userInfo.given_name || 'Google User',
-        email: userInfo.email,
-        picture: userInfo.picture,
-        provider: 'google',
-        googleId: userInfo.sub || userInfo.id
-      };
-      localStorage.setItem('token', 'google-auth-' + Date.now());
-      localStorage.setItem('user', JSON.stringify(user));
+    function completeGoogleLogin(data) {
       localStorage.setItem('onboardingComplete', 'true');
       showToast('Signed in with Google!');
       setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 500);

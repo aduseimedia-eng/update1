@@ -215,6 +215,24 @@ class APIService {
     return data;
   }
 
+  async googleAuth(credential, accessToken) {
+    const body = credential ? { credential } : { accessToken };
+    const response = await fetch(`${API_BASE_URL}/auth/google`, {
+      method: 'POST',
+      headers: this.getHeaders(false),
+      body: JSON.stringify(body)
+    });
+    const data = await this.handleResponse(response);
+    if (data.data && data.data.token) {
+      this.setToken(data.data.token);
+      try { await this.loadUserPreferences(); } catch (e) {}
+    }
+    if (data.data && data.data.user) {
+      localStorage.setItem('user', JSON.stringify(data.data.user));
+    }
+    return data;
+  }
+
   async getProfile() {
     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
       headers: this.getHeaders()
