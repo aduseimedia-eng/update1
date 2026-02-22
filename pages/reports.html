@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -1815,7 +1815,7 @@
           <div class="expense-rank ${rankClasses[index]}">${index + 1}</div>
           <div class="expense-details">
             <div class="expense-title">${expense.description || expense.category}</div>
-            <div class="expense-date">${utils.formatDate(expense.expense_date || expense.date)} ΓÇó ${expense.category}</div>
+            <div class="expense-date">${utils.formatDate(expense.expense_date || expense.date)} • ${expense.category}</div>
           </div>
           <div class="expense-amount">${utils.formatCurrency(expense.amount)}</div>
         </div>

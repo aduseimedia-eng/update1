@@ -1,4 +1,4 @@
-﻿// KudiSave - API Service
+// KudiSave - API Service
 // Handles all communication with backend
 
 // API Configuration - set by config.js
@@ -409,10 +409,10 @@ class APIService {
       });
 
       const result = await this.handleResponse(response);
-      console.log('Γ£à Goal created successfully:', result.data.title);
+      console.log('✅ Goal created successfully:', result.data.title);
       return result;
     } catch (error) {
-      console.error('Γ¥î Failed to create goal:', error.message);
+      console.error('❌ Failed to create goal:', error.message);
       throw error;
     }
   }

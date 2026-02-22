@@ -1,4 +1,4 @@
-﻿/* KudiSave - Main Stylesheet */
+/* KudiSave - Main Stylesheet */
 /* Modern Glass + Clean Design System */
 /* Mobile-First Design */
 /* Enhanced iPhone X - 17 Pro Max Support */
@@ -2454,7 +2454,7 @@ div[style*="background: var(--primary-color)"] {
 }
 
 /* ================================
-   FUN & LIVELY ANIMATIONS ≡ƒÄë
+   FUN & LIVELY ANIMATIONS 🎉
    ================================ */
 
 /* Bounce Animation */
@@ -2848,7 +2848,7 @@ div[style*="background: var(--primary-color)"] {
 }
 
 .streak-fire::after {
-  content: '≡ƒöÑ';
+  content: '🔥';
   position: absolute;
   top: -5px;
   right: -5px;
@@ -2966,7 +2966,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* ================================
-   CELEBRATION EFFECTS ≡ƒÄè
+   CELEBRATION EFFECTS 🎊
    ================================ */
 
 .celebrate {
@@ -2975,7 +2975,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .celebrate::before,
 .celebrate::after {
-  content: 'Γ£¿';
+  content: '✨';
   position: absolute;
   animation: sparkle 1s ease-in-out infinite;
 }
@@ -2999,7 +2999,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .money-saved::before {
-  content: '≡ƒÆ░ ';
+  content: '💰 ';
 }
 
 /* Goal Reached Celebration */
@@ -3009,7 +3009,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .goal-reached::after {
-  content: '≡ƒÄë';
+  content: '🎉';
   position: absolute;
   top: -15px;
   right: -15px;
@@ -3069,15 +3069,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .notification-success::before {
-  content: 'Γ£à ';
+  content: '✅ ';
 }
 
 .notification-warning::before {
-  content: 'ΓÜá∩╕Å ';
+  content: '⚠️ ';
 }
 
 .notification-error::before {
-  content: 'Γ¥î ';
+  content: '❌ ';
 }
 
 /* ================================
@@ -3098,7 +3098,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .swipe-hint::after {
-  content: '≡ƒæë';
+  content: '👉';
   margin-left: 5px;
 }
 
@@ -3118,7 +3118,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .success-checkmark::after {
-  content: 'Γ£ô';
+  content: '✓';
   color: white;
   font-size: 24px;
   font-weight: bold;
@@ -3189,7 +3189,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .challenge-progress::after {
-  content: '≡ƒÅå';
+  content: '🏆';
   position: absolute;
   right: -20px;
   top: 50%;
@@ -3615,6 +3615,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .cache-indicator::before {
-  content: 'ΓÇó';
+  content: '•';
   color: var(--success);
 }/* Cache bust: 2026-02-15 19:05:14 */

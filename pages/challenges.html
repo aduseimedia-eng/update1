@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -670,11 +670,11 @@
 
     <!-- Challenge Info Section -->
     <div class="mtn-challenge-section">
-      <div class="mtn-challenge-icon">≡ƒÅå</div>
+      <div class="mtn-challenge-icon">🏆</div>
       <div class="mtn-challenge-info">
         <div class="mtn-challenge-title">Challenges</div>
         <div class="mtn-challenge-xp">
-          ΓÜí <span id="totalXP">0</span> XP Earned
+          ⚡ <span id="totalXP">0</span> XP Earned
         </div>
       </div>
     </div>
@@ -704,13 +704,13 @@
   <!-- Main Content -->
   <main class="main-content">
     <!-- Active Challenges Section -->
-    <div class="section-title">≡ƒöÑ Active Challenges</div>
+    <div class="section-title">🔥 Active Challenges</div>
     <div class="active-challenges" id="activeChallenges">
       <!-- Rendered dynamically -->
     </div>
 
     <!-- Available Challenges Section -->
-    <div class="section-title">Γ£¿ Available Challenges</div>
+    <div class="section-title">✨ Available Challenges</div>
     <div class="available-grid" id="availableChallenges">
       <!-- Rendered dynamically -->
     </div>
@@ -727,7 +727,7 @@
       <div class="modal-header" style="justify-content: flex-end;">
         <button class="close-btn" onclick="closeModal('challengeModal')">&times;</button>
       </div>
-      <div class="modal-icon" id="modalIcon">≡ƒÄ»</div>
+      <div class="modal-icon" id="modalIcon">🎯</div>
       <h2 class="modal-title" id="modalTitle">Challenge Name</h2>
       <p class="modal-desc" id="modalDesc">Challenge description goes here with details about what you need to do.</p>
       
@@ -738,8 +738,8 @@
       
       <div class="challenge-meta" style="justify-content: center; margin-bottom: 16px;">
         <span class="difficulty-badge medium" id="modalDifficulty">Medium</span>
-        <span class="meta-item" id="modalDuration">≡ƒôà 30 days</span>
-        <span class="meta-item" id="modalTarget">≡ƒÄ» Target: Γé╡500</span>
+        <span class="meta-item" id="modalDuration">📅 30 days</span>
+        <span class="meta-item" id="modalTarget">🎯 Target: ₵500</span>
       </div>
       
       <div class="challenge-actions">
@@ -769,11 +769,11 @@
           <div class="form-group">
             <label class="form-label">Type</label>
             <select class="form-select" id="challengeType">
-              <option value="savings">≡ƒÆ░ Savings</option>
-              <option value="no-spend">≡ƒÜ½ No-Spend</option>
-              <option value="budget">≡ƒôè Budget</option>
-              <option value="streak">≡ƒöÑ Streak</option>
-              <option value="goal">≡ƒÄ» Goal</option>
+              <option value="savings">💰 Savings</option>
+              <option value="no-spend">🚫 No-Spend</option>
+              <option value="budget">📊 Budget</option>
+              <option value="streak">🔥 Streak</option>
+              <option value="goal">🎯 Goal</option>
             </select>
           </div>
           <div class="form-group">
@@ -788,7 +788,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Target Value (Γé╡)</label>
+            <label class="form-label">Target Value (₵)</label>
             <input type="number" class="form-input" id="challengeTarget" placeholder="500" min="1">
           </div>
           <div class="form-group">
@@ -834,25 +834,25 @@
 
     // Challenge icons mapping
     const challengeIcons = {
-      'no-spend': '≡ƒÜ½',
-      'savings': '≡ƒÆ░',
-      'budget': '≡ƒôè',
-      'streak': '≡ƒöÑ',
-      'goal': '≡ƒÄ»',
-      'default': 'Γ¡É'
+      'no-spend': '🚫',
+      'savings': '💰',
+      'budget': '📊',
+      'streak': '🔥',
+      'goal': '🎯',
+      'default': '⭐'
     };
 
     // Default challenges
     const defaultChallenges = [
       { id: 1, name: 'No-Spend Day', type: 'no-spend', description: 'Go 24 hours without spending any money', difficulty: 'easy', target: 1, duration: 1, xp: 50 },
-      { id: 2, name: 'Save Γé╡100', type: 'savings', description: 'Save at least Γé╡100 this week', difficulty: 'easy', target: 100, duration: 7, xp: 100 },
+      { id: 2, name: 'Save ₵100', type: 'savings', description: 'Save at least ₵100 this week', difficulty: 'easy', target: 100, duration: 7, xp: 100 },
       { id: 3, name: 'Budget Master', type: 'budget', description: 'Stay under budget for all categories this month', difficulty: 'medium', target: 30, duration: 30, xp: 300 },
       { id: 4, name: '7-Day Streak', type: 'streak', description: 'Track expenses for 7 days straight', difficulty: 'easy', target: 7, duration: 7, xp: 75 },
       { id: 5, name: 'Weekend Warrior', type: 'no-spend', description: 'No spending on Saturday and Sunday', difficulty: 'medium', target: 2, duration: 2, xp: 150 },
-      { id: 6, name: 'Save Γé╡500', type: 'savings', description: 'Save Γé╡500 in one month', difficulty: 'medium', target: 500, duration: 30, xp: 250 },
+      { id: 6, name: 'Save ₵500', type: 'savings', description: 'Save ₵500 in one month', difficulty: 'medium', target: 500, duration: 30, xp: 250 },
       { id: 7, name: '30-Day Tracker', type: 'streak', description: 'Track every expense for 30 days', difficulty: 'hard', target: 30, duration: 30, xp: 400 },
-      { id: 8, name: 'Save Γé╡1000', type: 'savings', description: 'Save Γé╡1000 in two months', difficulty: 'hard', target: 1000, duration: 60, xp: 500 },
-      { id: 9, name: 'Super Saver', type: 'savings', description: 'Save Γé╡5000 in 6 months', difficulty: 'extreme', target: 5000, duration: 180, xp: 1000 },
+      { id: 8, name: 'Save ₵1000', type: 'savings', description: 'Save ₵1000 in two months', difficulty: 'hard', target: 1000, duration: 60, xp: 500 },
+      { id: 9, name: 'Super Saver', type: 'savings', description: 'Save ₵5000 in 6 months', difficulty: 'extreme', target: 5000, duration: 180, xp: 1000 },
       { id: 10, name: 'No Coffee Week', type: 'no-spend', description: 'Skip buying coffee for a week', difficulty: 'easy', target: 7, duration: 7, xp: 60 }
     ];
 
@@ -928,7 +928,7 @@
           <div class="challenge-card">
             <div class="challenge-header">
               <div class="challenge-icon ${challenge.difficulty || 'easy'}">
-                ${challengeIcons[challenge.type] || 'Γ¡É'}
+                ${challengeIcons[challenge.type] || '⭐'}
               </div>
               <div class="challenge-info">
                 <div class="challenge-name">${escapeHtml(challenge.name || 'Unknown')}</div>
@@ -949,7 +949,7 @@
 
             <div class="challenge-meta">
               <span class="difficulty-badge ${challenge.difficulty || 'easy'}">${challenge.difficulty || 'easy'}</span>
-              <span class="meta-item">≡ƒôà ${daysLeft} days left</span>
+              <span class="meta-item">📅 ${daysLeft} days left</span>
             </div>
 
             <div class="challenge-actions">
@@ -984,7 +984,7 @@
 
       container.innerHTML = available.map(challenge => `
         <div class="available-card" onclick="showChallengeDetail(${challenge.id})">
-          <div class="available-icon">${challengeIcons[challenge.type] || 'Γ¡É'}</div>
+          <div class="available-icon">${challengeIcons[challenge.type] || '⭐'}</div>
           <div class="available-name">${escapeHtml(challenge.name)}</div>
           <div class="available-xp">+${challenge.xp} XP</div>
           <span class="difficulty-badge ${challenge.difficulty}">${challenge.difficulty}</span>
@@ -997,14 +997,14 @@
       selectedChallenge = challenges.find(c => c.id === id);
       if (!selectedChallenge) return;
 
-      document.getElementById('modalIcon').textContent = challengeIcons[selectedChallenge.type] || 'Γ¡É';
+      document.getElementById('modalIcon').textContent = challengeIcons[selectedChallenge.type] || '⭐';
       document.getElementById('modalTitle').textContent = selectedChallenge.name;
       document.getElementById('modalDesc').textContent = selectedChallenge.description;
       document.getElementById('modalXP').textContent = `+${selectedChallenge.xp} XP`;
       document.getElementById('modalDifficulty').textContent = selectedChallenge.difficulty;
       document.getElementById('modalDifficulty').className = `difficulty-badge ${selectedChallenge.difficulty}`;
-      document.getElementById('modalDuration').textContent = `≡ƒôà ${selectedChallenge.duration} days`;
-      document.getElementById('modalTarget').textContent = `≡ƒÄ» Target: ${selectedChallenge.type === 'savings' ? 'Γé╡' : ''}${selectedChallenge.target}`;
+      document.getElementById('modalDuration').textContent = `📅 ${selectedChallenge.duration} days`;
+      document.getElementById('modalTarget').textContent = `🎯 Target: ${selectedChallenge.type === 'savings' ? '₵' : ''}${selectedChallenge.target}`;
 
       document.getElementById('challengeModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -1068,7 +1068,7 @@
         badgesData.xp += challenge?.xp || 0;
         localStorage.setItem('kudisave_badges', JSON.stringify(badgesData));
 
-        showToast(`≡ƒÄë Challenge completed! +${challenge?.xp || 0} XP`);
+        showToast(`🎉 Challenge completed! +${challenge?.xp || 0} XP`);
       } else {
         showToast('Progress updated!');
       }

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -267,7 +267,7 @@
     }
 
     .balance-label::before {
-      content: '≡ƒÆ│';
+      content: '💳';
       font-size: 14px;
     }
 
@@ -499,7 +499,7 @@
     }
 
     .transaction-title::before {
-      content: '≡ƒôï';
+      content: '📋';
       animation: float 3s ease-in-out infinite;
     }
 
@@ -1497,7 +1497,7 @@
       z-index: 1;
       font-weight: 500;
     }
-    .insight-tip::before { content: '≡ƒÆí'; font-size: 12px; flex-shrink: 0; margin-top: 0px; }
+    .insight-tip::before { content: '💡'; font-size: 12px; flex-shrink: 0; margin-top: 0px; }
 
     .insight-source {
       font-size: 10px;
@@ -1541,7 +1541,7 @@
       animation: shimmer 1.5s infinite;
     }
     .insight-shimmer::before {
-      content: '≡ƒñö';
+      content: '🤔';
       position: absolute;
       top: 50%;
       left: 50%;
@@ -1817,19 +1817,19 @@
       <!-- Bills Widget -->
       <a href="bills.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
         <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="calendar-check"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="billsDueCount">ΓÇô</div>
+        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="billsDueCount">–</div>
         <div style="font-size: 10px; color: var(--text-muted);">Bills Due</div>
       </a>
       <!-- Challenges Widget -->
       <a href="challenges.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
         <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="trophy"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="activeChallenges">ΓÇô</div>
+        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="activeChallenges">–</div>
         <div style="font-size: 10px; color: var(--text-muted);">Challenges</div>
       </a>
       <!-- Achievements Widget -->
       <a href="achievements.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
         <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="award"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="achievementsEarned">ΓÇô</div>
+        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="achievementsEarned">–</div>
         <div style="font-size: 10px; color: var(--text-muted);">Badges</div>
       </a>
     </div>
@@ -1878,7 +1878,7 @@
     <div class="card">
       <div class="transaction-header">
         <span class="transaction-title"><i data-lucide="list" class="icon-inline"></i> Recent Transactions</span>
-        <a href="expenses.html" class="transaction-link">See all ΓåÆ</a>
+        <a href="expenses.html" class="transaction-link">See all →</a>
       </div>
       <div id="recentExpensesList">
         <div class="spinner"></div>
@@ -1923,7 +1923,7 @@
         <div class="form-group">
           <label class="form-label">Amount</label>
           <div class="currency-input-wrapper">
-            <span class="currency-prefix">Γé╡</span>
+            <span class="currency-prefix">₵</span>
             <input type="number" class="form-input" id="expenseAmount" placeholder="0.00" step="0.01" min="0.01" required>
           </div>
         </div>
@@ -1964,7 +1964,7 @@
         <div class="form-group">
           <label class="form-label">Amount</label>
           <div class="currency-input-wrapper">
-            <span class="currency-prefix">Γé╡</span>
+            <span class="currency-prefix">₵</span>
             <input type="number" class="form-input" id="incomeAmount" placeholder="0.00" step="0.01" min="0.01" required>
           </div>
         </div>
@@ -2008,7 +2008,7 @@
         <div class="form-group">
           <label class="form-label">Budget Amount</label>
           <div class="currency-input-wrapper">
-            <span class="currency-prefix">Γé╡</span>
+            <span class="currency-prefix">₵</span>
             <input type="number" class="form-input" id="budgetAmount" placeholder="0.00" step="0.01" min="1" required>
           </div>
         </div>
@@ -2054,30 +2054,30 @@
             <label>From</label>
             <div class="currency-input-row">
               <select class="currency-select" id="fromCurrency" onchange="convertCurrency()">
-                <option value="GHS" selected>≡ƒç¼≡ƒç¡ GHS</option>
-                <option value="USD">≡ƒç║≡ƒç╕ USD</option>
-                <option value="EUR">≡ƒç¬≡ƒç║ EUR</option>
-                <option value="GBP">≡ƒç¼≡ƒçº GBP</option>
-                <option value="NGN">≡ƒç│≡ƒç¼ NGN</option>
-                <option value="ZAR">≡ƒç┐≡ƒçª ZAR</option>
-                <option value="KES">≡ƒç░≡ƒç¬ KES</option>
-                <option value="XOF">≡ƒç¿≡ƒç« XOF</option>
-                <option value="CNY">≡ƒç¿≡ƒç│ CNY</option>
-                <option value="JPY">≡ƒç»≡ƒç╡ JPY</option>
-                <option value="AED">≡ƒçª≡ƒç¬ AED</option>
-                <option value="CAD">≡ƒç¿≡ƒçª CAD</option>
-                <option value="INR">≡ƒç«≡ƒç│ INR</option>
+                <option value="GHS" selected>🇬🇭 GHS</option>
+                <option value="USD">🇺🇸 USD</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="NGN">🇳🇬 NGN</option>
+                <option value="ZAR">🇿🇦 ZAR</option>
+                <option value="KES">🇰🇪 KES</option>
+                <option value="XOF">🇨🇮 XOF</option>
+                <option value="CNY">🇨🇳 CNY</option>
+                <option value="JPY">🇯🇵 JPY</option>
+                <option value="AED">🇦🇪 AED</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="INR">🇮🇳 INR</option>
               </select>
               <input type="number" class="currency-amount-input" id="fromAmount" 
                 placeholder="0.00" step="0.01" oninput="debouncedConvert()">
             </div>
             <!-- Quick Amount Buttons -->
             <div class="quick-amounts">
-              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(50)">Γé╡50</button>
-              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(100)">Γé╡100</button>
-              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(500)">Γé╡500</button>
-              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(1000)">Γé╡1K</button>
-              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(5000)">Γé╡5K</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(50)">₵50</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(100)">₵100</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(500)">₵500</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(1000)">₵1K</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(5000)">₵5K</button>
             </div>
           </div>
 
@@ -2093,19 +2093,19 @@
             <label>To</label>
             <div class="currency-input-row">
               <select class="currency-select" id="toCurrency" onchange="convertCurrency()">
-                <option value="GHS">≡ƒç¼≡ƒç¡ GHS</option>
-                <option value="USD" selected>≡ƒç║≡ƒç╕ USD</option>
-                <option value="EUR">≡ƒç¬≡ƒç║ EUR</option>
-                <option value="GBP">≡ƒç¼≡ƒçº GBP</option>
-                <option value="NGN">≡ƒç│≡ƒç¼ NGN</option>
-                <option value="ZAR">≡ƒç┐≡ƒçª ZAR</option>
-                <option value="KES">≡ƒç░≡ƒç¬ KES</option>
-                <option value="XOF">≡ƒç¿≡ƒç« XOF</option>
-                <option value="CNY">≡ƒç¿≡ƒç│ CNY</option>
-                <option value="JPY">≡ƒç»≡ƒç╡ JPY</option>
-                <option value="AED">≡ƒçª≡ƒç¬ AED</option>
-                <option value="CAD">≡ƒç¿≡ƒçª CAD</option>
-                <option value="INR">≡ƒç«≡ƒç│ INR</option>
+                <option value="GHS">🇬🇭 GHS</option>
+                <option value="USD" selected>🇺🇸 USD</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="NGN">🇳🇬 NGN</option>
+                <option value="ZAR">🇿🇦 ZAR</option>
+                <option value="KES">🇰🇪 KES</option>
+                <option value="XOF">🇨🇮 XOF</option>
+                <option value="CNY">🇨🇳 CNY</option>
+                <option value="JPY">🇯🇵 JPY</option>
+                <option value="AED">🇦🇪 AED</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="INR">🇮🇳 INR</option>
               </select>
               <input type="number" class="currency-amount-input" id="toAmount" 
                 placeholder="0.00" readonly>
@@ -2258,10 +2258,10 @@
           }));
 
           updateLastUpdatedText();
-          console.log('Γ£à Live exchange rates loaded');
+          console.log('✅ Live exchange rates loaded');
         }
       } catch (error) {
-        console.warn('ΓÜá∩╕Å Failed to fetch live rates, using fallback:', error.message);
+        console.warn('⚠️ Failed to fetch live rates, using fallback:', error.message);
         exchangeRates = { ...fallbackRates };
         ratesLastUpdated = null;
         updateLastUpdatedText();
@@ -2278,9 +2278,9 @@
           day: 'numeric', month: 'short', year: 'numeric',
           hour: '2-digit', minute: '2-digit'
         });
-        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Live rates updated: ${timeStr} ΓÇó <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Refresh</a>`;
+        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Live rates updated: ${timeStr} • <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Refresh</a>`;
       } else {
-        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Using offline rates ΓÇó <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Try refresh</a>`;
+        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Using offline rates • <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Try refresh</a>`;
       }
       lucide.createIcons({ node: el });
     }
@@ -2297,19 +2297,19 @@
     }
 
     const currencyInfo = {
-      GHS: { flag: '≡ƒç¼≡ƒç¡', name: 'Ghanaian Cedi', symbol: 'Γé╡' },
-      USD: { flag: '≡ƒç║≡ƒç╕', name: 'US Dollar', symbol: '$' },
-      EUR: { flag: '≡ƒç¬≡ƒç║', name: 'Euro', symbol: 'Γé¼' },
-      GBP: { flag: '≡ƒç¼≡ƒçº', name: 'British Pound', symbol: '┬ú' },
-      NGN: { flag: '≡ƒç│≡ƒç¼', name: 'Nigerian Naira', symbol: 'Γéª' },
-      ZAR: { flag: '≡ƒç┐≡ƒçª', name: 'South African Rand', symbol: 'R' },
-      KES: { flag: '≡ƒç░≡ƒç¬', name: 'Kenyan Shilling', symbol: 'KSh' },
-      XOF: { flag: '≡ƒç¿≡ƒç«', name: 'CFA Franc', symbol: 'CFA' },
-      CNY: { flag: '≡ƒç¿≡ƒç│', name: 'Chinese Yuan', symbol: '┬Ñ' },
-      JPY: { flag: '≡ƒç»≡ƒç╡', name: 'Japanese Yen', symbol: '┬Ñ' },
-      AED: { flag: '≡ƒçª≡ƒç¬', name: 'UAE Dirham', symbol: '╪».╪Ñ' },
-      CAD: { flag: '≡ƒç¿≡ƒçª', name: 'Canadian Dollar', symbol: 'C$' },
-      INR: { flag: '≡ƒç«≡ƒç│', name: 'Indian Rupee', symbol: 'Γé╣' }
+      GHS: { flag: '🇬🇭', name: 'Ghanaian Cedi', symbol: '₵' },
+      USD: { flag: '🇺🇸', name: 'US Dollar', symbol: '$' },
+      EUR: { flag: '🇪🇺', name: 'Euro', symbol: '€' },
+      GBP: { flag: '🇬🇧', name: 'British Pound', symbol: '£' },
+      NGN: { flag: '🇳🇬', name: 'Nigerian Naira', symbol: '₦' },
+      ZAR: { flag: '🇿🇦', name: 'South African Rand', symbol: 'R' },
+      KES: { flag: '🇰🇪', name: 'Kenyan Shilling', symbol: 'KSh' },
+      XOF: { flag: '🇨🇮', name: 'CFA Franc', symbol: 'CFA' },
+      CNY: { flag: '🇨🇳', name: 'Chinese Yuan', symbol: '¥' },
+      JPY: { flag: '🇯🇵', name: 'Japanese Yen', symbol: '¥' },
+      AED: { flag: '🇦🇪', name: 'UAE Dirham', symbol: 'د.إ' },
+      CAD: { flag: '🇨🇦', name: 'Canadian Dollar', symbol: 'C$' },
+      INR: { flag: '🇮🇳', name: 'Indian Rupee', symbol: '₹' }
     };
 
     let favoriteConversions = JSON.parse(localStorage.getItem('currencyFavorites')) || [];
@@ -2431,9 +2431,9 @@
         return `
           <div class="favorite-item" onclick="loadFavorite('${fav.from}', '${fav.to}')">
             <div class="favorite-pair">
-              <span class="favorite-flags">${fromInfo.flag} ΓåÆ ${toInfo.flag}</span>
+              <span class="favorite-flags">${fromInfo.flag} → ${toInfo.flag}</span>
               <div>
-                <div class="favorite-codes">${fav.from} ΓåÆ ${fav.to}</div>
+                <div class="favorite-codes">${fav.from} → ${fav.to}</div>
                 <div class="favorite-rate">1 ${fav.from} = ${rate < 1 ? rate.toFixed(4) : rate.toFixed(2)} ${fav.to}</div>
               </div>
             </div>

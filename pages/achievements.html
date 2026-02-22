@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -418,7 +418,7 @@
 
     <!-- Level & XP Section -->
     <div class="mtn-level-section">
-      <div class="mtn-level-icon" id="levelBadge">≡ƒÅå</div>
+      <div class="mtn-level-icon" id="levelBadge">🏆</div>
       <div class="mtn-level-info">
         <div class="mtn-level-name" id="levelTitle">Money Master</div>
         <div class="mtn-xp-text">
@@ -486,33 +486,33 @@
 
     // Achievement icons mapping
     const achievementIcons = {
-      'first_expense': '≡ƒô¥',
-      'expense_master': '≡ƒÆ╡',
-      'budget_keeper': '≡ƒôè',
-      'savings_starter': '≡ƒî▒',
-      'savings_champion': '≡ƒÆ░',
-      'goal_setter': '≡ƒÄ»',
-      'goal_crusher': '≡ƒÅå',
-      'streak_starter': '≡ƒöÑ',
-      'streak_master': 'ΓÜí',
-      'challenge_winner': '≡ƒÑç',
-      'early_bird': '≡ƒîà',
-      'night_owl': '≡ƒªë',
-      'consistent': '≡ƒôà',
-      'frugal': '≡ƒ¬Ö',
-      'investor': '≡ƒôê',
-      'default': 'Γ¡É'
+      'first_expense': '📝',
+      'expense_master': '💵',
+      'budget_keeper': '📊',
+      'savings_starter': '🌱',
+      'savings_champion': '💰',
+      'goal_setter': '🎯',
+      'goal_crusher': '🏆',
+      'streak_starter': '🔥',
+      'streak_master': '⚡',
+      'challenge_winner': '🥇',
+      'early_bird': '🌅',
+      'night_owl': '🦉',
+      'consistent': '📅',
+      'frugal': '🪙',
+      'investor': '📈',
+      'default': '⭐'
     };
 
     // Level definitions
     const levels = [
-      { name: 'Beginner', icon: '≡ƒî▒', minXP: 0 },
-      { name: 'Saver', icon: '≡ƒÆ░', minXP: 100 },
-      { name: 'Budgeter', icon: '≡ƒôè', minXP: 500 },
-      { name: 'Investor', icon: '≡ƒôê', minXP: 1000 },
-      { name: 'Expert', icon: '≡ƒÄô', minXP: 2500 },
-      { name: 'Master', icon: '≡ƒææ', minXP: 5000 },
-      { name: 'Legend', icon: '≡ƒÅå', minXP: 10000 }
+      { name: 'Beginner', icon: '🌱', minXP: 0 },
+      { name: 'Saver', icon: '💰', minXP: 100 },
+      { name: 'Budgeter', icon: '📊', minXP: 500 },
+      { name: 'Investor', icon: '📈', minXP: 1000 },
+      { name: 'Expert', icon: '🎓', minXP: 2500 },
+      { name: 'Master', icon: '👑', minXP: 5000 },
+      { name: 'Legend', icon: '🏆', minXP: 10000 }
     ];
 
     document.addEventListener('DOMContentLoaded', loadAchievements);
@@ -623,7 +623,7 @@
     }
 
     function getIcon(achievement) {
-      if (achievement.is_secret && !achievement.earned) return 'Γ¥ô';
+      if (achievement.is_secret && !achievement.earned) return '❓';
       if (achievement.icon) return achievement.icon;
       return achievementIcons[achievement.achievement_key] || achievementIcons.default;
     }
@@ -675,9 +675,9 @@
           max-width: 300px;
           animation: bounceIn 0.5s;
         ">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">≡ƒÄë</div>
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
           <h2 style="color: var(--primary-green); margin-bottom: 0.5rem;">Achievement Unlocked!</h2>
-          <div style="font-size: 3rem; margin: 1rem 0;">${achievement.icon || 'Γ¡É'}</div>
+          <div style="font-size: 3rem; margin: 1rem 0;">${achievement.icon || '⭐'}</div>
           <h3 style="margin-bottom: 0.5rem;">${achievement.name}</h3>
           <p style=\"color: var(--text-secondary); font-size: 0.9rem;\">${achievement.description}</p>
           <div style="

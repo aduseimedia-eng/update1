@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -92,7 +92,7 @@
           <div class="form-group">
             <label class="form-label">Target Amount</label>
             <div class="currency-input-wrapper">
-              <span class="currency-prefix">Γé╡</span>
+              <span class="currency-prefix">₵</span>
               <input type="number" class="form-input" id="goalAmount" placeholder="0.00" step="0.01" min="1" required>
             </div>
           </div>
@@ -178,7 +178,7 @@
         await api.createGoal(goalData);
         
         utils.hideLoading();
-        utils.showAlert('Goal created successfully! ≡ƒÄ»', 'success');
+        utils.showAlert('Goal created successfully! 🎯', 'success');
         
         closeModal();
         document.getElementById('goalForm').reset();

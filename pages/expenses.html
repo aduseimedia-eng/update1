@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -94,7 +94,7 @@
         <div class="form-group">
           <label class="form-label">Amount</label>
           <div class="currency-input-wrapper">
-            <span class="currency-prefix">Γé╡</span>
+            <span class="currency-prefix">₵</span>
             <input type="number" class="form-input" id="expenseAmount" placeholder="0.00" step="0.01" min="0.01" required>
           </div>
         </div>
@@ -153,7 +153,7 @@
                 ${utils.getCategoryIcon(expense.category)} ${expense.category}
               </div>
               <div class="expense-details">
-                ${expense.payment_method} ${expense.note ? 'ΓÇó ' + expense.note : ''}
+                ${expense.payment_method} ${expense.note ? '• ' + expense.note : ''}
               </div>
             </div>
             <div>
@@ -257,7 +257,7 @@
         await api.createExpense(expenseData);
         utils.hideLoading();
 
-        utils.showAlert('Expense added successfully! ≡ƒÄë', 'success');
+        utils.showAlert('Expense added successfully! 🎉', 'success');
         closeModal('expenseModal');
         document.getElementById('expenseForm').reset();
         await loadExpenses();

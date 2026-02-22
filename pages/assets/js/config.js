@@ -1,4 +1,4 @@
-﻿// KudiSave Configuration
+// KudiSave Configuration
 // Smart environment detection
 
 (function() {
@@ -19,19 +19,19 @@
   if (PRODUCTION_API_URL) {
     // Production mode - backend deployed
     window.KUDISAVE_API_URL = PRODUCTION_API_URL;
-    console.log('≡ƒÜÇ KudiSave: Production mode');
+    console.log('🚀 KudiSave: Production mode');
   } else if (isLocalNetwork) {
     // Local network (mobile device on same WiFi) - use same host IP
     window.KUDISAVE_API_URL = `http://${hostname}:5000/api/v1`;
-    console.log('≡ƒô▒ KudiSave: Local network mode');
+    console.log('📱 KudiSave: Local network mode');
   } else if (isLocalhost || isFileProtocol) {
     // Local development on same machine
     window.KUDISAVE_API_URL = 'http://localhost:5000/api/v1';
-    console.log('≡ƒÆ╗ KudiSave: Local development mode');
+    console.log('💻 KudiSave: Local development mode');
   } else {
     // Fallback - try same host with backend port
     window.KUDISAVE_API_URL = `http://${hostname}:5000/api/v1`;
-    console.log('≡ƒÆ╗ KudiSave: Fallback mode');
+    console.log('💻 KudiSave: Fallback mode');
   }
   
   // Log configuration

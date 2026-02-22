@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -546,7 +546,7 @@
     <!-- Stats Row -->
     <div class="mtn-stats-row">
       <div class="mtn-stat">
-        <div class="mtn-stat-value" id="totalDue">Γé╡0</div>
+        <div class="mtn-stat-value" id="totalDue">₵0</div>
         <div class="mtn-stat-label">Due This Month</div>
       </div>
       <div class="mtn-stat">
@@ -626,39 +626,39 @@
           <label class="form-label">Category</label>
           <div class="category-grid">
             <div class="category-option" data-category="electricity" onclick="selectCategory('electricity')">
-              <div class="category-option-icon">ΓÜí</div>
+              <div class="category-option-icon">⚡</div>
               <div class="category-option-label">Electricity</div>
             </div>
             <div class="category-option" data-category="water" onclick="selectCategory('water')">
-              <div class="category-option-icon">≡ƒÆº</div>
+              <div class="category-option-icon">💧</div>
               <div class="category-option-label">Water</div>
             </div>
             <div class="category-option" data-category="internet" onclick="selectCategory('internet')">
-              <div class="category-option-icon">≡ƒô╢</div>
+              <div class="category-option-icon">📶</div>
               <div class="category-option-label">Internet</div>
             </div>
             <div class="category-option" data-category="rent" onclick="selectCategory('rent')">
-              <div class="category-option-icon">≡ƒÅá</div>
+              <div class="category-option-icon">🏠</div>
               <div class="category-option-label">Rent</div>
             </div>
             <div class="category-option" data-category="phone" onclick="selectCategory('phone')">
-              <div class="category-option-icon">≡ƒô▒</div>
+              <div class="category-option-icon">📱</div>
               <div class="category-option-label">Phone</div>
             </div>
             <div class="category-option" data-category="insurance" onclick="selectCategory('insurance')">
-              <div class="category-option-icon">≡ƒ¢í∩╕Å</div>
+              <div class="category-option-icon">🛡️</div>
               <div class="category-option-label">Insurance</div>
             </div>
             <div class="category-option" data-category="subscription" onclick="selectCategory('subscription')">
-              <div class="category-option-icon">≡ƒô║</div>
+              <div class="category-option-icon">📺</div>
               <div class="category-option-label">Subscription</div>
             </div>
             <div class="category-option" data-category="loan" onclick="selectCategory('loan')">
-              <div class="category-option-icon">≡ƒÆ░</div>
+              <div class="category-option-icon">💰</div>
               <div class="category-option-label">Loan</div>
             </div>
             <div class="category-option" data-category="other" onclick="selectCategory('other')">
-              <div class="category-option-icon">≡ƒôï</div>
+              <div class="category-option-icon">📋</div>
               <div class="category-option-label">Other</div>
             </div>
           </div>
@@ -674,7 +674,7 @@
           <div class="form-group">
             <label class="form-label">Amount</label>
             <div class="currency-input-wrapper">
-              <span class="currency-prefix" id="currencyPrefix">Γé╡</span>
+              <span class="currency-prefix" id="currencyPrefix">₵</span>
               <input type="number" class="form-input has-prefix" id="billAmount" placeholder="0.00" step="0.01" min="0.01" required>
             </div>
           </div>
@@ -902,15 +902,15 @@
       }
 
       const categoryIcons = {
-        electricity: 'ΓÜí',
-        water: '≡ƒÆº',
-        internet: '≡ƒô╢',
-        rent: '≡ƒÅá',
-        phone: '≡ƒô▒',
-        insurance: '≡ƒ¢í∩╕Å',
-        subscription: '≡ƒô║',
-        loan: '≡ƒÆ░',
-        other: '≡ƒôï'
+        electricity: '⚡',
+        water: '💧',
+        internet: '📶',
+        rent: '🏠',
+        phone: '📱',
+        insurance: '🛡️',
+        subscription: '📺',
+        loan: '💰',
+        other: '📋'
       };
 
       container.innerHTML = filteredBills.map(bill => {
@@ -932,7 +932,7 @@
 
         return `
           <div class="bill-card ${status}" onclick="showBillDetails('${bill.id}')">
-            <div class="bill-icon ${bill.category}">${categoryIcons[bill.category] || '≡ƒôï'}</div>
+            <div class="bill-icon ${bill.category}">${categoryIcons[bill.category] || '📋'}</div>
             <div class="bill-details">
               <div class="bill-name">${bill.name}</div>
               <div class="bill-due ${status}">
@@ -959,21 +959,21 @@
       const daysUntil = getDaysUntilDue(bill.dueDate);
 
       const categoryIcons = {
-        electricity: 'ΓÜí',
-        water: '≡ƒÆº',
-        internet: '≡ƒô╢',
-        rent: '≡ƒÅá',
-        phone: '≡ƒô▒',
-        insurance: '≡ƒ¢í∩╕Å',
-        subscription: '≡ƒô║',
-        loan: '≡ƒÆ░',
-        other: '≡ƒôï'
+        electricity: '⚡',
+        water: '💧',
+        internet: '📶',
+        rent: '🏠',
+        phone: '📱',
+        insurance: '🛡️',
+        subscription: '📺',
+        loan: '💰',
+        other: '📋'
       };
 
       const content = `
         <div style="text-align: center; margin-bottom: 20px;">
           <div class="bill-icon ${bill.category}" style="width:70px;height:70px;font-size:32px;margin:0 auto 12px;">
-            ${categoryIcons[bill.category] || '≡ƒôï'}
+            ${categoryIcons[bill.category] || '📋'}
           </div>
           <h3 style="font-size:18px;color:var(--text-primary);margin-bottom:4px;">${bill.name}</h3>
           <span class="status-badge ${status}">${status === 'due-soon' ? 'Due Soon' : status}</span>
@@ -1035,7 +1035,7 @@
         closeModal('billDetailsModal');
         renderBills();
         updateSummary();
-        utils.showAlert('Bill marked as paid! ≡ƒÄë', 'success');
+        utils.showAlert('Bill marked as paid! 🎉', 'success');
       }
     }
 

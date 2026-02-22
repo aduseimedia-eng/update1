@@ -1,4 +1,4 @@
-﻿// KudiSave - Dashboard Logic
+// KudiSave - Dashboard Logic
 
 utils.requireAuth();
 
@@ -150,7 +150,7 @@ async function loadRecentExpenses() {
     if (!expenses || expenses.length === 0) {
       listContainer.innerHTML = `
         <div style="text-align: center; padding: 20px; color: var(--text-muted);">
-          <div style="font-size: 32px; margin-bottom: 8px;">≡ƒô¥</div>
+          <div style="font-size: 32px; margin-bottom: 8px;">📝</div>
           <p>No transactions yet</p>
         </div>
       `;
@@ -196,7 +196,7 @@ async function deleteTransaction(expenseId) {
     await api.deleteExpense(expenseId);
     
     utils.hideLoading();
-    utils.showAlert('Transaction deleted successfully Γ£ô', 'success');
+    utils.showAlert('Transaction deleted successfully ✓', 'success');
     
     // Animate deletion
     const element = document.getElementById(`expense-${expenseId}`);
@@ -259,9 +259,9 @@ async function loadBudget() {
     
     // Show budget status message
     if (usage >= 100) {
-      utils.showAlert('ΓÜá∩╕Å Budget exceeded! You\'re over your limit.', 'warning');
+      utils.showAlert('⚠️ Budget exceeded! You\'re over your limit.', 'warning');
     } else if (usage >= 90) {
-      utils.showAlert('≡ƒÜ¿ Budget warning: You\'re at 90% of your budget', 'warning');
+      utils.showAlert('🚨 Budget warning: You\'re at 90% of your budget', 'warning');
     }
 
   } catch (error) {
@@ -314,7 +314,7 @@ async function loadGamificationData() {
     const badges = badgesResponse.data || [];
     
     const badgesContainer = document.getElementById('badgesContainer');
-    const badgeEmojis = ['≡ƒÆ░', '≡ƒÄ»', '≡ƒôè', 'Γ¡É', '≡ƒöÑ', '≡ƒÆÄ'];
+    const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
     
     if (badges.length === 0) {
       badgesContainer.innerHTML = badgeEmojis.map(emoji => 
@@ -323,12 +323,12 @@ async function loadGamificationData() {
     } else {
       const earnedBadgeNames = badges.map(b => b.badge_name || b.name);
       const badgeNamesToemoji = {
-        'Saver': '≡ƒÆ░',
-        'Goal Achiever': '≡ƒÄ»',
-        'Analyst': '≡ƒôè',
-        'Top Performer': 'Γ¡É',
-        'Streak Master': '≡ƒöÑ',
-        'Platinum Member': '≡ƒÆÄ'
+        'Saver': '💰',
+        'Goal Achiever': '🎯',
+        'Analyst': '📊',
+        'Top Performer': '⭐',
+        'Streak Master': '🔥',
+        'Platinum Member': '💎'
       };
       
       badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
@@ -339,11 +339,11 @@ async function loadGamificationData() {
 
     // Set motivational message
     const quotes = [
-      "Every cedi saved is a cedi earned! ≡ƒÆ¬",
-      "Small steps lead to big wins! ≡ƒÜÇ",
-      "Your future self will thank you! ≡ƒîƒ",
-      "Building wealth, one day at a time! ≡ƒôê",
-      "Stay consistent, stay wealthy! ≡ƒÆ░"
+      "Every cedi saved is a cedi earned! 💪",
+      "Small steps lead to big wins! 🚀",
+      "Your future self will thank you! 🌟",
+      "Building wealth, one day at a time! 📈",
+      "Stay consistent, stay wealthy! 💰"
     ];
     const motivationalEl = document.getElementById('motivationalMessage');
     if (motivationalEl) {
@@ -469,7 +469,7 @@ async function handleAddExpense(event) {
     // Award XP for expense tracking
     celebrateXPGain(10); // Award 10 XP for tracking expense
     
-    showFunToast('Expense added successfully! +10 XP earned! ≡ƒÄë', '≡ƒÆ╕', 'success');
+    showFunToast('Expense added successfully! +10 XP earned! 🎉', '💸', 'success');
     
     closeModal('expenseModal');
     document.getElementById('expenseForm').reset();
@@ -524,7 +524,7 @@ async function handleAddIncome(event) {
     await api.createIncome(incomeData);
     
     utils.hideLoading();
-    showFunToast('Income added successfully! ≡ƒÆ░', '≡ƒÆ╡', 'success');
+    showFunToast('Income added successfully! 💰', '💵', 'success');
     
     closeModal('incomeModal');
     document.getElementById('incomeForm').reset();
@@ -583,7 +583,7 @@ async function handleSetBudget(event) {
     await api.createBudget(budgetData);
     
     utils.hideLoading();
-    showFunToast('Budget set successfully! ≡ƒÆ╝', '≡ƒÆ░', 'success');
+    showFunToast('Budget set successfully! 💼', '💰', 'success');
     
     closeModal('budgetModal');
     document.getElementById('budgetForm').reset();
@@ -656,7 +656,7 @@ async function loadWidgets() {
       if (billsResponse.success && billsResponse.data) {
         const dueBills = (billsResponse.data.overdue_count || billsResponse.data.overdue || 0) + (billsResponse.data.due_soon_count || billsResponse.data.due_soon || 0);
         const billsCountEl = document.getElementById('billsDueCount');
-        if (billsCountEl) billsCountEl.textContent = dueBills > 0 ? dueBills : 'ΓÇô';
+        if (billsCountEl) billsCountEl.textContent = dueBills > 0 ? dueBills : '–';
       }
     } catch (e) { /* Bills API not available */ }
 
@@ -666,7 +666,7 @@ async function loadWidgets() {
       if (challengesResponse.success) {
         const challengesEl = document.getElementById('activeChallenges');
         const n = challengesResponse.data.active_challenges || 0;
-        if (challengesEl) challengesEl.textContent = n > 0 ? n : 'ΓÇô';
+        if (challengesEl) challengesEl.textContent = n > 0 ? n : '–';
       }
     } catch (e) { /* Challenges API not available */ }
 
@@ -676,7 +676,7 @@ async function loadWidgets() {
       if (achievementsResponse.success) {
         const achievementsEl = document.getElementById('achievementsEarned');
         const n = achievementsResponse.data.earned_achievements || 0;
-        if (achievementsEl) achievementsEl.textContent = n > 0 ? n : 'ΓÇô';
+        if (achievementsEl) achievementsEl.textContent = n > 0 ? n : '–';
       }
     } catch (e) { /* Achievements API not available */ }
 
@@ -711,13 +711,13 @@ async function loadSpendingInsights() {
 
   // Fun loading messages
   const loadingMsgs = [
-    'Crunching your numbers... ≡ƒº«',
-    'Analyzing your spending brain... ≡ƒºá',
-    'Consulting the money oracle... ≡ƒö«',
-    'Teaching your cedis some tricks... ≡ƒÄ¬',
-    'Reading your financial fortune... Γ¡É',
-    'Summoning 30 insights... ≡ƒ¬ä',
-    'Scanning every cedi and pesewa... ≡ƒÆ░'
+    'Crunching your numbers... 🧮',
+    'Analyzing your spending brain... 🧠',
+    'Consulting the money oracle... 🔮',
+    'Teaching your cedis some tricks... 🎪',
+    'Reading your financial fortune... ⭐',
+    'Summoning 30 insights... 🪄',
+    'Scanning every cedi and pesewa... 💰'
   ];
 
   if (greetingEl) {
@@ -741,7 +741,7 @@ async function loadSpendingInsights() {
       insightsSliderState.total = insights.length;
       insightsSliderState.index = 0;
 
-      if (countBadge) countBadge.textContent = `${insights.length} ≡ƒÄ»`;
+      if (countBadge) countBadge.textContent = `${insights.length} 🎯`;
 
       // Fun greeting based on insight count & mix
       if (greetingEl) {
@@ -749,12 +749,12 @@ async function loadSpendingInsights() {
         const hasAlert = insights.some(i => i.type === 'alert');
         const count = insights.length;
         const greetings = count >= 10
-          ? [`${count} insights about YOUR money! Swipe to explore ≡ƒæë`, `Loaded ${count} smart insights! Your money has STORIES ≡ƒôû`, `${count} insights ready! Slide through your financial storybook Γ£¿`]
+          ? [`${count} insights about YOUR money! Swipe to explore 👉`, `Loaded ${count} smart insights! Your money has STORIES 📖`, `${count} insights ready! Slide through your financial storybook ✨`]
           : hasPositive && !hasAlert
-          ? ['You\'re doing amazing! Here\'s why ≡ƒæç', 'Look at you go! ≡ƒîƒ Your highlights:', 'Your money game is strong! ≡ƒÆ¬ Check it:']
+          ? ['You\'re doing amazing! Here\'s why 👇', 'Look at you go! 🌟 Your highlights:', 'Your money game is strong! 💪 Check it:']
           : hasAlert
-          ? ['Heads up! Some things need your attention ≡ƒæÇ', 'Let\'s talk about your money moves ≡ƒÆ¼', 'A few things to keep an eye on ≡ƒöì']
-          : ['Here\'s what your money has been up to ≡ƒæç', 'Your spending story this week ≡ƒôû', 'Fresh insights just for you Γ£¿'];
+          ? ['Heads up! Some things need your attention 👀', 'Let\'s talk about your money moves 💬', 'A few things to keep an eye on 🔍']
+          : ['Here\'s what your money has been up to 👇', 'Your spending story this week 📖', 'Fresh insights just for you ✨'];
         greetingEl.textContent = greetings[Math.floor(Math.random() * greetings.length)];
       }
 
@@ -798,7 +798,7 @@ async function loadSpendingInsights() {
       const emptyMsgs = [
         { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
         { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
-        { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game ΓÇö but with real money!' },
+        { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
         { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
       ];
       const msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
@@ -939,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
       refreshBtn.classList.add('spinning');
       stopAutoPlayTimer();
       const greetingEl = document.getElementById('insightsGreeting');
-      const refreshMsgs = ['Shuffling your insights... ≡ƒÄ▓', 'Getting fresh data... ≡ƒìâ', 'Recalculating genius... ≡ƒºáΓ£¿', 'Reloading 30 money wisdom bombs... ≡ƒÆú'];
+      const refreshMsgs = ['Shuffling your insights... 🎲', 'Getting fresh data... 🍃', 'Recalculating genius... 🧠✨', 'Reloading 30 money wisdom bombs... 💣'];
       if (greetingEl) greetingEl.textContent = refreshMsgs[Math.floor(Math.random() * refreshMsgs.length)];
       await loadSpendingInsights();
       setTimeout(() => refreshBtn.classList.remove('spinning'), 600);
@@ -948,7 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ================================
-// FUN & LIVELY INTERACTIONS ≡ƒÄë
+// FUN & LIVELY INTERACTIONS 🎉
 // ================================
 
 // Animated number counter
@@ -1015,7 +1015,7 @@ function showConfetti() {
 }
 
 // Fun toast notification
-function showFunToast(message, emoji = '≡ƒÄë', type = 'success') {
+function showFunToast(message, emoji = '🎉', type = 'success') {
   const existing = document.querySelector('.fun-toast');
   if (existing) existing.remove();
   
@@ -1071,7 +1071,7 @@ function showFunToast(message, emoji = '≡ƒÄë', type = 'success') {
 // Celebrate achievement unlock
 function celebrateAchievement(title) {
   showConfetti();
-  showFunToast(`Achievement Unlocked: ${title}!`, '≡ƒÅå');
+  showFunToast(`Achievement Unlocked: ${title}!`, '🏆');
   
   // Add sound effect (web audio)
   try {
@@ -1096,7 +1096,7 @@ function celebrateAchievement(title) {
 // Money saved celebration
 function celebrateSavings(amount) {
   if (amount > 100) {
-    showFunToast(`You saved ${utils.formatCurrency(amount)} this month!`, '≡ƒÆ░');
+    showFunToast(`You saved ${utils.formatCurrency(amount)} this month!`, '💰');
     document.querySelector('.balance-amount')?.classList.add('animate-heartbeat');
     setTimeout(() => {
       document.querySelector('.balance-amount')?.classList.remove('animate-heartbeat');
@@ -1107,17 +1107,17 @@ function celebrateSavings(amount) {
 // Streak celebration
 function celebrateStreak(days) {
   if (days === 7) {
-    showFunToast('7 Day Streak! Keep it up! ≡ƒöÑ', '≡ƒöÑ');
+    showFunToast('7 Day Streak! Keep it up! 🔥', '🔥');
     showConfetti();
   } else if (days === 30) {
-    showFunToast('30 Day Streak! You\'re amazing! ≡ƒÅå', '≡ƒÅå');
+    showFunToast('30 Day Streak! You\'re amazing! 🏆', '🏆');
     showConfetti();
   }
 }
 
 // XP gain celebration
 function celebrateXPGain(amount) {
-  showFunToast(`+${amount} XP earned! ≡ƒîƒ`, 'Γ¡É');
+  showFunToast(`+${amount} XP earned! 🌟`, '⭐');
   
   // Animate the XP bar
   const xpBar = document.getElementById('xpProgress');
@@ -1153,7 +1153,7 @@ function celebrateLevelUp(newLevel) {
       color: white;
       animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     ">
-      <div style="font-size: 80px; margin-bottom: 20px;">≡ƒÄë</div>
+      <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
       <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Level Up!</h1>
       <div style="
         font-size: 64px;
@@ -1294,16 +1294,16 @@ function addEmojiReaction(element, emoji) {
 // Daily motivational quotes with time-based variety
 function getDailyQuote() {
   const quotes = [
-    { text: "Every cedi saved is a cedi earned! ≡ƒÆ¬", emoji: "≡ƒÆ¬" },
-    { text: "Small steps lead to big wins! ≡ƒÜÇ", emoji: "≡ƒÜÇ" },
-    { text: "Your future self will thank you! ≡ƒîƒ", emoji: "≡ƒîƒ" },
-    { text: "Building wealth, one day at a time! ≡ƒôê", emoji: "≡ƒôê" },
-    { text: "Stay consistent, stay wealthy! ≡ƒÆ░", emoji: "≡ƒÆ░" },
-    { text: "Financial freedom starts today! ≡ƒÄ»", emoji: "≡ƒÄ»" },
-    { text: "Smart money moves pay off! ≡ƒºá", emoji: "≡ƒºá" },
-    { text: "Track today, prosper tomorrow! Γ£¿", emoji: "Γ£¿" },
-    { text: "Discipline is the bridge to success! ≡ƒîë", emoji: "≡ƒîë" },
-    { text: "Every budget kept is a goal met! ≡ƒÅå", emoji: "≡ƒÅå" }
+    { text: "Every cedi saved is a cedi earned! 💪", emoji: "💪" },
+    { text: "Small steps lead to big wins! 🚀", emoji: "🚀" },
+    { text: "Your future self will thank you! 🌟", emoji: "🌟" },
+    { text: "Building wealth, one day at a time! 📈", emoji: "📈" },
+    { text: "Stay consistent, stay wealthy! 💰", emoji: "💰" },
+    { text: "Financial freedom starts today! 🎯", emoji: "🎯" },
+    { text: "Smart money moves pay off! 🧠", emoji: "🧠" },
+    { text: "Track today, prosper tomorrow! ✨", emoji: "✨" },
+    { text: "Discipline is the bridge to success! 🌉", emoji: "🌉" },
+    { text: "Every budget kept is a goal met! 🏆", emoji: "🏆" }
   ];
   
   const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
@@ -1381,12 +1381,12 @@ function showAchievementUnlockNotification(achievement) {
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       border: 2px solid rgba(255,255,255,0.1);
     ">
-      <div style="font-size: 4.5rem; margin-bottom: 1.2rem; animation: pulse 1s infinite;">≡ƒÄë</div>
+      <div style="font-size: 4.5rem; margin-bottom: 1.2rem; animation: pulse 1s infinite;">🎉</div>
       <h2 style="color: #FFD700; margin-bottom: 0.8rem; font-size: 22px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
         Achievement Unlocked!
       </h2>
       <div style="font-size: 3.5rem; margin: 1.2rem 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">
-        ${achievement.icon || 'Γ¡É'}
+        ${achievement.icon || '⭐'}
       </div>
       <h3 style="color: white; margin-bottom: 0.6rem; font-size: 20px; font-weight: 600;">
         ${achievement.name || 'New Achievement'}
@@ -1407,7 +1407,7 @@ function showAchievementUnlockNotification(achievement) {
         font-size: 15px;
         box-shadow: 0 4px 12px rgba(255,215,0,0.4);
       ">
-        <span style="font-size: 18px;">Γ¡É</span>
+        <span style="font-size: 18px;">⭐</span>
         +${achievement.xp_reward || 0} XP
       </div>
     </div>
