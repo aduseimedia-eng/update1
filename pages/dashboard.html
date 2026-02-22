@@ -1628,6 +1628,59 @@
       justify-content: center;
       padding: 8px 2px 0;
     }
+
+    /* Feature Widgets */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .widget-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 14px 10px 12px;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .widget-card:active { transform: scale(0.95); }
+    .widget-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .widget-icon i { width: 17px; height: 17px; }
+    .bills-icon { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .challenges-icon { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .badges-icon { background: rgba(234,179,8,0.1); color: #eab308; }
+    .widget-counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .widget-counter.bills-active { background: rgba(245,158,11,0.13); color: #f59e0b; }
+    .widget-counter.challenges-active { background: rgba(99,102,241,0.13); color: #6366f1; }
+    .widget-counter.badges-active { background: rgba(234,179,8,0.13); color: #ca8a04; }
+    .widget-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
   </style>
 </head>
 <body>
@@ -1814,24 +1867,24 @@
     </div>
 
     <!-- Feature Widgets -->
-    <div class="widgets-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
+    <div class="widgets-grid">
       <!-- Bills Widget -->
-      <a href="bills.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
-        <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="calendar-check"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="billsDueCount">–</div>
-        <div style="font-size: 10px; color: var(--text-muted);">Bills Due</div>
+      <a href="bills.html" class="widget-card">
+        <div class="widget-icon bills-icon"><i data-lucide="calendar-check"></i></div>
+        <div class="widget-counter" id="billsDueCount">–</div>
+        <div class="widget-label">Bills Due</div>
       </a>
       <!-- Challenges Widget -->
-      <a href="challenges.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
-        <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="trophy"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="activeChallenges">–</div>
-        <div style="font-size: 10px; color: var(--text-muted);">Challenges</div>
+      <a href="challenges.html" class="widget-card">
+        <div class="widget-icon challenges-icon"><i data-lucide="swords"></i></div>
+        <div class="widget-counter" id="activeChallenges">–</div>
+        <div class="widget-label">Challenges</div>
       </a>
-      <!-- Achievements Widget -->
-      <a href="achievements.html" class="widget-card" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 12px; text-decoration: none; text-align: center;">
-        <div style="font-size: 20px; margin-bottom: 4px; color: var(--primary-light);"><i data-lucide="award"></i></div>
-        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);" id="achievementsEarned">–</div>
-        <div style="font-size: 10px; color: var(--text-muted);">Badges</div>
+      <!-- Badges Widget -->
+      <a href="achievements.html" class="widget-card">
+        <div class="widget-icon badges-icon"><i data-lucide="award"></i></div>
+        <div class="widget-counter" id="achievementsEarned">–</div>
+        <div class="widget-label">Badges</div>
       </a>
     </div>
 
