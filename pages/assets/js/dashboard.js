@@ -654,10 +654,11 @@ async function loadWidgets() {
     try {
       const billsResponse = await api.get('/bills/summary');
       if (billsResponse.success && billsResponse.data) {
-        const dueBills = (billsResponse.data.overdue_count || billsResponse.data.overdue || 0) + (billsResponse.data.due_soon_count || billsResponse.data.due_soon || 0);
+        const d = billsResponse.data;
+        const dueBills = (parseInt(d.overdue_count) || 0) + (parseInt(d.due_soon_count) || 0) + (parseInt(d.upcoming_count) || 0);
         const billsCountEl = document.getElementById('billsDueCount');
         if (billsCountEl) {
-          billsCountEl.textContent = dueBills > 0 ? dueBills : '–';
+          billsCountEl.textContent = dueBills;
           billsCountEl.classList.toggle('bills-active', dueBills > 0);
         }
       }
@@ -668,9 +669,9 @@ async function loadWidgets() {
       const challengesResponse = await api.get('/challenges/stats');
       if (challengesResponse.success) {
         const challengesEl = document.getElementById('activeChallenges');
-        const n = challengesResponse.data.active_challenges || 0;
+        const n = parseInt(challengesResponse.data.active_count) || 0;
         if (challengesEl) {
-          challengesEl.textContent = n > 0 ? n : '–';
+          challengesEl.textContent = n;
           challengesEl.classList.toggle('challenges-active', n > 0);
         }
       }
@@ -681,9 +682,9 @@ async function loadWidgets() {
       const achievementsResponse = await api.get('/achievements/stats');
       if (achievementsResponse.success) {
         const achievementsEl = document.getElementById('achievementsEarned');
-        const n = achievementsResponse.data.earned_achievements || 0;
+        const n = parseInt(achievementsResponse.data.earned_count) || 0;
         if (achievementsEl) {
-          achievementsEl.textContent = n > 0 ? n : '–';
+          achievementsEl.textContent = n;
           achievementsEl.classList.toggle('badges-active', n > 0);
         }
       }
