@@ -303,7 +303,7 @@
 
       if (!emailAddress) {
         showToast('No email found. Please register again.', 'error');
-        setTimeout(function() { window.location.href = 'index.html'; }, 2000);
+        setTimeout(function() { window.location.href = '../index.html'; }, 2000);
         return;
       }
 
@@ -450,7 +450,7 @@
           sessionStorage.removeItem('pendingEmailVerification');
 
           setTimeout(function() {
-            window.location.href = 'index.html?verified=true';
+            window.location.href = '../index.html?verified=true';
           }, 2000);
         });
       })

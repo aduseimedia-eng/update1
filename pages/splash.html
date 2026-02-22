@@ -128,11 +128,11 @@
 
     function getRedirectUrl() {
       if (isLoggedIn) {
-        return 'pages/dashboard.html';
+        return 'dashboard.html';
       } else if (!hasCompletedOnboarding) {
         return 'onboarding.html';
       } else {
-        return 'index.html';
+        return '../index.html';
       }
     }
 

@@ -21,7 +21,7 @@
       const hasSeenSplash = sessionStorage.getItem('splashShown');
       if (!hasSeenSplash) {
         sessionStorage.setItem('splashShown', 'true');
-        window.location.href = 'splash.html';
+        window.location.href = 'pages/splash.html';
       }
     })();
   </script>
@@ -1017,7 +1017,7 @@
       const isLoggedIn = localStorage.getItem('token');
       if (!hasVisited && !isLoggedIn) {
         localStorage.setItem('kudisave_visited', 'true');
-        window.location.href = 'splash.html';
+        window.location.href = 'pages/splash.html';
         return;
       }
     })();
@@ -1240,7 +1240,7 @@
           showToast('Email verification required. Redirecting...', 'warning');
           const email = errorData.email;
           sessionStorage.setItem('pendingEmailVerification', email);
-          setTimeout(() => { window.location.href = 'verify-email.html'; }, 1000);
+          setTimeout(() => { window.location.href = 'pages/verify-email.html'; }, 1000);
         } else {
           showToast(error.message || 'Login failed. Check your credentials.', 'error');
         }
@@ -1292,7 +1292,7 @@
           if (result.data.requiresEmailVerification) {
             showToast('Account created! Verify your email.');
             sessionStorage.setItem('pendingEmailVerification', email);
-            setTimeout(() => { window.location.href = 'verify-email.html'; }, 500);
+            setTimeout(() => { window.location.href = 'pages/verify-email.html'; }, 500);
           } else {
             showToast('Account created successfully!');
             setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 500);
