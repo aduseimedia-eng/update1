@@ -898,7 +898,7 @@ function setupInsightsSlider(container, total) {
     setTimeout(() => resumeAutoPlay(), 5000);
   }, { passive: true });
 
-  // Start auto-play (every 4 seconds)
+  // Start auto-play (every 5 seconds)
   startAutoPlay(total);
 }
 
@@ -910,7 +910,7 @@ function startAutoPlay(total) {
     if (insightsSliderState.paused) return;
     const newIdx = (insightsSliderState.index + 1) % total;
     scrollToInsight(newIdx);
-  }, 4000);
+  }, 5000);
 }
 
 function pauseAutoPlay() {
