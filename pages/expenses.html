@@ -269,6 +269,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = utils.getCurrencySymbol(); });
       loadExpenses();
     });
 

@@ -43,6 +43,8 @@ function getUserPreference(key) {
 // Update user preference locally and sync to server
 async function setUserPreference(key, value) {
   userPreferences[key] = value;
+  // Persist currency to localStorage so all pages pick it up immediately
+  if (key === 'currency') localStorage.setItem('currency', value);
   
   // Sync to server if authenticated
   const token = localStorage.getItem('token');
@@ -128,6 +130,7 @@ class APIService {
           const profile = data.data;
           userPreferences.theme = profile.theme || 'light';
           userPreferences.currency = profile.currency || 'GHS';
+          localStorage.setItem('currency', userPreferences.currency);
           userPreferences.profile_picture = profile.profile_picture;
           userPreferences.low_data_mode = profile.low_data_mode || false;
           userPreferences.last_visited_page = profile.last_visited_page || 'pages/dashboard.html';

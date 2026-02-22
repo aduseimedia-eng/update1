@@ -1466,6 +1466,8 @@ function initCurrencyDisplay() {
   if (budgetRemainingEl && budgetRemainingEl.textContent.includes('left')) {
     budgetRemainingEl.textContent = `${symbol} 0 left`;
   }
+  // Update all form modal currency prefix spans
+  document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = symbol; });
 }
 
 // Initialize on page load

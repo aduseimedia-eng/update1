@@ -1385,20 +1385,15 @@
     }
 
     async function setCurrency(code, name) {
-      try {
-        await api.put('/currency/settings', { default_currency: code });
-        currentCurrency = code;
-        localStorage.setItem('currency', code);
-        updateCurrencyDisplay();
-        closeModal('currencyModal');
-        utils.showAlert(`Currency set to ${name}`, 'success');
-      } catch (error) {
-        // Still update locally if API fails
-        currentCurrency = code;
-        localStorage.setItem('currency', code);
-        updateCurrencyDisplay();
-        closeModal('currencyModal');
-      }
+      currentCurrency = code;
+      localStorage.setItem('currency', code);
+      // Update in-memory preferences so all pages reflect change immediately
+      if (typeof setUserPreference === 'function') setUserPreference('currency', code);
+      updateCurrencyDisplay();
+      closeModal('currencyModal');
+      utils.showAlert(`Currency changed to ${name}`, 'success');
+      // Persist to server in background
+      try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
     }
 
     // Backup Functions

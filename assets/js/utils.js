@@ -65,12 +65,12 @@ const CURRENCY_CONFIG = {
   'XOF': { symbol: 'CFA', name: 'West African CFA', locale: 'fr-SN' }
 };
 
-// Get current currency from user preferences (API)
+// Get current currency from user preferences (API) with localStorage fallback
 function getCurrentCurrency() {
   if (typeof getUserPreference === 'function') {
-    return getUserPreference('currency') || 'GHS';
+    return getUserPreference('currency') || localStorage.getItem('currency') || 'GHS';
   }
-  return 'GHS';
+  return localStorage.getItem('currency') || 'GHS';
 }
 
 // Set currency preference

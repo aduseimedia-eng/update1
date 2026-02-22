@@ -960,7 +960,7 @@
 
       const sc = selectedChallenge;
       const target = sc.target_amount || sc.target_days || 0;
-      const prefix = sc.challenge_type === 'save_amount' ? '₵' : '';
+      const prefix = sc.challenge_type === 'save_amount' ? utils.getCurrencySymbol() : '';
       document.getElementById('modalIcon').textContent = challengeIcons[sc.challenge_type] || '⭐';
       document.getElementById('modalTitle').textContent = sc.title;
       document.getElementById('modalDesc').textContent = sc.description || '';
