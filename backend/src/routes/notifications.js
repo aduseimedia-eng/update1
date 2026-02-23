@@ -8,6 +8,7 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 const emailService = require('../services/emailService');
+const { triggerBillReminders, triggerWeeklySummaries } = require('../scheduledTasks');
 
 // Get notification settings
 router.get('/settings', authenticateToken, async (req, res) => {
@@ -183,6 +184,41 @@ router.put('/mark-all-read', authenticateToken, async (req, res) => {
     res.json({ success: true, message: 'All notifications marked as read' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to mark notifications as read' });
+  }
+});
+
+// ==========================================
+// ADMIN: Manual trigger endpoints (for testing)
+// In production, consider adding admin auth
+// ==========================================
+
+// Manually trigger bill reminders
+router.post('/admin/trigger-bill-reminders', authenticateToken, async (req, res) => {
+  try {
+    const count = await triggerBillReminders();
+    res.json({ 
+      success: true, 
+      message: `Bill reminders triggered. ${count} emails sent.`,
+      emailsSent: count
+    });
+  } catch (error) {
+    console.error('Bill reminder trigger error:', error);
+    res.status(500).json({ success: false, message: 'Failed to trigger bill reminders' });
+  }
+});
+
+// Manually trigger weekly summaries
+router.post('/admin/trigger-weekly-summaries', authenticateToken, async (req, res) => {
+  try {
+    const count = await triggerWeeklySummaries();
+    res.json({ 
+      success: true, 
+      message: `Weekly summaries triggered. ${count} emails sent.`,
+      emailsSent: count
+    });
+  } catch (error) {
+    console.error('Weekly summary trigger error:', error);
+    res.status(500).json({ success: false, message: 'Failed to trigger weekly summaries' });
   }
 });
 

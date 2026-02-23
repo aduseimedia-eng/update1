@@ -1,6 +1,7 @@
 const { query, transaction } = require('../config/database');
 const { updateStreak, awardXP } = require('../services/gamificationService');
 const { XP_REWARDS } = require('../config/constants');
+const { checkBudgetAndAlert } = require('../services/emailTriggerService');
 
 /**
  * Create new expense
@@ -33,6 +34,9 @@ const createExpense = async (req, res) => {
 
     // Award XP for logging expense
     await awardXP(userId, XP_REWARDS.EXPENSE_LOG, 'Expense logged');
+
+    // Check budget and send alert if needed (async, don't await)
+    checkBudgetAndAlert(userId).catch(err => console.error('Budget alert error:', err));
 
     res.status(201).json({
       success: true,

@@ -1,5 +1,6 @@
 const app = require('./src/app');
 const { pool } = require('./src/config/database');
+const { initScheduledTasks } = require('./src/scheduledTasks');
 // Only load .env in development
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -34,6 +35,9 @@ async function connectWithRetry(maxRetries, delayMs) {
       const res = await pool.query('SELECT NOW()');
       console.log('✅ Database connected successfully');
       console.log('📅 Database time:', res.rows[0].now);
+      
+      // Initialize scheduled email tasks after DB is ready
+      initScheduledTasks();
       return;
     } catch (err) {
       console.error(`❌ Failed to connect to database (attempt ${attempt}/${maxRetries}):`, err.message);
