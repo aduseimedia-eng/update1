@@ -122,9 +122,9 @@ const LEVEL_THRESHOLDS = [
 // Budget alert thresholds (percentage)
 const BUDGET_ALERT_THRESHOLDS = [50, 75, 90, 100];
 
-// Ghana phone number validation
-const GHANA_PHONE_REGEX = /^233[0-9]{9}$/;
-const GHANA_PHONE_PREFIXES = ['233'];
+// Ghana phone number validation (accepts 233XXXXXXXXX or 0XXXXXXXXX)
+const GHANA_PHONE_REGEX = /^(233[0-9]{9}|0[0-9]{9})$/;
+const GHANA_PHONE_PREFIXES = ['233', '0'];
 
 // Motivational messages for dashboard
 const MOTIVATIONAL_MESSAGES = {

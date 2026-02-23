@@ -358,9 +358,9 @@ function getTierColor(tier) {
   return colors[tier] || '#FFD700';
 }
 
-// Validate Ghana phone number
+// Validate Ghana phone number (accepts 233XXXXXXXXX or 0XXXXXXXXX)
 function validateGhanaPhone(phone) {
-  const regex = /^233[0-9]{9}$/;
+  const regex = /^(233[0-9]{9}|0[0-9]{9})$/;
   return regex.test(phone);
 }
 
@@ -368,6 +368,9 @@ function validateGhanaPhone(phone) {
 function formatPhoneNumber(phone) {
   if (phone.startsWith('233')) {
     return `+${phone.slice(0, 3)} ${phone.slice(3, 5)} ${phone.slice(5, 8)} ${phone.slice(8)}`;
+  }
+  if (phone.startsWith('0')) {
+    return `${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`;
   }
   return phone;
 }

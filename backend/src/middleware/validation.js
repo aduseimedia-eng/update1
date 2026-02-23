@@ -43,7 +43,7 @@ const registerValidation = [
   body('phone')
     .trim()
     .notEmpty().withMessage('Phone number is required')
-    .matches(GHANA_PHONE_REGEX).withMessage('Invalid Ghana phone number. Use format: 233XXXXXXXXX'),
+    .matches(GHANA_PHONE_REGEX).withMessage('Invalid Ghana phone number. Use format: 0XXXXXXXXX or 233XXXXXXXXX'),
   
   body('password')
     .notEmpty().withMessage('Password is required')

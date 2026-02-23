@@ -35,7 +35,7 @@ router.post(
     body('phone')
       .trim()
       .notEmpty().withMessage('Phone number is required')
-      .matches(/^233[0-9]{9}$/).withMessage('Invalid Ghana phone number. Use format: 233XXXXXXXXX'),
+      .matches(/^(233[0-9]{9}|0[0-9]{9})$/).withMessage('Invalid Ghana phone number. Use format: 233XXXXXXXXX or 0XXXXXXXXX'),
     handleValidationErrors
   ],
   sendPhoneOTP
@@ -51,7 +51,7 @@ router.post(
     body('phone')
       .trim()
       .notEmpty().withMessage('Phone number is required')
-      .matches(/^233[0-9]{9}$/).withMessage('Invalid Ghana phone number'),
+      .matches(/^(233[0-9]{9}|0[0-9]{9})$/).withMessage('Invalid Ghana phone number'),
     body('otp')
       .trim()
       .notEmpty().withMessage('OTP is required')
@@ -71,7 +71,7 @@ router.post(
     body('phone')
       .trim()
       .notEmpty().withMessage('Phone number is required')
-      .matches(/^233[0-9]{9}$/).withMessage('Invalid Ghana phone number. Use format: 233XXXXXXXXX'),
+      .matches(/^(233[0-9]{9}|0[0-9]{9})$/).withMessage('Invalid Ghana phone number. Use format: 233XXXXXXXXX or 0XXXXXXXXX'),
     handleValidationErrors
   ],
   resendPhoneOTP

@@ -923,14 +923,14 @@
               type="tel" 
               class="form-input" 
               id="registerPhone" 
-              placeholder="233244123456"
-              pattern="233[0-9]{9}"
+              placeholder="0244123456 or 233244123456"
+              pattern="(233[0-9]{9}|0[0-9]{9})"
               required
               autocomplete="tel"
             >
             <span class="input-icon-left"><i data-lucide="phone"></i></span>
           </div>
-          <span class="form-hint">Format: 233XXXXXXXXX</span>
+          <span class="form-hint">Format: 0XXXXXXXXX or 233XXXXXXXXX</span>
         </div>
 
         <!-- Password -->
@@ -1240,8 +1240,8 @@
         return;
       }
 
-      if (!phone.match(/^233[0-9]{9}$/)) {
-        showToast('Phone must be Ghana format: 233XXXXXXXXX', 'error');
+      if (!phone.match(/^(233[0-9]{9}|0[0-9]{9})$/)) {
+        showToast('Phone must be Ghana format: 0XXXXXXXXX or 233XXXXXXXXX', 'error');
         return;
       }
 

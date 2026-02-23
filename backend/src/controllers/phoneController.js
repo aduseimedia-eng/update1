@@ -12,11 +12,11 @@ const sendPhoneOTP = async (req, res) => {
   try {
     const { phone } = req.body;
 
-    // Validate phone format (Ghana format: 233XXXXXXXXX)
-    if (!/^233[0-9]{9}$/.test(phone)) {
+    // Validate phone format (Ghana format: 233XXXXXXXXX or 0XXXXXXXXX)
+    if (!/^(233[0-9]{9}|0[0-9]{9})$/.test(phone)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid Ghana phone number. Use format: 233XXXXXXXXX'
+        message: 'Invalid Ghana phone number. Use format: 233XXXXXXXXX or 0XXXXXXXXX'
       });
     }
 
