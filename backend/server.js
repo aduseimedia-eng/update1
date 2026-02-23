@@ -36,9 +36,6 @@ async function connectWithRetry(maxRetries, delayMs) {
       console.log('✅ Database connected successfully');
       console.log('📅 Database time:', res.rows[0].now);
       
-      // Run any pending migrations
-      await runStartupMigrations();
-      
       // Initialize scheduled email tasks after DB is ready
       initScheduledTasks();
       return;
@@ -51,22 +48,6 @@ async function connectWithRetry(maxRetries, delayMs) {
         console.error('⚠️  All database connection attempts failed. Server is running but DB is unavailable.');
       }
     }
-  }
-}
-
-// Run startup migrations (idempotent)
-async function runStartupMigrations() {
-  console.log('🔄 Running startup migrations...');
-  try {
-    // Add email notification tracking columns (idempotent)
-    await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_budget_alert_threshold INTEGER DEFAULT 0');
-    await pool.query('ALTER TABLE goals ADD COLUMN IF NOT EXISTS last_milestone_notified INTEGER DEFAULT 0');
-    await pool.query('ALTER TABLE bill_reminders ADD COLUMN IF NOT EXISTS last_reminder_sent DATE');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_bill_reminders_due_date ON bill_reminders(due_date)');
-    console.log('✅ Migrations completed');
-  } catch (err) {
-    console.error('⚠️  Migration warning:', err.message);
-    // Don't fail startup on migration errors - they may already exist
   }
 }
 
