@@ -141,10 +141,11 @@
 
     .logo-icon {
       width: auto;
-      height: 180px;
+      height: 65px;
       display: flex;
       align-items: center;
       justify-content: left;
+      flex-shrink: 0;
     }
 
     .logo-icon img {
@@ -660,6 +661,8 @@
     @media (max-width: 640px) {
       .hero { padding: 50px 0 40px; }
       
+      .logo-icon { height: 55px; }
+      
       .waitlist-form {
         flex-direction: column;
       }
@@ -694,7 +697,7 @@
       <div class="container">
         <div class="nav-inner">
           <a href="#" class="logo">
-            <div class="logo-icon"><img src="Logo.png?v=180" alt="KudiSave Logo"></div>
+            <div class="logo-icon"><img src="Logo.png?v=65" alt="KudiSave Logo"></div>
           </a>
           <div class="nav-badge">v1.0 Coming Soon</div>
         </div>
