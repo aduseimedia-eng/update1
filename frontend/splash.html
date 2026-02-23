@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -127,11 +127,11 @@
 
     function getRedirectUrl() {
       if (isLoggedIn) {
-        return 'dashboard.html';
+        return 'pages/dashboard.html';
       } else if (!hasCompletedOnboarding) {
         return 'onboarding.html';
       } else {
-        return '../index.html';
+        return 'index.html';
       }
     }
 

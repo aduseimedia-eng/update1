@@ -69,27 +69,12 @@
       text-decoration: none;
     }
 
-    .mtn-logo-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .mtn-logo-icon i {
-      width: 18px;
-      height: 18px;
-    }
-
-    .mtn-logo-text {
-      font-size: 18px;
-      font-weight: 700;
-      color: white;
-      letter-spacing: -0.3px;
+    .mtn-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
     }
 
     .mtn-topbar-actions {
@@ -1689,8 +1674,7 @@
     <!-- Top Bar: Logo + Action Icons -->
     <div class="mtn-topbar">
       <a class="mtn-logo" href="dashboard.html">
-        <div class="mtn-logo-icon"><i data-lucide="landmark"></i></div>
-        <span class="mtn-logo-text">KudiSave</span>
+        <img src="../../Secondary_Logo.png" alt="KudiSave" class="mtn-logo-img">
       </a>
       <div class="mtn-topbar-actions">
         <button class="hamburger" onclick="toggleMobileMenu()" title="Menu">

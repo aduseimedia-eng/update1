@@ -214,11 +214,11 @@
       animation: logoRing 3s ease-in-out infinite;
     }
 
-    .auth-logo-wrap i {
-      width: 34px;
-      height: 34px;
-      color: #006B3F;
-      stroke-width: 1.8;
+    .auth-logo-wrap img.auth-logo-img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      display: block;
     }
 
     @keyframes logoPulse {
@@ -707,10 +707,9 @@
       color: #00e676;
     }
 
-    .splash-overlay .splash-logo i {
-      width: 50px;
-      height: 50px;
-      stroke-width: 1.5;
+    .splash-overlay .splash-logo-img {
+      width: 100px;
+      height: auto;
     }
 
     .splash-overlay .splash-title {
@@ -800,8 +799,7 @@
 
   <!-- Splash Overlay -->
   <div class="splash-overlay hidden" id="splashOverlay">
-    <div class="splash-logo"><i data-lucide="landmark"></i></div>
-    <h1 class="splash-title">KudiSave</h1>
+    <div class="splash-logo"><img src="Secondary_Logo.png" alt="KudiSave" class="splash-logo-img"></div>
     <p class="splash-subtitle">Welcome back!</p>
     <div class="splash-loader">
       <div class="splash-dot"></div>
@@ -817,7 +815,7 @@
       <!-- Header -->
       <div class="auth-header">
         <div class="auth-logo-wrap">
-          <i data-lucide="landmark"></i>
+          <img src="Logo.png" alt="KudiSave" class="auth-logo-img">
         </div>
         <h1 class="auth-title">KudiSave</h1>
         <p class="auth-subtitle">Master your finances, one cedi at a time</p>
