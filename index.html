@@ -198,11 +198,11 @@
       margin: 0 auto 20px;
       display: flex;
       justify-content: center;
+      width: 100%;
     }
 
     .auth-logo-wrap img.auth-logo-img {
       width: 100%;
-      max-width: 340px;
       height: auto;
       object-fit: contain;
       display: block;
@@ -752,14 +752,14 @@
     }
 
     @media (max-width: 360px) {
-      .auth-logo-wrap img.auth-logo-img { max-width: 260px; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 100%; }
     }
 
     /* ===== Landscape safety ===== */
     @media (max-height: 600px) {
       .auth-container { justify-content: flex-start; padding-top: 16px; }
       .auth-header { margin-bottom: 20px; }
-      .auth-logo-wrap img.auth-logo-img { max-width: 220px; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 100%; }
     }
   </style>
 </head>
