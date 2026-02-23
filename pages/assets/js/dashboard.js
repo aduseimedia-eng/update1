@@ -650,19 +650,50 @@ function logout() {
 // Load widget data for new features
 async function loadWidgets() {
   try {
-    // Load bills summary
+    // Load bills from localStorage
     try {
-      const billsResponse = await api.get('/bills/summary');
-      if (billsResponse.success && billsResponse.data) {
-        const d = billsResponse.data;
-        const dueBills = (parseInt(d.overdue_count) || 0) + (parseInt(d.due_soon_count) || 0) + (parseInt(d.upcoming_count) || 0);
-        const billsCountEl = document.getElementById('billsDueCount');
-        if (billsCountEl) {
-          billsCountEl.textContent = dueBills;
-          billsCountEl.classList.toggle('bills-active', dueBills > 0);
+      const allBills = JSON.parse(localStorage.getItem('kudisave_bills')) || [];
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let overdue = 0, dueSoon = 0;
+      allBills.forEach(b => {
+        if (b.status === 'paid') return;
+        const due = new Date(b.dueDate); due.setHours(0, 0, 0, 0);
+        const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+        if (diff < 0) overdue++;
+        else if (diff <= 3) dueSoon++;
+      });
+      const dueBills = overdue + dueSoon;
+      const billsCountEl = document.getElementById('billsDueCount');
+      if (billsCountEl) {
+        billsCountEl.textContent = dueBills;
+        billsCountEl.classList.toggle('bills-active', dueBills > 0);
+      }
+      // Alert banner
+      const banner = document.getElementById('billsAlertBanner');
+      if (banner) {
+        if (overdue > 0 || dueSoon > 0) {
+          const isRed = overdue > 0;
+          let title, desc;
+          if (overdue > 0 && dueSoon > 0) {
+            title = `${overdue} overdue + ${dueSoon} due soon`;
+            desc = 'Tap to view and manage your bills';
+          } else if (overdue > 0) {
+            title = `${overdue} bill${overdue !== 1 ? 's' : ''} overdue!`;
+            desc = 'These bills are past their due date';
+          } else {
+            title = `${dueSoon} bill${dueSoon !== 1 ? 's' : ''} due in the next 3 days`;
+            desc = 'Tap to view and manage your bills';
+          }
+          document.getElementById('billsAlertTitle').textContent = title;
+          document.getElementById('billsAlertDesc').textContent = desc;
+          banner.querySelector('.bills-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
+          banner.classList.toggle('overdue', isRed);
+          banner.style.display = 'flex';
+        } else {
+          banner.style.display = 'none';
         }
       }
-    } catch (e) { /* Bills API not available */ }
+    } catch (e) { /* ignore */ }
 
     // Load active challenges from API
     try {
