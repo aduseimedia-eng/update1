@@ -12,6 +12,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    @font-face {
+      font-family: 'Cal Sans';
+      src: url('https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/fonts/CalSans-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- Lottie for animations -->
@@ -200,15 +209,16 @@
     }
 
     .auth-logo-wrap img.auth-logo-img {
-      width: 140px;
+      width: 200px;
       height: auto;
       object-fit: contain;
       display: block;
     }
 
     .auth-title {
+      font-family: 'Cal Sans', sans-serif;
       font-size: 26px;
-      font-weight: 800;
+      font-weight: 600;
       color: #111827;
       letter-spacing: -0.5px;
       margin-top: 0;
