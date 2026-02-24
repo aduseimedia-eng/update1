@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Subscriptions - KudiSave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { padding-top: 0 !important; }
+
+    /* Header */
+    .mtn-header { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 80%, #1a1a2e 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: 24px; overflow: hidden; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
+    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; text-decoration: none; }
+    .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
+    .mtn-back-btn i { width: 18px; height: 18px; }
+    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+    .mtn-add-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; }
+    .mtn-add-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.25); }
+    .mtn-add-btn i { width: 20px; height: 20px; }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px 8px 16px; position: relative; z-index: 1; text-align: center; }
+    .mtn-info-icon { width: 40px; height: 40px; border-radius: 14px; background: rgba(99,102,241,0.25); border: 1px solid rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .mtn-info-icon i { width: 20px; height: 20px; }
+    .mtn-info-title { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.2px; }
+    .mtn-info-subtitle { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
+    .mtn-header-curve { position: absolute; bottom: -1px; left: 0; right: 0; height: 24px; background: var(--bg-primary, #f5f6fa); border-radius: 24px 24px 0 0; }
+    [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
+    .mtn-header-spacer { height: 148px; }
+
+    /* Summary card */
+    .summary-card { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 60%, #533483 100%); border-radius: 20px; padding: 20px; margin: 0 0 16px 0; color: white; position: relative; overflow: hidden; }
+    .summary-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(165,180,252,0.2) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .summary-item { text-align: center; }
+    .summary-value { font-size: 18px; font-weight: 800; color: #a5b4fc; letter-spacing: -0.5px; }
+    .summary-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
+    .summary-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+    .summary-monthly { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+    .summary-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 14px 0 0 0; }
+
+    /* Alert banners */
+    .alert-banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.4; }
+    .alert-banner i { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-warning { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+    .alert-danger  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+    .alert-info    { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
+    .alert-success { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+
+    /* Filter tabs */
+    .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--card-bg, #fff); color: var(--text-secondary, #6b7280); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .filter-tab.active { background: #6366f1; border-color: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+    .filter-tab .tab-count { display: inline-flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.12); width: 18px; height: 18px; border-radius: 50%; font-size: 10px; margin-left: 4px; }
+    .filter-tab.active .tab-count { background: rgba(255,255,255,0.25); }
+
+    /* Subscription card */
+    .sub-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color, #e5e7eb); transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .sub-card:active { transform: scale(0.99); }
+    .sub-card.overdue { border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.03); }
+    .sub-card.due-soon { border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.03); }
+    .sub-card.cancelled { opacity: 0.5; }
+    .sub-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .sub-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; font-weight: 700; }
+    .sub-name { font-size: 16px; font-weight: 700; color: var(--text-primary, #1f2937); }
+    .sub-category { font-size: 12px; color: var(--text-secondary, #6b7280); margin-top: 1px; font-weight: 500; }
+    .sub-amount { margin-left: auto; text-align: right; }
+    .sub-amount-value { font-size: 18px; font-weight: 800; color: #6366f1; }
+    .sub-amount-freq { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; }
+    .sub-meta { display: flex; align-items: center; justify-content: space-between; }
+    .due-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+    .due-badge.overdue { background: rgba(239,68,68,0.1); color: #ef4444; }
+    .due-badge.due-soon { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .due-badge.upcoming { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .due-badge.paid { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .due-badge i { width: 13px; height: 13px; }
+    .sub-actions { display: flex; gap: 8px; }
+    .btn-pay { padding: 8px 16px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-pay:active { transform: scale(0.95); opacity: 0.9; }
+    .btn-icon-action { width: 34px; height: 34px; border-radius: 10px; background: var(--bg-secondary, #f3f4f6); border: 1px solid var(--border-color, #e5e7eb); color: var(--text-secondary, #6b7280); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .btn-icon-action i { width: 15px; height: 15px; }
+    .btn-icon-action.danger { color: #ef4444; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-secondary, #6b7280); }
+    .empty-state i { width: 48px; height: 48px; margin: 0 auto 16px; opacity: 0.3; }
+    .empty-state h3 { font-size: 16px; font-weight: 700; color: var(--text-primary, #374151); margin-bottom: 6px; }
+    .empty-state p { font-size: 14px; line-height: 1.5; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); overflow-y: auto; padding: 20px 16px; }
+    .modal.active { display: flex; align-items: flex-end; justify-content: center; }
+    .modal-sheet { background: var(--card-bg, #fff); border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-width: 480px; animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1); max-height: 92vh; overflow-y: auto; }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-color, #e5e7eb); margin: -10px auto 20px; }
+    .modal-title { font-size: 20px; font-weight: 800; color: var(--text-primary, #1f2937); margin-bottom: 20px; letter-spacing: -0.3px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .form-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); color: var(--text-primary, #1f2937); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+    .form-input:focus { border-color: #6366f1; background: var(--card-bg, #fff); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .currency-input-wrapper { position: relative; }
+    .currency-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 700; color: var(--text-secondary, #6b7280); pointer-events: none; }
+    .currency-input-wrapper .form-input { padding-left: 28px; }
+
+    /* Service presets */
+    .presets-label { font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+    .presets-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+    .preset-btn { padding: 10px 4px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); cursor: pointer; transition: all 0.2s; text-align: center; }
+    .preset-btn:active { transform: scale(0.95); }
+    .preset-btn.selected { border-color: #6366f1; background: rgba(99,102,241,0.08); }
+    .preset-emoji { font-size: 20px; display: block; margin-bottom: 3px; }
+    .preset-name { font-size: 10px; font-weight: 600; color: var(--text-secondary, #6b7280); }
+
+    /* Fab */
+    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; box-shadow: 0 8px 24px rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; transition: all 0.25s; }
+    .fab:active { transform: scale(0.92); }
+    .fab i { width: 24px; height: 24px; }
+
+    /* Loading skeleton */
+    .skeleton { background: linear-gradient(90deg, var(--bg-secondary,#f3f4f6) 25%, var(--border-color,#e5e7eb) 50%, var(--bg-secondary,#f3f4f6) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; height: 100px; margin-bottom: 12px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="mtn-header">
+    <div class="mtn-topbar">
+      <a href="dashboard.html" class="mtn-back-btn"><i data-lucide="arrow-left"></i></a>
+      <span class="mtn-page-title">Subscriptions</span>
+      <button class="mtn-add-btn" onclick="openModal()" aria-label="Add subscription"><i data-lucide="plus"></i></button>
+    </div>
+    <div class="mtn-info-section">
+      <div class="mtn-info-icon"><i data-lucide="credit-card"></i></div>
+      <div class="mtn-info-title">Manage Subscriptions</div>
+      <div class="mtn-info-subtitle">Track recurring bills & services</div>
+    </div>
+    <div class="mtn-header-curve"></div>
+  </header>
+  <div class="mtn-header-spacer"></div>
+
+  <div class="container" style="padding-bottom: 100px;">
+    <!-- Summary Card -->
+    <div id="summaryCard" class="summary-card" style="display:none;">
+      <div class="summary-title">Monthly Subscriptions</div>
+      <div class="summary-monthly" id="summaryMonthly">₵0.00</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px;" id="summaryYearly">₵0.00 / year</div>
+      <hr class="summary-divider">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-value" id="summaryActive">0</div>
+          <div class="summary-label">Active</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-value" id="summaryDueSoon" style="color:#fbbf24;">0</div>
+          <div class="summary-label">Due Soon</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-value" id="summaryOverdue" style="color:#f87171;">0</div>
+          <div class="summary-label">Overdue</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div id="alertsContainer"></div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" data-filter="all" onclick="setFilter('all', this)">All <span class="tab-count" id="countAll">0</span></button>
+      <button class="filter-tab" data-filter="active" onclick="setFilter('active', this)">Active <span class="tab-count" id="countActive">0</span></button>
+      <button class="filter-tab" data-filter="due-soon" onclick="setFilter('due-soon', this)">Due Soon <span class="tab-count" id="countDueSoon">0</span></button>
+      <button class="filter-tab" data-filter="overdue" onclick="setFilter('overdue', this)">Overdue <span class="tab-count" id="countOverdue">0</span></button>
+      <button class="filter-tab" data-filter="cancelled" onclick="setFilter('cancelled', this)">Cancelled <span class="tab-count" id="countCancelled">0</span></button>
+    </div>
+
+    <!-- Subscriptions List -->
+    <div id="subscriptionsContainer">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" onclick="openModal()" aria-label="Add subscription"><i data-lucide="plus"></i></button>
+
+  <!-- Add/Edit Subscription Modal -->
+  <div id="subModal" class="modal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="modalTitle" class="modal-title">New Subscription</div>
+
+      <!-- Service Presets -->
+      <div class="presets-label">Quick Add</div>
+      <div class="presets-grid" id="presetGrid">
+        <button class="preset-btn" onclick="applyPreset('Netflix','Netflix','Entertainment',49.99)" data-name="Netflix"><span class="preset-emoji">📺</span><span class="preset-name">Netflix</span></button>
+        <button class="preset-btn" onclick="applyPreset('Spotify','Spotify','Entertainment',14.99)" data-name="Spotify"><span class="preset-emoji">🎵</span><span class="preset-name">Spotify</span></button>
+        <button class="preset-btn" onclick="applyPreset('Prime','Amazon Prime','Entertainment',24.99)" data-name="Prime"><span class="preset-emoji">📦</span><span class="preset-name">Prime</span></button>
+        <button class="preset-btn" onclick="applyPreset('YouTube','YouTube Premium','Entertainment',19.99)" data-name="YouTube"><span class="preset-emoji">▶️</span><span class="preset-name">YouTube</span></button>
+        <button class="preset-btn" onclick="applyPreset('Canva','Canva Pro','Software',29.99)" data-name="Canva"><span class="preset-emoji">🎨</span><span class="preset-name">Canva</span></button>
+        <button class="preset-btn" onclick="applyPreset('ChatGPT','ChatGPT Plus','Software',85.99)" data-name="ChatGPT"><span class="preset-emoji">🤖</span><span class="preset-name">ChatGPT</span></button>
+        <button class="preset-btn" onclick="applyPreset('Showmax','Showmax','Entertainment',39.99)" data-name="Showmax"><span class="preset-emoji">🎬</span><span class="preset-name">Showmax</span></button>
+        <button class="preset-btn" onclick="applyPreset('iCloud','iCloud Storage','Software',9.99)" data-name="iCloud"><span class="preset-emoji">☁️</span><span class="preset-name">iCloud</span></button>
+      </div>
+
+      <form id="subForm" onsubmit="handleSubmitSub(event)">
+        <input type="hidden" id="editSubId">
+        <div class="form-group">
+          <label class="form-label">Service Name</label>
+          <input type="text" class="form-input" id="subName" placeholder="e.g., Netflix" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Amount</label>
+            <div class="currency-input-wrapper">
+              <span class="currency-prefix" id="currencyPrefix">₵</span>
+              <input type="number" class="form-input" id="subAmount" placeholder="0.00" step="0.01" min="0.01" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Frequency</label>
+            <select class="form-input" id="subFrequency">
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" id="subCategory">
+              <option value="Entertainment">Entertainment</option>
+              <option value="Software">Software</option>
+              <option value="Health">Health</option>
+              <option value="Education">Education</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Finance">Finance</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Next Due Date</label>
+            <input type="date" class="form-input" id="subNextDue" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (optional)</label>
+          <input type="text" class="form-input" id="subNotes" placeholder="e.g., Family plan">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <button type="button" class="btn" style="flex:1; background:var(--bg-secondary,#f3f4f6); color:var(--text-secondary,#6b7280); border:none;" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn" style="flex:2; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; border:none; font-weight:700;" id="formSubmitBtn">Save Subscription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    utils.requireAuth();
+
+    let allSubscriptions = [];
+    let currentFilter = 'all';
+
+    // ─── Load & Render ──────────────────────────────────────────────────────────
+
+    async function loadAll() {
+      try {
+        const [subsResp, insightsResp] = await Promise.all([
+          api.getSubscriptions(),
+          api.getSubscriptionInsights()
+        ]);
+
+        allSubscriptions = Array.isArray(subsResp.data) ? subsResp.data : [];
+        renderInsights(insightsResp.data);
+        renderList();
+        updateCounts();
+      } catch (err) {
+        console.error(err);
+        utils.showAlert('Failed to load subscriptions', 'error');
+        document.getElementById('subscriptionsContainer').innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="wifi-off"></i>
+            <h3>Couldn't load data</h3>
+            <p>Check your connection and try again.</p>
+          </div>`;
+        lucide.createIcons({ node: document.getElementById('subscriptionsContainer') });
+      }
+    }
+
+    function renderInsights(data) {
+      if (!data) return;
+
+      const sym = utils.getCurrencySymbol();
+      const card = document.getElementById('summaryCard');
+      card.style.display = 'block';
+
+      document.getElementById('summaryMonthly').textContent =
+        sym + (data.total_monthly_cost || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('summaryYearly').textContent =
+        sym + (data.total_yearly_cost || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' / year';
+      document.getElementById('summaryActive').textContent = data.total_active || 0;
+      document.getElementById('summaryDueSoon').textContent = (data.upcoming_this_week || []).length;
+      document.getElementById('summaryOverdue').textContent = (data.overdue || []).length;
+
+      // Alerts
+      const alertsEl = document.getElementById('alertsContainer');
+      alertsEl.innerHTML = '';
+      if (data.alerts && data.alerts.length > 0) {
+        data.alerts.forEach(a => {
+          const iconMap = { warning: 'alert-triangle', danger: 'alert-circle', info: 'info', success: 'check-circle' };
+          alertsEl.innerHTML += `
+            <div class="alert-banner alert-${a.type}">
+              <i data-lucide="${iconMap[a.type] || 'info'}"></i>
+              <span>${a.message}</span>
+            </div>`;
+        });
+        lucide.createIcons({ node: alertsEl });
+      }
+    }
+
+    function renderList() {
+      const container = document.getElementById('subscriptionsContainer');
+      let filtered = allSubscriptions;
+
+      if (currentFilter === 'active') filtered = allSubscriptions.filter(s => s.status === 'active');
+      else if (currentFilter === 'due-soon') filtered = allSubscriptions.filter(s => s.is_due_soon && s.status === 'active');
+      else if (currentFilter === 'overdue') filtered = allSubscriptions.filter(s => s.is_overdue && s.status === 'active');
+      else if (currentFilter === 'cancelled') filtered = allSubscriptions.filter(s => s.status === 'cancelled');
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="credit-card"></i>
+            <h3>No subscriptions here</h3>
+            <p>Tap <strong>+</strong> to add your first subscription.</p>
+          </div>`;
+        lucide.createIcons({ node: container });
+        return;
+      }
+
+      const sym = utils.getCurrencySymbol();
+      container.innerHTML = filtered.map(s => buildCard(s, sym)).join('');
+      lucide.createIcons({ node: container });
+    }
+
+    function buildCard(s, sym) {
+      const isCancelled = s.status === 'cancelled';
+      const classes = ['sub-card', isCancelled ? 'cancelled' : (s.is_overdue ? 'overdue' : (s.is_due_soon ? 'due-soon' : ''))].filter(Boolean).join(' ');
+
+      let badgeClass, badgeIcon, badgeText;
+      if (isCancelled) { badgeClass = 'paid'; badgeIcon = 'x-circle'; badgeText = 'Cancelled'; }
+      else if (s.is_overdue) { badgeClass = 'overdue'; badgeIcon = 'alert-circle'; badgeText = 'Overdue'; }
+      else if (s.is_due_soon) { badgeClass = 'due-soon'; badgeIcon = 'clock'; badgeText = `Due in ${s.days_until_due}d`; }
+      else { badgeClass = 'upcoming'; badgeIcon = 'calendar'; badgeText = s.days_until_due === 0 ? 'Due today' : `Due in ${s.days_until_due}d`; }
+
+      const initial = s.name.charAt(0).toUpperCase();
+      const freqLabel = { weekly: '/wk', monthly: '/mo', quarterly: '/qtr', yearly: '/yr' }[s.frequency] || '/mo';
+
+      return `
+        <div class="${classes}">
+          <div class="sub-header">
+            <div class="sub-icon">${initial}</div>
+            <div style="flex:1; min-width:0;">
+              <div class="sub-name">${escHtml(s.name)}</div>
+              <div class="sub-category">${escHtml(s.category)}</div>
+            </div>
+            <div class="sub-amount">
+              <div class="sub-amount-value">${sym}${parseFloat(s.amount).toFixed(2)}</div>
+              <div class="sub-amount-freq">${freqLabel}</div>
+            </div>
+          </div>
+          <div class="sub-meta">
+            <span class="due-badge ${badgeClass}">
+              <i data-lucide="${badgeIcon}"></i>
+              ${badgeText}
+            </span>
+            <div class="sub-actions">
+              ${!isCancelled ? `<button class="btn-pay" onclick="handlePay('${s.id}', '${escHtml(s.name)}')">Pay Now</button>` : ''}
+              <button class="btn-icon-action" onclick="openEditModal('${s.id}')" title="Edit"><i data-lucide="edit-2"></i></button>
+              <button class="btn-icon-action danger" onclick="handleDelete('${s.id}', '${escHtml(s.name)}')" title="${isCancelled ? 'Delete' : 'Cancel'}"><i data-lucide="${isCancelled ? 'trash-2' : 'x'}"></i></button>
+            </div>
+          </div>
+          ${s.notes ? `<div style="margin-top:10px; font-size:12px; color:var(--text-secondary,#6b7280); padding-top:10px; border-top:1px solid var(--border-color,#e5e7eb);">${escHtml(s.notes)}</div>` : ''}
+        </div>`;
+    }
+
+    function updateCounts() {
+      document.getElementById('countAll').textContent = allSubscriptions.length;
+      document.getElementById('countActive').textContent = allSubscriptions.filter(s => s.status === 'active').length;
+      document.getElementById('countDueSoon').textContent = allSubscriptions.filter(s => s.is_due_soon && s.status === 'active').length;
+      document.getElementById('countOverdue').textContent = allSubscriptions.filter(s => s.is_overdue && s.status === 'active').length;
+      document.getElementById('countCancelled').textContent = allSubscriptions.filter(s => s.status === 'cancelled').length;
+    }
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderList();
+    }
+
+    // ─── Pay ───────────────────────────────────────────────────────────────────
+
+    async function handlePay(id, name) {
+      if (!confirm(`Record payment for ${name}?`)) return;
+      try {
+        utils.showLoading();
+        await api.paySubscription(id);
+        utils.hideLoading();
+        utils.showAlert(`Payment recorded for ${name}! ✅`, 'success');
+        await loadAll();
+      } catch (err) {
+        utils.hideLoading();
+        utils.showAlert(err.message || 'Payment failed', 'error');
+      }
+    }
+
+    // ─── Delete / Cancel ───────────────────────────────────────────────────────
+
+    async function handleDelete(id, name) {
+      const sub = allSubscriptions.find(s => s.id === id);
+      const isCancelled = sub && sub.status === 'cancelled';
+      const action = isCancelled ? 'permanently delete' : 'cancel';
+      if (!confirm(`${action === 'permanently delete' ? 'Delete' : 'Cancel'} subscription "${name}"?`)) return;
+      try {
+        utils.showLoading();
+        await api.deleteSubscription(id, isCancelled);
+        utils.hideLoading();
+        utils.showAlert(`Subscription ${isCancelled ? 'deleted' : 'cancelled'}`, 'success');
+        await loadAll();
+      } catch (err) {
+        utils.hideLoading();
+        utils.showAlert(err.message || 'Failed', 'error');
+      }
+    }
+
+    // ─── Modal ─────────────────────────────────────────────────────────────────
+
+    function openModal() {
+      document.getElementById('editSubId').value = '';
+      document.getElementById('modalTitle').textContent = 'New Subscription';
+      document.getElementById('formSubmitBtn').textContent = 'Save Subscription';
+      document.getElementById('subForm').reset();
+      clearPresetHighlight();
+      // Default next due = today + 1 month
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1);
+      document.getElementById('subNextDue').value = d.toISOString().split('T')[0];
+      document.getElementById('subModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openEditModal(id) {
+      const s = allSubscriptions.find(sub => sub.id === id);
+      if (!s) return;
+      document.getElementById('editSubId').value = s.id;
+      document.getElementById('modalTitle').textContent = 'Edit Subscription';
+      document.getElementById('formSubmitBtn').textContent = 'Update Subscription';
+      document.getElementById('subName').value = s.name;
+      document.getElementById('subAmount').value = s.amount;
+      document.getElementById('subFrequency').value = s.frequency;
+      document.getElementById('subCategory').value = s.category;
+      document.getElementById('subNextDue').value = s.next_due_date ? s.next_due_date.split('T')[0] : '';
+      document.getElementById('subNotes').value = s.notes || '';
+      clearPresetHighlight();
+      document.getElementById('subModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('subModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('subModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('subModal')) closeModal();
+    });
+
+    async function handleSubmitSub(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editSubId').value;
+      const payload = {
+        name: document.getElementById('subName').value.trim(),
+        amount: parseFloat(document.getElementById('subAmount').value),
+        frequency: document.getElementById('subFrequency').value,
+        category: document.getElementById('subCategory').value,
+        next_due_date: document.getElementById('subNextDue').value,
+        notes: document.getElementById('subNotes').value.trim() || null
+      };
+      try {
+        utils.showLoading();
+        if (editId) {
+          await api.updateSubscription(editId, payload);
+          utils.hideLoading();
+          utils.showAlert('Subscription updated ✅', 'success');
+        } else {
+          await api.createSubscription(payload);
+          utils.hideLoading();
+          utils.showAlert('Subscription added ✅', 'success');
+        }
+        closeModal();
+        await loadAll();
+      } catch (err) {
+        utils.hideLoading();
+        utils.showAlert(err.message || 'Failed to save', 'error');
+      }
+    }
+
+    // ─── Presets ───────────────────────────────────────────────────────────────
+
+    function applyPreset(dataName, fullName, category, amount) {
+      document.getElementById('subName').value = fullName;
+      document.getElementById('subAmount').value = amount;
+      document.getElementById('subCategory').value = category;
+      document.getElementById('subFrequency').value = 'monthly';
+      clearPresetHighlight();
+      document.querySelector(`[data-name="${dataName}"]`)?.classList.add('selected');
+    }
+
+    function clearPresetHighlight() {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    }
+
+    // ─── Utility ───────────────────────────────────────────────────────────────
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ─── Init ───────────────────────────────────────────────────────────────────
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = utils.getCurrencySymbol(); });
+      loadAll();
+    });
+  </script>
+</body>
+</html>

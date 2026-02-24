@@ -463,6 +463,84 @@ class APIService {
     return await this.handleResponse(response);
   }
 
+  async deleteGoal(id) {
+    const response = await fetch(`${API_BASE_URL}/goals/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  async depositToGoal(id, data) {
+    const response = await fetch(`${API_BASE_URL}/goals/${id}/deposit`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await this.handleResponse(response);
+  }
+
+  async getGoalInsights(id) {
+    const response = await fetch(`${API_BASE_URL}/goals/${id}/insights`, {
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  // SUBSCRIPTION ENDPOINTS
+
+  async getSubscriptions(status = null) {
+    const url = status
+      ? `${API_BASE_URL}/subscriptions?status=${status}`
+      : `${API_BASE_URL}/subscriptions`;
+    const response = await fetch(url, { headers: this.getHeaders() });
+    return await this.handleResponse(response);
+  }
+
+  async createSubscription(data) {
+    const response = await fetch(`${API_BASE_URL}/subscriptions`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await this.handleResponse(response);
+  }
+
+  async getSubscriptionInsights() {
+    const response = await fetch(`${API_BASE_URL}/subscriptions/insights`, {
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  async paySubscription(id) {
+    const response = await fetch(`${API_BASE_URL}/subscriptions/${id}/pay`, {
+      method: 'POST',
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
+  async updateSubscription(id, data) {
+    const response = await fetch(`${API_BASE_URL}/subscriptions/${id}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return await this.handleResponse(response);
+  }
+
+  async deleteSubscription(id, permanent = false) {
+    const url = permanent
+      ? `${API_BASE_URL}/subscriptions/${id}?permanent=true`
+      : `${API_BASE_URL}/subscriptions/${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: this.getHeaders()
+    });
+    return await this.handleResponse(response);
+  }
+
   // REPORTS ENDPOINTS
 
   async getMonthlyReport(month = null) {

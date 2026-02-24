@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -11,7 +11,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <title>Goals - KudiSave</title>
-  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,83 +18,141 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { padding-top: 0 !important; }
-    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: 24px; overflow: hidden; }
-    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
-    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; }
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color, #006B3F) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-bottom: 24px; overflow: hidden; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
-    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; }
-    .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
+    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
     .mtn-back-btn i { width: 18px; height: 18px; }
-    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
-    .mtn-topbar-spacer { width: 38px; }
-    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 16px 8px 16px; position: relative; z-index: 1; text-align: center; }
-    .mtn-info-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.12); color: white; }
+    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; }
+    .mtn-add-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.15); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .mtn-add-btn i { width: 20px; height: 20px; }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; position: relative; z-index: 1; text-align: center; }
+    .mtn-info-icon { width: 40px; height: 40px; border-radius: 14px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: white; }
     .mtn-info-icon i { width: 20px; height: 20px; }
-    .mtn-info-text { flex: 1; min-width: 0; }
-    .mtn-info-title { font-size: 16px; font-weight: 700; color: white; line-height: 1.2; letter-spacing: -0.2px; }
-    .mtn-info-subtitle { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; font-weight: 500; }
+    .mtn-info-title { font-size: 16px; font-weight: 700; color: white; }
+    .mtn-info-subtitle { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
     .mtn-header-curve { position: absolute; bottom: -1px; left: 0; right: 0; height: 24px; background: var(--bg-primary, #f5f6fa); border-radius: 24px 24px 0 0; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
-    .mtn-header::before, .mtn-header::after { pointer-events: none; }
-    .mtn-header-spacer { height: 155px; }
-    .container { padding-top: 4px; }
+    .mtn-header-spacer { height: 152px; }
+    .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .stat-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 14px 12px; text-align: center; border: 1px solid var(--border-color, #e5e7eb); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .stat-value { font-size: 20px; font-weight: 800; color: var(--primary-color, #006B3F); letter-spacing: -0.5px; }
+    .stat-label { font-size: 11px; color: var(--text-secondary, #6b7280); margin-top: 2px; font-weight: 500; }
+    .goal-card { background: var(--card-bg, #fff); border-radius: 20px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border-color, #e5e7eb); box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+    .goal-card.completed { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.03); }
+    .goal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .goal-icon { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 800; flex-shrink: 0; }
+    .goal-icon.completed { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .goal-title { font-size: 17px; font-weight: 700; color: var(--text-primary, #1f2937); }
+    .goal-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; margin-top: 2px; }
+    .goal-status.active { background: rgba(34,197,94,0.1); color: #16a34a; }
+    .goal-status.completed { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .progress-wrap { margin-bottom: 14px; }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary, #6b7280); margin-bottom: 6px; font-weight: 500; }
+    .progress-saved { color: var(--primary-color, #006B3F); font-weight: 700; font-size: 14px; }
+    .progress-bar { height: 10px; background: var(--bg-secondary, #f3f4f6); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #00a855, #006B3F); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); min-width: 6px; }
+    .progress-fill.completed { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .progress-pct { font-size: 12px; font-weight: 700; color: var(--primary-color, #006B3F); margin-top: 5px; text-align: right; }
+    .progress-pct.completed { color: #22c55e; }
+    .insights-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .insight-chip { background: var(--bg-secondary, #f9fafb); border-radius: 10px; padding: 8px 10px; }
+    .insight-chip-label { font-size: 10px; color: var(--text-secondary, #6b7280); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+    .insight-chip-value { font-size: 14px; font-weight: 700; color: var(--text-primary, #1f2937); margin-top: 2px; }
+    .goal-alert { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border-radius: 10px; margin-bottom: 10px; font-size: 12px; line-height: 1.4; }
+    .goal-alert i { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+    .goal-alert.success { background: rgba(34,197,94,0.1); color: #16a34a; }
+    .goal-alert.info { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .goal-alert.warning { background: rgba(245,158,11,0.1); color: #d97706; }
+    .goal-deadline { font-size: 12px; color: var(--text-secondary, #6b7280); display: flex; align-items: center; gap: 5px; margin-bottom: 12px; }
+    .goal-deadline i { width: 13px; height: 13px; }
+    .goal-actions { display: flex; gap: 8px; }
+    .btn-deposit { flex: 1; padding: 11px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); color: white; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-deposit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-deposit i { width: 15px; height: 15px; }
+    .btn-icon-sm { width: 40px; height: 40px; border-radius: 12px; background: var(--bg-secondary, #f3f4f6); border: 1px solid var(--border-color, #e5e7eb); color: var(--text-secondary, #6b7280); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .btn-icon-sm i { width: 16px; height: 16px; }
+    .btn-icon-sm.danger { color: #ef4444; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.15); }
+    .empty-state { text-align: center; padding: 56px 24px; color: var(--text-secondary, #6b7280); }
+    .empty-state h3 { font-size: 17px; font-weight: 700; color: var(--text-primary, #374151); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+    .modal { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .modal.active { display: flex; align-items: flex-end; justify-content: center; }
+    .modal-sheet { background: var(--card-bg, #fff); border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-width: 480px; animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1); max-height: 88vh; overflow-y: auto; }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-color, #e5e7eb); margin: -10px auto 20px; }
+    .modal-title { font-size: 20px; font-weight: 800; color: var(--text-primary, #1f2937); margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .form-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); color: var(--text-primary, #1f2937); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+    .form-input:focus { border-color: var(--primary-color, #006B3F); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .currency-input-wrapper { position: relative; }
+    .currency-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 700; color: var(--text-secondary, #6b7280); pointer-events: none; }
+    .currency-input-wrapper .form-input { padding-left: 28px; }
+    .deposit-goal-name { background: var(--bg-secondary, #f3f4f6); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; font-size: 15px; font-weight: 600; color: var(--text-primary, #1f2937); display: flex; align-items: center; gap: 8px; }
+    .deposit-goal-name i { width: 16px; height: 16px; color: var(--primary-color, #006B3F); }
+    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); color: white; border: none; box-shadow: 0 8px 24px rgba(0,107,63,0.35); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; }
+    .fab i { width: 24px; height: 24px; }
+    .skeleton { background: linear-gradient(90deg, var(--bg-secondary,#f3f4f6) 25%, var(--border-color,#e5e7eb) 50%, var(--bg-secondary,#f3f4f6) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; height: 140px; margin-bottom: 14px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
 </head>
 <body>
-  <!-- MTN-Style Header -->
   <header class="mtn-header">
     <div class="mtn-topbar">
-      <a href="dashboard.html" class="mtn-back-btn">
-        <i data-lucide="arrow-left"></i>
-      </a>
-      <span class="mtn-page-title">Goals</span>
-      <div class="mtn-topbar-spacer"></div>
+      <a href="dashboard.html" class="mtn-back-btn"><i data-lucide="arrow-left"></i></a>
+      <span class="mtn-page-title">Savings Goals</span>
+      <button class="mtn-add-btn" onclick="openGoalModal()"><i data-lucide="plus"></i></button>
     </div>
     <div class="mtn-info-section">
-      <div class="mtn-info-icon">
-        <i data-lucide="target"></i>
-      </div>
-      <div class="mtn-info-text">
-        <div class="mtn-info-title">Savings Goals</div>
-        <div class="mtn-info-subtitle">Set targets & track your progress</div>
-      </div>
+      <div class="mtn-info-icon"><i data-lucide="target"></i></div>
+      <div class="mtn-info-title">Savings Goals</div>
+      <div class="mtn-info-subtitle">Set targets &amp; track your progress</div>
     </div>
     <div class="mtn-header-curve"></div>
   </header>
   <div class="mtn-header-spacer"></div>
 
-
-  <div class="container">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><i data-lucide="target" class="icon-inline"></i> Savings Goals</h2>
-        <button class="btn btn-primary" onclick="openGoalModal()">+ New Goal</button>
+  <div class="container" style="padding-bottom: 100px;">
+    <div class="summary-row" id="summaryRow" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="statGoals">0</div>
+        <div class="stat-label">Total Goals</div>
       </div>
-      
-      <div id="goalsContainer" style="display: grid; gap: 20px;">
-        <p style="text-align: center; color: rgba(255,255,255,0.7);">Loading goals...</p>
+      <div class="stat-card">
+        <div class="stat-value" id="statCompleted" style="color:#22c55e;">0</div>
+        <div class="stat-label">Completed</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSaved">0</div>
+        <div class="stat-label">Total Saved</div>
+      </div>
+    </div>
+    <div id="goalsContainer">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
     </div>
   </div>
 
-  <!-- Goal Modal -->
+  <button class="fab" onclick="openGoalModal()"><i data-lucide="plus"></i></button>
+
+  <!-- Create / Edit Goal Modal -->
   <div id="goalModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Create Savings Goal</h2>
-        <button class="close-btn" onclick="closeModal()">&times;</button>
-      </div>
-      <form id="goalForm" onsubmit="handleCreateGoal(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="goalModalTitle" class="modal-title">Create New Goal</div>
+      <form id="goalForm" onsubmit="handleSubmitGoal(event)">
+        <input type="hidden" id="editGoalId">
         <div class="form-group">
           <label class="form-label">Goal Title</label>
           <input type="text" class="form-input" id="goalTitle" placeholder="e.g., New Laptop" required>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Target Amount</label>
             <div class="currency-input-wrapper">
-              <span class="currency-prefix">₵</span>
+              <span class="currency-prefix" id="goalCurrencyPrefix">&#8373;</span>
               <input type="number" class="form-input" id="goalAmount" placeholder="0.00" step="0.01" min="1" required>
             </div>
           </div>
@@ -104,8 +161,40 @@
             <input type="date" class="form-input" id="goalDeadline">
           </div>
         </div>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <button type="button" class="btn" style="flex:1; background:var(--bg-secondary,#f3f4f6); color:var(--text-secondary,#6b7280); border:none;" onclick="closeGoalModal()">Cancel</button>
+          <button type="submit" class="btn" style="flex:2; background:linear-gradient(135deg,var(--primary-color,#006B3F),#00a855); color:white; border:none; font-weight:700;" id="goalSubmitBtn">Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Goal</button>
+  <!-- Deposit Modal -->
+  <div id="depositModal" class="modal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Add Savings</div>
+      <input type="hidden" id="depositGoalId">
+      <div class="deposit-goal-name">
+        <i data-lucide="target"></i>
+        <span id="depositGoalNameText">Goal</span>
+      </div>
+      <form id="depositForm" onsubmit="handleDeposit(event)">
+        <div class="form-group">
+          <label class="form-label">Amount to Save</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-prefix" id="depositCurrencyPrefix">&#8373;</span>
+            <input type="number" class="form-input" id="depositAmount" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Note (optional)</label>
+          <input type="text" class="form-input" id="depositNotes" placeholder="e.g., Monthly savings">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <button type="button" class="btn" style="flex:1; background:var(--bg-secondary,#f3f4f6); color:var(--text-secondary,#6b7280); border:none;" onclick="closeDepositModal()">Cancel</button>
+          <button type="submit" class="btn" style="flex:2; background:linear-gradient(135deg,var(--primary-color,#006B3F),#00a855); color:white; border:none; font-weight:700;">Save Money</button>
+        </div>
       </form>
     </div>
   </div>
@@ -115,85 +204,185 @@
   <script src="../assets/js/utils.js"></script>
   <script>
     utils.requireAuth();
+    let allGoals = [];
 
     async function loadGoals() {
       try {
-        const response = await api.getGoals();
-        const goals = Array.isArray(response.data) ? response.data : [];
-        
-        const container = document.getElementById('goalsContainer');
-        
-        if (goals.length === 0) {
-          container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7);">No goals yet. Create one to start saving!</p>';
-          return;
-        }
-
-        container.innerHTML = goals.map(goal => {
-          const progress = utils.calculateProgress(goal.current_amount, goal.target_amount);
-          return `
-            <div class="card">
-              <h3 style="margin-bottom: 16px;"><i data-lucide="target" class="icon-inline"></i> ${goal.title}</h3>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <span>${utils.formatCurrency(goal.current_amount)}</span>
-                <span>${utils.formatCurrency(goal.target_amount)}</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%;">${progress.toFixed(0)}%</div>
-              </div>
-              ${goal.deadline ? `<p style="margin-top: 8px; color: rgba(255,255,255,0.7);">Deadline: ${utils.formatDate(goal.deadline)}</p>` : ''}
-              <span class="badge ${goal.status === 'completed' ? 'badge-success' : 'badge-warning'}" style="margin-top: 8px;">${goal.status}</span>
-            </div>
-          `;
-        }).join('');
-        lucide.createIcons({ node: container });
-      } catch (error) {
+        const resp = await api.getGoals();
+        allGoals = Array.isArray(resp.data) ? resp.data : [];
+        renderSummary();
+        renderGoals();
+      } catch (err) {
         utils.showAlert('Failed to load goals', 'error');
+        document.getElementById('goalsContainer').innerHTML = '<div class="empty-state"><h3>Could not load goals</h3><p>Check your connection and try again.</p></div>';
       }
     }
 
+    function renderSummary() {
+      const row = document.getElementById('summaryRow');
+      if (allGoals.length === 0) { row.style.display = 'none'; return; }
+      row.style.display = 'grid';
+      const completed = allGoals.filter(g => g.status === 'completed').length;
+      const totalSaved = allGoals.reduce((s, g) => s + parseFloat(g.current_amount || 0), 0);
+      const sym = utils.getCurrencySymbol();
+      document.getElementById('statGoals').textContent = allGoals.length;
+      document.getElementById('statCompleted').textContent = completed;
+      document.getElementById('statSaved').textContent = sym + totalSaved.toLocaleString('en', { maximumFractionDigits: 0 });
+    }
+
+    function renderGoals() {
+      const container = document.getElementById('goalsContainer');
+      if (allGoals.length === 0) {
+        container.innerHTML = '<div class="empty-state"><h3>No goals yet</h3><p>Tap <strong>+</strong> to create your first savings goal and start building toward your dreams.</p></div>';
+        lucide.createIcons({ node: container });
+        return;
+      }
+      const sym = utils.getCurrencySymbol();
+      container.innerHTML = allGoals.map(g => buildGoalCard(g, sym)).join('');
+      lucide.createIcons({ node: container });
+    }
+
+    function buildGoalCard(g, sym) {
+      const progress = Math.min(parseFloat(g.progress_percentage || 0), 100);
+      const current = parseFloat(g.current_amount || 0);
+      const target = parseFloat(g.target_amount || 0);
+      const remaining = Math.max(target - current, 0);
+      const isCompleted = g.status === 'completed';
+      const initial = g.title.charAt(0).toUpperCase();
+      let deadlineHtml = '', insightsHtml = '', alertHtml = '';
+
+      if (g.deadline) {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const dl = new Date(g.deadline); dl.setHours(0,0,0,0);
+        const daysLeft = Math.round((dl - today) / 86400000);
+        const monthsLeft = Math.max(daysLeft / 30.44, 0.1);
+        const monthlyRequired = remaining > 0 && monthsLeft > 0 ? remaining / monthsLeft : 0;
+        const dueText = daysLeft < 0 ? '<span style="color:#ef4444;">Overdue by ' + Math.abs(daysLeft) + ' days</span>'
+          : daysLeft === 0 ? '<span style="color:#f59e0b;">Due today</span>'
+          : '<span>' + daysLeft + ' days left &mdash; ' + utils.formatDate(g.deadline) + '</span>';
+        deadlineHtml = '<div class="goal-deadline"><i data-lucide="calendar"></i>' + dueText + '</div>';
+        if (!isCompleted) {
+          insightsHtml = '<div class="insights-row">'
+            + '<div class="insight-chip"><div class="insight-chip-label">Remaining</div><div class="insight-chip-value">' + sym + remaining.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+            + '<div class="insight-chip"><div class="insight-chip-label">Need / Month</div><div class="insight-chip-value">' + sym + monthlyRequired.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+            + '</div>';
+        }
+      }
+
+      if (isCompleted) alertHtml = '<div class="goal-alert success"><i data-lucide="check-circle"></i><span>Goal achieved! Congratulations</span></div>';
+      else if (progress >= 75) alertHtml = '<div class="goal-alert info"><i data-lucide="trending-up"></i><span>Almost there! Only ' + (100-progress).toFixed(1) + '% to go.</span></div>';
+
+      return '<div class="goal-card' + (isCompleted ? ' completed' : '') + '">'
+        + '<div class="goal-header">'
+        + '<div class="goal-icon' + (isCompleted ? ' completed' : '') + '">' + initial + '</div>'
+        + '<div style="flex:1;min-width:0;">'
+        + '<div class="goal-title">' + escHtml(g.title) + '</div>'
+        + '<span class="goal-status ' + g.status + '">' + g.status + '</span>'
+        + '</div>'
+        + '<button class="btn-icon-sm danger" onclick="handleDeleteGoal(\'' + g.id + '\',\'' + escHtml(g.title) + '\')" title="Delete"><i data-lucide="trash-2"></i></button>'
+        + '</div>'
+        + '<div class="progress-wrap">'
+        + '<div class="progress-labels"><span class="progress-saved">' + sym + current.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</span><span>' + sym + target.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</span></div>'
+        + '<div class="progress-bar"><div class="progress-fill' + (isCompleted ? ' completed' : '') + '" style="width:' + progress + '%;"></div></div>'
+        + '<div class="progress-pct' + (isCompleted ? ' completed' : '') + '">' + progress.toFixed(1) + '%</div>'
+        + '</div>'
+        + deadlineHtml
+        + insightsHtml
+        + alertHtml
+        + '<div class="goal-actions">'
+        + '<button class="btn-deposit" onclick="openDepositModal(\'' + g.id + '\',\'' + escHtml(g.title) + '\')"' + (isCompleted ? ' disabled' : '') + '><i data-lucide="plus-circle"></i>' + (isCompleted ? 'Completed' : 'Add Savings') + '</button>'
+        + '<button class="btn-icon-sm" onclick="openEditGoalModal(\'' + g.id + '\')" title="Edit"><i data-lucide="edit-2"></i></button>'
+        + '</div></div>';
+    }
+
     function openGoalModal() {
+      document.getElementById('editGoalId').value = '';
+      document.getElementById('goalModalTitle').textContent = 'Create New Goal';
+      document.getElementById('goalSubmitBtn').textContent = 'Save Goal';
+      document.getElementById('goalForm').reset();
       document.getElementById('goalModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() {
+    function openEditGoalModal(id) {
+      const g = allGoals.find(g => g.id === id);
+      if (!g) return;
+      document.getElementById('editGoalId').value = g.id;
+      document.getElementById('goalModalTitle').textContent = 'Edit Goal';
+      document.getElementById('goalSubmitBtn').textContent = 'Update Goal';
+      document.getElementById('goalTitle').value = g.title;
+      document.getElementById('goalAmount').value = g.target_amount;
+      document.getElementById('goalDeadline').value = g.deadline ? g.deadline.split('T')[0] : '';
+      document.getElementById('goalModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGoalModal() {
       document.getElementById('goalModal').classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    // Backdrop click to close
-    document.getElementById('goalModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
+    document.getElementById('goalModal').addEventListener('click', function(e) { if (e.target === this) closeGoalModal(); });
 
-    async function handleCreateGoal(event) {
-      event.preventDefault();
-      
+    async function handleSubmitGoal(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editGoalId').value;
       const deadlineVal = document.getElementById('goalDeadline').value;
-      const goalData = {
-        title: document.getElementById('goalTitle').value,
-        target_amount: parseFloat(document.getElementById('goalAmount').value),
-      };
-      if (deadlineVal) goalData.deadline = deadlineVal;
-
+      const payload = { title: document.getElementById('goalTitle').value.trim(), target_amount: parseFloat(document.getElementById('goalAmount').value) };
+      if (deadlineVal) payload.deadline = deadlineVal;
       try {
         utils.showLoading();
-        await api.createGoal(goalData);
-        
-        utils.hideLoading();
-        utils.showAlert('Goal created successfully! 🎯', 'success');
-        
-        closeModal();
-        document.getElementById('goalForm').reset();
+        if (editId) { await api.updateGoal(editId, payload); utils.hideLoading(); utils.showAlert('Goal updated', 'success'); }
+        else { await api.createGoal(payload); utils.hideLoading(); utils.showAlert('Goal created! Target set', 'success'); }
+        closeGoalModal();
         await loadGoals();
-      } catch (error) {
-        utils.hideLoading();
-        utils.showAlert(error.message || 'Failed to create goal', 'error');
-      }
+      } catch (err) { utils.hideLoading(); utils.showAlert(err.message || 'Failed to save goal', 'error'); }
     }
 
-    function logout() {
-      api.logout();
+    async function handleDeleteGoal(id, title) {
+      if (!confirm('Delete goal "' + title + '"? This cannot be undone.')) return;
+      try {
+        utils.showLoading();
+        await api.deleteGoal(id);
+        utils.hideLoading();
+        utils.showAlert('Goal deleted', 'success');
+        await loadGoals();
+      } catch (err) { utils.hideLoading(); utils.showAlert(err.message || 'Failed to delete', 'error'); }
+    }
+
+    function openDepositModal(id, title) {
+      document.getElementById('depositGoalId').value = id;
+      document.getElementById('depositGoalNameText').textContent = title;
+      document.getElementById('depositForm').reset();
+      document.getElementById('depositModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('depositAmount').focus(), 300);
+    }
+
+    function closeDepositModal() {
+      document.getElementById('depositModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('depositModal').addEventListener('click', function(e) { if (e.target === this) closeDepositModal(); });
+
+    async function handleDeposit(e) {
+      e.preventDefault();
+      const goalId = document.getElementById('depositGoalId').value;
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      const notes = document.getElementById('depositNotes').value.trim();
+      try {
+        utils.showLoading();
+        const resp = await api.depositToGoal(goalId, { amount, notes: notes || null });
+        utils.hideLoading();
+        utils.showAlert(resp.message || 'Savings recorded!', 'success');
+        closeDepositModal();
+        await loadGoals();
+      } catch (err) { utils.hideLoading(); utils.showAlert(err.message || 'Failed to record deposit', 'error'); }
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
     document.addEventListener('DOMContentLoaded', () => {

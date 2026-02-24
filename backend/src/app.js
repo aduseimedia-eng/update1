@@ -29,6 +29,7 @@ const backupRoutes = require('./routes/backup');
 const exportRoutes = require('./routes/export');
 const notificationsRoutes = require('./routes/notifications');
 const gmailRoutes = require('./routes/gmail');
+const subscriptionsRoutes = require('./routes/subscriptions');
 
 const app = express();
 
@@ -104,6 +105,7 @@ app.use(`${API_VERSION}/backup`, backupRoutes);
 app.use(`${API_VERSION}/export`, exportRoutes);
 app.use(`${API_VERSION}/notifications`, notificationsRoutes);
 app.use(`${API_VERSION}/gmail`, gmailRoutes);
+app.use(`${API_VERSION}/subscriptions`, subscriptionsRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -129,7 +131,8 @@ app.get('/', (req, res) => {
       backup: `${API_VERSION}/backup`,
       export: `${API_VERSION}/export`,
       notifications: `${API_VERSION}/notifications`,
-      gmail: `${API_VERSION}/gmail`
+      gmail: `${API_VERSION}/gmail`,
+      subscriptions: `${API_VERSION}/subscriptions`
     }
   });
 });
