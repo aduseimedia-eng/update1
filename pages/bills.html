@@ -388,6 +388,90 @@
       transform: scale(1.1);
     }
 
+    /* ===== Subscription Summary Card ===== */
+    .sub-summary-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      color: white;
+      display: none;
+    }
+    .sub-summary-card.visible { display: block; }
+    .sub-summary-title {
+      font-size: 11px;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .sub-summary-amount {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+    .sub-summary-sub {
+      font-size: 11px;
+      opacity: 0.55;
+    }
+    .sub-summary-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .sub-summary-stat {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      flex: 1;
+      text-align: center;
+    }
+    .sub-summary-stat-val {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .sub-summary-stat-lbl {
+      font-size: 10px;
+      opacity: 0.55;
+      margin-top: 2px;
+    }
+    /* Service Presets */
+    .service-presets {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: var(--bg-color);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .service-presets.visible { display: flex; }
+    .service-presets-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+    .service-preset-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: var(--card-bg);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .service-preset-btn:hover {
+      border-color: var(--primary-color);
+      background: rgba(0,107,63,0.08);
+    }
     /* Bill Category Select */
     .category-grid {
       display: grid;
@@ -596,6 +680,30 @@
       <button class="filter-tab" onclick="filterBills('paid')" id="filterPaid">
         <i data-lucide="check-circle" style="width:14px;height:14px"></i> Paid
       </button>
+      <button class="filter-tab" onclick="filterBills('subscriptions')" id="filterSubscriptions">
+        <i data-lucide="repeat" style="width:14px;height:14px"></i> Subscriptions <span class="count" id="countSubscriptions">0</span>
+      </button>
+    </div>
+
+    <!-- Subscription Summary Card (shown when subscriptions tab active) -->
+    <div class="sub-summary-card" id="subSummaryCard">
+      <div class="sub-summary-title">Monthly Subscriptions</div>
+      <div class="sub-summary-amount" id="subMonthlyTotal">₵0.00</div>
+      <div class="sub-summary-sub" id="subYearlyTotal">₵0.00 per year</div>
+      <div class="sub-summary-row">
+        <div class="sub-summary-stat">
+          <div class="sub-summary-stat-val" id="subActiveCount">0</div>
+          <div class="sub-summary-stat-lbl">Active</div>
+        </div>
+        <div class="sub-summary-stat">
+          <div class="sub-summary-stat-val" id="subDueSoonCount">0</div>
+          <div class="sub-summary-stat-lbl">Due Soon</div>
+        </div>
+        <div class="sub-summary-stat">
+          <div class="sub-summary-stat-val" id="subPaidCount">0</div>
+          <div class="sub-summary-stat-lbl">Paid</div>
+        </div>
+      </div>
     </div>
 
     <!-- Bills List -->
@@ -652,7 +760,7 @@
               <div class="category-option-icon">🛡️</div>
               <div class="category-option-label">Insurance</div>
             </div>
-            <div class="category-option" data-category="subscription" onclick="selectCategory('subscription')">
+            <div class="category-option" data-category="subscription" onclick="selectCategory('subscription'); showServicePresets()">
               <div class="category-option-icon">📺</div>
               <div class="category-option-label">Subscription</div>
             </div>
@@ -666,6 +774,21 @@
             </div>
           </div>
           <input type="hidden" id="billCategory" required>
+        </div>
+
+        <!-- Service Presets (shown when Subscription selected) -->
+        <div class="service-presets" id="servicePresets">
+          <span class="service-presets-label">Quick Pick a Service</span>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Netflix', 45.99, 'monthly')">🎬 Netflix</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Spotify', 19.99, 'monthly')">🎵 Spotify</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('YouTube Premium', 29.99, 'monthly')">▶️ YouTube</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Apple Music', 19.99, 'monthly')">🎵 Apple Music</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('ShowMax', 35.00, 'monthly')">📺 ShowMax</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Amazon Prime', 25.00, 'monthly')">📦 Prime</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Microsoft 365', 89.00, 'yearly')">💼 Microsoft 365</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('iCloud+', 14.99, 'monthly')">☁️ iCloud+</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('Canva Pro', 55.00, 'monthly')">🎨 Canva Pro</button>
+          <button type="button" class="service-preset-btn" onclick="applyPreset('ChatGPT Plus', 100.00, 'monthly')">🤖 ChatGPT+</button>
         </div>
 
         <div class="form-group">
@@ -752,7 +875,8 @@
       document.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
       document.querySelectorAll('.frequency-pill').forEach(el => el.classList.remove('selected'));
       document.querySelector('.frequency-pill[data-freq="monthly"]').classList.add('selected');
-      
+      const presets = document.getElementById('servicePresets');
+      if (presets) presets.classList.remove('visible');
       selectedCategory = '';
       selectedFrequency = 'monthly';
       document.getElementById('billFrequency').value = 'monthly';
@@ -790,7 +914,45 @@
       document.querySelector(`.category-option[data-category="${category}"]`).classList.add('selected');
       document.getElementById('billCategory').value = category;
       selectedCategory = category;
+      // Show presets only for subscription
+      const presets = document.getElementById('servicePresets');
+      if (presets) presets.classList.toggle('visible', category === 'subscription');
     }
+
+    function showServicePresets() {
+      const presets = document.getElementById('servicePresets');
+      if (presets) presets.classList.add('visible');
+    }
+
+    function applyPreset(name, amount, frequency) {
+      document.getElementById('billName').value = name;
+      document.getElementById('billAmount').value = amount;
+      selectFrequency(frequency);
+      // Close presets visually to indicate selection
+      const presets = document.getElementById('servicePresets');
+      if (presets) presets.style.borderColor = 'var(--primary-color)';
+      setTimeout(() => { if (presets) presets.style.borderColor = ''; }, 800);
+    }
+
+    function updateSubscriptionSummary() {
+      const subs = bills.filter(b => b.category === 'subscription');
+      let monthlyTotal = 0;
+      subs.forEach(b => {
+        if (b.status === 'paid') return;
+        if (b.frequency === 'monthly') monthlyTotal += b.amount;
+        else if (b.frequency === 'yearly') monthlyTotal += b.amount / 12;
+        else if (b.frequency === 'quarterly') monthlyTotal += b.amount / 3;
+        else if (b.frequency === 'once') monthlyTotal += b.amount;
+      });
+      const yearlyTotal = monthlyTotal * 12;
+      const sym = utils.getCurrencySymbol();
+      document.getElementById('subMonthlyTotal').textContent = utils.formatCurrency(monthlyTotal);
+      document.getElementById('subYearlyTotal').textContent = utils.formatCurrency(yearlyTotal) + ' per year';
+      document.getElementById('subActiveCount').textContent = subs.filter(b => b.status !== 'paid').length;
+      document.getElementById('subDueSoonCount').textContent = subs.filter(b => getBillStatus(b) === 'due-soon').length;
+      document.getElementById('subPaidCount').textContent = subs.filter(b => b.status === 'paid').length;
+    }
+
 
     function selectFrequency(freq) {
       document.querySelectorAll('.frequency-pill').forEach(el => el.classList.remove('selected'));
@@ -843,6 +1005,14 @@
       currentFilter = filter;
       document.querySelectorAll('.filter-tab').forEach(el => el.classList.remove('active'));
       document.getElementById('filter' + filter.charAt(0).toUpperCase() + filter.slice(1)).classList.add('active');
+      // Show/hide subscription summary card
+      const subCard = document.getElementById('subSummaryCard');
+      if (filter === 'subscriptions') {
+        subCard.classList.add('visible');
+        updateSubscriptionSummary();
+      } else {
+        subCard.classList.remove('visible');
+      }
       renderBills();
     }
 
@@ -884,6 +1054,8 @@
         filteredBills = bills.filter(b => getBillStatus(b) === 'overdue');
       } else if (currentFilter === 'paid') {
         filteredBills = bills.filter(b => b.status === 'paid');
+      } else if (currentFilter === 'subscriptions') {
+        filteredBills = bills.filter(b => b.category === 'subscription');
       }
 
       // Sort by due date
@@ -891,6 +1063,8 @@
 
       // Update counts
       document.getElementById('countAll').textContent = bills.length;
+      const subCount = bills.filter(b => b.category === 'subscription').length;
+      document.getElementById('countSubscriptions').textContent = subCount;
 
       if (filteredBills.length === 0) {
         container.innerHTML = `
