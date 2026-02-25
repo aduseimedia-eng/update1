@@ -57,12 +57,12 @@
     .swipe-section-title i { width: 18px; height: 18px; color: var(--primary-color, #006B3F); }
     .swipe-hint { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; margin-left: auto; }
     
-    .swipe-container { position: relative; overflow: hidden; border-radius: 20px; }
-    .swipe-track { display: flex; transition: transform 0.3s ease-out; cursor: grab; will-change: transform; -webkit-overflow-scrolling: touch; }
+    .swipe-container { position: relative; overflow: hidden; border-radius: 20px; touch-action: pan-y; }
+    .swipe-track { display: flex; transition: transform 0.3s ease-out; cursor: grab; will-change: transform; -webkit-overflow-scrolling: touch; user-select: none; -webkit-user-select: none; }
     .swipe-track:active { cursor: grabbing; }
-    .swipe-track.dragging { transition: none; }
+    .swipe-track.dragging { transition: none !important; cursor: grabbing; }
     
-    .swipe-card { flex: 0 0 280px; margin-right: 12px; background: var(--card-bg, #fff); border-radius: 20px; padding: 20px; border: 2px solid var(--border-color, #e5e7eb); box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; user-select: none; }
+    .swipe-card { flex: 0 0 100%; margin-right: 0; background: var(--card-bg, #fff); border-radius: 20px; padding: 20px; border: 2px solid var(--border-color, #e5e7eb); box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; user-select: none; -webkit-user-select: none; cursor: pointer; touch-action: manipulation; }
     .swipe-card:last-child { margin-right: 0; }
     .swipe-card:active { transform: scale(0.98); }
     .swipe-card.selected { border-color: var(--primary-color, #006B3F); background: rgba(0,107,63,0.04); box-shadow: 0 4px 20px rgba(0,107,63,0.15); }
@@ -453,11 +453,15 @@
 
     let swipeTrack, swipeCards, currentIndex = 0;
     let isDragging = false, startX = 0, currentX = 0, translateX = 0;
-    const cardWidth = 292; // 280px card + 12px margin
+    let cardWidth = 0; // Will be set dynamically
 
     function initSwipeCards() {
       swipeTrack = document.getElementById('swipeTrack');
       swipeCards = document.querySelectorAll('.swipe-card');
+      
+      // Calculate card width from container width
+      const container = document.querySelector('.swipe-container');
+      cardWidth = container ? container.offsetWidth : window.innerWidth;
       
       // Create indicators
       const indicatorsContainer = document.getElementById('swipeIndicators');
@@ -469,10 +473,19 @@
         indicatorsContainer.appendChild(dot);
       }
 
-      // Touch events
-      swipeTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
+      // Add click handlers to cards
+      swipeCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+          if (Math.abs(currentX - startX) < 10) { // Not a swipe
+            selectServiceCard(this);
+          }
+        });
+      });
+
+      // Touch events - use passive: false for touchstart to allow preventDefault
+      swipeTrack.addEventListener('touchstart', handleTouchStart, { passive: false });
       swipeTrack.addEventListener('touchmove', handleTouchMove, { passive: false });
-      swipeTrack.addEventListener('touchend', handleTouchEnd);
+      swipeTrack.addEventListener('touchend', handleTouchEnd, { passive: true });
       
       // Mouse events for desktop
       swipeTrack.addEventListener('mousedown', handleMouseDown);
@@ -483,7 +496,9 @@
     function handleTouchStart(e) {
       isDragging = true;
       startX = e.touches[0].clientX;
+      currentX = startX;
       swipeTrack.classList.add('dragging');
+      e.preventDefault();
     }
 
     function handleTouchMove(e) {
@@ -519,6 +534,7 @@
     function handleMouseDown(e) {
       isDragging = true;
       startX = e.clientX;
+      currentX = startX;
       swipeTrack.classList.add('dragging');
       e.preventDefault();
     }
@@ -938,6 +954,12 @@
       document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = utils.getCurrencySymbol(); });
       initSwipeCards();
       loadAll();
+      
+      // Recalculate card width on window resize
+      window.addEventListener('resize', () => {
+        const container = document.querySelector('.swipe-container');
+        cardWidth = container ? container.offsetWidth : window.innerWidth;
+      });
     });
   </script>
 </body>
