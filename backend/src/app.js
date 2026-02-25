@@ -3,7 +3,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
-const path = require('path');
 require('dotenv').config();
 
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -69,9 +68,6 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   app.use(morgan('combined'));
 }
-
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, '../../')));
 
 // Rate limiting
 app.use('/api/', apiLimiter);
