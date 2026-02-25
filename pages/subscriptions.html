@@ -58,7 +58,7 @@
     .swipe-hint { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; margin-left: auto; }
     
     .swipe-container { position: relative; overflow: hidden; border-radius: 20px; }
-    .swipe-track { display: flex; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); cursor: grab; }
+    .swipe-track { display: flex; transition: transform 0.3s ease-out; cursor: grab; will-change: transform; -webkit-overflow-scrolling: touch; }
     .swipe-track:active { cursor: grabbing; }
     .swipe-track.dragging { transition: none; }
     
@@ -67,7 +67,7 @@
     .swipe-card:active { transform: scale(0.98); }
     .swipe-card.selected { border-color: var(--primary-color, #006B3F); background: rgba(0,107,63,0.04); box-shadow: 0 4px 20px rgba(0,107,63,0.15); }
     
-    .swipe-card-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 28px; }
+    .swipe-card-icon { width: 68px; height: 68px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 32px; }
     .swipe-card-name { font-size: 18px; font-weight: 800; color: var(--text-primary, #1f2937); margin-bottom: 4px; }
     .swipe-card-category { font-size: 12px; color: var(--text-secondary, #6b7280); font-weight: 500; margin-bottom: 12px; }
     .swipe-card-price { font-size: 14px; font-weight: 700; color: var(--primary-color, #006B3F); }
@@ -88,7 +88,7 @@
     .icon-chatgpt { background: linear-gradient(135deg, #10A37F, #1A7F64); }
     .icon-other { background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); }
     
-    .swipe-card-icon img { width: 32px; height: 32px; object-fit: contain; }
+    .swipe-card-icon img { width: 40px; height: 40px; object-fit: contain; }
     .selected-service-icon img { width: 24px; height: 24px; object-fit: contain; }
     .sub-icon img { width: 24px; height: 24px; object-fit: contain; }
     
@@ -232,84 +232,84 @@
             <div class="swipe-card-icon icon-snapchat"><img src="https://cdn.simpleicons.org/snapchat/white" alt="Snapchat"></div>
             <div class="swipe-card-name">Snapchat</div>
             <div class="swipe-card-category">Social Media</div>
-            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Netflix -->
           <div class="swipe-card" data-service="netflix" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-netflix"><img src="https://cdn.simpleicons.org/netflix/white" alt="Netflix"></div>
             <div class="swipe-card-name">Netflix</div>
             <div class="swipe-card-category">Entertainment</div>
-            <div class="swipe-card-price">₵49.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Spotify -->
           <div class="swipe-card" data-service="spotify" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-spotify"><img src="https://cdn.simpleicons.org/spotify/white" alt="Spotify"></div>
             <div class="swipe-card-name">Spotify</div>
             <div class="swipe-card-category">Music</div>
-            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Apple Music -->
           <div class="swipe-card" data-service="apple-music" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-apple-music"><img src="https://cdn.simpleicons.org/applemusic/white" alt="Apple Music"></div>
             <div class="swipe-card-name">Apple Music</div>
             <div class="swipe-card-category">Music</div>
-            <div class="swipe-card-price">₵16.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- GitHub -->
           <div class="swipe-card" data-service="github" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-github"><img src="https://cdn.simpleicons.org/github/white" alt="GitHub"></div>
             <div class="swipe-card-name">GitHub</div>
             <div class="swipe-card-category">Developer Tools</div>
-            <div class="swipe-card-price">₵75.00 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Apple TV -->
           <div class="swipe-card" data-service="apple-tv" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-apple-tv"><img src="https://cdn.simpleicons.org/appletv/white" alt="Apple TV"></div>
             <div class="swipe-card-name">Apple TV+</div>
             <div class="swipe-card-category">Entertainment</div>
-            <div class="swipe-card-price">₵39.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- DSTV -->
           <div class="swipe-card" data-service="dstv" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-dstv"><img src="https://cdn.simpleicons.org/dstv/white" alt="DStv"></div>
             <div class="swipe-card-name">DStv</div>
             <div class="swipe-card-category">Entertainment</div>
-            <div class="swipe-card-price">₵150.00 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Apple Storage (iCloud) -->
           <div class="swipe-card" data-service="icloud" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-icloud"><img src="https://cdn.simpleicons.org/icloud/white" alt="iCloud"></div>
             <div class="swipe-card-name">iCloud Storage</div>
             <div class="swipe-card-category">Cloud Storage</div>
-            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Google Storage -->
           <div class="swipe-card" data-service="google-storage" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-google-storage"><img src="https://cdn.simpleicons.org/googlecloud/white" alt="Google One"></div>
             <div class="swipe-card-name">Google One</div>
             <div class="swipe-card-category">Cloud Storage</div>
-            <div class="swipe-card-price">₵12.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- X (Twitter) -->
           <div class="swipe-card" data-service="x" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-x"><img src="https://cdn.simpleicons.org/x/white" alt="X"></div>
             <div class="swipe-card-name">X Premium</div>
             <div class="swipe-card-category">Social Media</div>
-            <div class="swipe-card-price">₵60.00 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- YouTube -->
           <div class="swipe-card" data-service="youtube" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-youtube"><img src="https://cdn.simpleicons.org/youtube/white" alt="YouTube"></div>
             <div class="swipe-card-name">YouTube Premium</div>
             <div class="swipe-card-category">Entertainment</div>
-            <div class="swipe-card-price">₵22.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- ChatGPT -->
           <div class="swipe-card" data-service="chatgpt" onclick="selectServiceCard(this)">
             <div class="swipe-card-icon icon-chatgpt"><img src="https://cdn.simpleicons.org/openai/white" alt="ChatGPT"></div>
             <div class="swipe-card-name">ChatGPT Plus</div>
             <div class="swipe-card-category">AI Tools</div>
-            <div class="swipe-card-price">₵85.99 <span>/month</span></div>
+            <div class="swipe-card-price">₵0.00 <span>/month</span></div>
           </div>
           <!-- Others -->
           <div class="swipe-card" data-service="other" onclick="selectServiceCard(this)">
@@ -434,18 +434,18 @@
 
     // ─── Service Data ───────────────────────────────────────────────────────────
     const servicePresets = {
-      'snapchat': { name: 'Snapchat+', category: 'Social Media', amount: 14.99, iconUrl: 'https://cdn.simpleicons.org/snapchat/white', iconClass: 'icon-snapchat' },
-      'netflix': { name: 'Netflix', category: 'Entertainment', amount: 49.99, iconUrl: 'https://cdn.simpleicons.org/netflix/white', iconClass: 'icon-netflix' },
-      'spotify': { name: 'Spotify', category: 'Music', amount: 14.99, iconUrl: 'https://cdn.simpleicons.org/spotify/white', iconClass: 'icon-spotify' },
-      'apple-music': { name: 'Apple Music', category: 'Music', amount: 16.99, iconUrl: 'https://cdn.simpleicons.org/applemusic/white', iconClass: 'icon-apple-music' },
-      'github': { name: 'GitHub Pro', category: 'Developer Tools', amount: 75.00, iconUrl: 'https://cdn.simpleicons.org/github/white', iconClass: 'icon-github' },
-      'apple-tv': { name: 'Apple TV+', category: 'Entertainment', amount: 39.99, iconUrl: 'https://cdn.simpleicons.org/appletv/white', iconClass: 'icon-apple-tv' },
-      'dstv': { name: 'DStv', category: 'Entertainment', amount: 150.00, iconUrl: 'https://cdn.simpleicons.org/dstv/white', iconClass: 'icon-dstv' },
-      'icloud': { name: 'iCloud Storage', category: 'Cloud Storage', amount: 14.99, iconUrl: 'https://cdn.simpleicons.org/icloud/white', iconClass: 'icon-icloud' },
-      'google-storage': { name: 'Google One', category: 'Cloud Storage', amount: 12.99, iconUrl: 'https://cdn.simpleicons.org/googlecloud/white', iconClass: 'icon-google-storage' },
-      'x': { name: 'X Premium', category: 'Social Media', amount: 60.00, iconUrl: 'https://cdn.simpleicons.org/x/white', iconClass: 'icon-x' },
-      'youtube': { name: 'YouTube Premium', category: 'Entertainment', amount: 22.99, iconUrl: 'https://cdn.simpleicons.org/youtube/white', iconClass: 'icon-youtube' },
-      'chatgpt': { name: 'ChatGPT Plus', category: 'AI Tools', amount: 85.99, iconUrl: 'https://cdn.simpleicons.org/openai/white', iconClass: 'icon-chatgpt' },
+      'snapchat': { name: 'Snapchat+', category: 'Social Media', amount: 0, iconUrl: 'https://cdn.simpleicons.org/snapchat/white', iconClass: 'icon-snapchat' },
+      'netflix': { name: 'Netflix', category: 'Entertainment', amount: 0, iconUrl: 'https://cdn.simpleicons.org/netflix/white', iconClass: 'icon-netflix' },
+      'spotify': { name: 'Spotify', category: 'Music', amount: 0, iconUrl: 'https://cdn.simpleicons.org/spotify/white', iconClass: 'icon-spotify' },
+      'apple-music': { name: 'Apple Music', category: 'Music', amount: 0, iconUrl: 'https://cdn.simpleicons.org/applemusic/white', iconClass: 'icon-apple-music' },
+      'github': { name: 'GitHub Pro', category: 'Developer Tools', amount: 0, iconUrl: 'https://cdn.simpleicons.org/github/white', iconClass: 'icon-github' },
+      'apple-tv': { name: 'Apple TV+', category: 'Entertainment', amount: 0, iconUrl: 'https://cdn.simpleicons.org/appletv/white', iconClass: 'icon-apple-tv' },
+      'dstv': { name: 'DStv', category: 'Entertainment', amount: 0, iconUrl: 'https://cdn.simpleicons.org/dstv/white', iconClass: 'icon-dstv' },
+      'icloud': { name: 'iCloud Storage', category: 'Cloud Storage', amount: 0, iconUrl: 'https://cdn.simpleicons.org/icloud/white', iconClass: 'icon-icloud' },
+      'google-storage': { name: 'Google One', category: 'Cloud Storage', amount: 0, iconUrl: 'https://cdn.simpleicons.org/googlecloud/white', iconClass: 'icon-google-storage' },
+      'x': { name: 'X Premium', category: 'Social Media', amount: 0, iconUrl: 'https://cdn.simpleicons.org/x/white', iconClass: 'icon-x' },
+      'youtube': { name: 'YouTube Premium', category: 'Entertainment', amount: 0, iconUrl: 'https://cdn.simpleicons.org/youtube/white', iconClass: 'icon-youtube' },
+      'chatgpt': { name: 'ChatGPT Plus', category: 'AI Tools', amount: 0, iconUrl: 'https://cdn.simpleicons.org/openai/white', iconClass: 'icon-chatgpt' },
       'other': { name: '', category: 'Other', amount: 0, iconUrl: '', iconClass: 'icon-other' }
     };
 
@@ -503,7 +503,7 @@
       swipeTrack.classList.remove('dragging');
       
       const diff = currentX - startX;
-      if (Math.abs(diff) > 50) {
+      if (Math.abs(diff) > 30) {
         if (diff < 0 && currentIndex < swipeCards.length - 1) {
           currentIndex++;
         } else if (diff > 0 && currentIndex > 0) {
@@ -539,7 +539,7 @@
       swipeTrack.classList.remove('dragging');
       
       const diff = currentX - startX;
-      if (Math.abs(diff) > 50) {
+      if (Math.abs(diff) > 30) {
         if (diff < 0 && currentIndex < swipeCards.length - 1) {
           currentIndex++;
         } else if (diff > 0 && currentIndex > 0) {
@@ -602,7 +602,7 @@
         catEl.textContent = service.category;
         
         document.getElementById('subName').value = service.name;
-        document.getElementById('subAmount').value = service.amount;
+        document.getElementById('subAmount').value = ''; // User must set amount
         document.getElementById('subCategory').value = service.category;
       }
       
