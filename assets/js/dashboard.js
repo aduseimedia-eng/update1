@@ -304,33 +304,27 @@ async function loadGamificationData() {
       localStorage.setItem('userLevel', level.toString());
     }
     
-    const userLevelEl = document.getElementById('userLevel');
-    const levelBadgeEl = document.getElementById('levelBadge');
-    const xpProgressEl = document.getElementById('xpProgress');
-    const xpTextEl = document.getElementById('xpText');
-    if (userLevelEl) userLevelEl.textContent = `Level ${level}`;
-    if (levelBadgeEl) levelBadgeEl.textContent = level;
-    if (xpProgressEl) xpProgressEl.style.width = `${Math.min(100, progressPercent)}%`;
-    if (xpTextEl) xpTextEl.textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
+    document.getElementById('userLevel').textContent = `Level ${level}`;
+    document.getElementById('levelBadge').textContent = level;
+    document.getElementById('xpProgress').style.width = `${Math.min(100, progressPercent)}%`;
+    document.getElementById('xpText').textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
 
     // Load badges with animation
     const badgesResponse = await api.getBadges();
     const badges = badgesResponse.data || [];
     
     const badgesContainer = document.getElementById('badgesContainer');
-    if (badgesContainer) {
-      const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
-      
-      if (badges.length === 0) {
-        badgesContainer.innerHTML = badgeEmojis.map(emoji => 
-          `<span class="badge-item">${emoji}</span>`
-        ).join('');
-      } else {
-        badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
-          const isBadgeEarned = badges.length > idx;
-          return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
-        }).join('');
-      }
+    const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
+    
+    if (badges.length === 0) {
+      badgesContainer.innerHTML = badgeEmojis.map(emoji => 
+        `<span class="badge-item">${emoji}</span>`
+      ).join('');
+    } else {
+      badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
+        const isBadgeEarned = badges.length > idx;
+        return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
+      }).join('');
     }
 
     // Set motivational message
@@ -349,12 +343,9 @@ async function loadGamificationData() {
   } catch (error) {
     console.error('Load gamification error:', error);
     // Set defaults if gamification API fails
-    const ulEl = document.getElementById('userLevel');
-    const lbEl = document.getElementById('levelBadge');
-    const xtEl = document.getElementById('xpText');
-    if (ulEl) ulEl.textContent = 'Level 1';
-    if (lbEl) lbEl.textContent = '1';
-    if (xtEl) xtEl.textContent = '0 / 100 XP';
+    document.getElementById('userLevel').textContent = 'Level 1';
+    document.getElementById('levelBadge').textContent = '1';
+    document.getElementById('xpText').textContent = '0 / 100 XP';
   }
 }
 
