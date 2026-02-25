@@ -19,10 +19,10 @@
   <style>
     body { padding-top: 0 !important; }
 
-    /* Header */
-    .mtn-header { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 80%, #1a1a2e 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: 24px; overflow: hidden; }
-    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
-    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    /* Header - Green theme matching other pages */
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color, #006B3F) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: 24px; overflow: hidden; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
     .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; text-decoration: none; }
     .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
@@ -32,7 +32,7 @@
     .mtn-add-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.25); }
     .mtn-add-btn i { width: 20px; height: 20px; }
     .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px 8px 16px; position: relative; z-index: 1; text-align: center; }
-    .mtn-info-icon { width: 40px; height: 40px; border-radius: 14px; background: rgba(99,102,241,0.25); border: 1px solid rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .mtn-info-icon { width: 40px; height: 40px; border-radius: 14px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: white; }
     .mtn-info-icon i { width: 20px; height: 20px; }
     .mtn-info-title { font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.2px; }
     .mtn-info-subtitle { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
@@ -41,29 +41,71 @@
     .mtn-header-spacer { height: 148px; }
 
     /* Summary card */
-    .summary-card { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 60%, #533483 100%); border-radius: 20px; padding: 20px; margin: 0 0 16px 0; color: white; position: relative; overflow: hidden; }
-    .summary-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(165,180,252,0.2) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .summary-card { background: linear-gradient(135deg, var(--primary-color, #006B3F) 0%, #004d2c 60%, #002a19 100%); border-radius: 20px; padding: 20px; margin: 0 0 16px 0; color: white; position: relative; overflow: hidden; }
+    .summary-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
     .summary-item { text-align: center; }
-    .summary-value { font-size: 18px; font-weight: 800; color: #a5b4fc; letter-spacing: -0.5px; }
+    .summary-value { font-size: 18px; font-weight: 800; color: #a5f3c0; letter-spacing: -0.5px; }
     .summary-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
     .summary-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
     .summary-monthly { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
     .summary-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 14px 0 0 0; }
+
+    /* Swipe Card Carousel */
+    .swipe-section { margin-bottom: 20px; }
+    .swipe-section-title { font-size: 14px; font-weight: 700; color: var(--text-primary, #1f2937); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .swipe-section-title i { width: 18px; height: 18px; color: var(--primary-color, #006B3F); }
+    .swipe-hint { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; margin-left: auto; }
+    
+    .swipe-container { position: relative; overflow: hidden; border-radius: 20px; }
+    .swipe-track { display: flex; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); cursor: grab; }
+    .swipe-track:active { cursor: grabbing; }
+    .swipe-track.dragging { transition: none; }
+    
+    .swipe-card { flex: 0 0 280px; margin-right: 12px; background: var(--card-bg, #fff); border-radius: 20px; padding: 20px; border: 2px solid var(--border-color, #e5e7eb); box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; user-select: none; }
+    .swipe-card:last-child { margin-right: 0; }
+    .swipe-card:active { transform: scale(0.98); }
+    .swipe-card.selected { border-color: var(--primary-color, #006B3F); background: rgba(0,107,63,0.04); box-shadow: 0 4px 20px rgba(0,107,63,0.15); }
+    
+    .swipe-card-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 28px; }
+    .swipe-card-name { font-size: 18px; font-weight: 800; color: var(--text-primary, #1f2937); margin-bottom: 4px; }
+    .swipe-card-category { font-size: 12px; color: var(--text-secondary, #6b7280); font-weight: 500; margin-bottom: 12px; }
+    .swipe-card-price { font-size: 14px; font-weight: 700; color: var(--primary-color, #006B3F); }
+    .swipe-card-price span { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; }
+    
+    /* Service-specific colors */
+    .icon-snapchat { background: linear-gradient(135deg, #FFFC00, #FFE500); }
+    .icon-netflix { background: linear-gradient(135deg, #E50914, #B20710); }
+    .icon-spotify { background: linear-gradient(135deg, #1DB954, #169C46); }
+    .icon-apple-music { background: linear-gradient(135deg, #FA233B, #FB5C74); }
+    .icon-github { background: linear-gradient(135deg, #24292e, #0d1117); }
+    .icon-apple-tv { background: linear-gradient(135deg, #000000, #333333); }
+    .icon-dstv { background: linear-gradient(135deg, #003580, #0055B8); }
+    .icon-icloud { background: linear-gradient(135deg, #3693F3, #5AC8FA); }
+    .icon-google-storage { background: linear-gradient(135deg, #4285F4, #34A853); }
+    .icon-x { background: linear-gradient(135deg, #000000, #14171A); }
+    .icon-youtube { background: linear-gradient(135deg, #FF0000, #CC0000); }
+    .icon-chatgpt { background: linear-gradient(135deg, #10A37F, #1A7F64); }
+    .icon-other { background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); }
+    
+    /* Swipe Indicators */
+    .swipe-indicators { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+    .swipe-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-color, #e5e7eb); transition: all 0.3s; }
+    .swipe-dot.active { width: 24px; border-radius: 4px; background: var(--primary-color, #006B3F); }
 
     /* Alert banners */
     .alert-banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.4; }
     .alert-banner i { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
     .alert-warning { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
     .alert-danger  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
-    .alert-info    { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
+    .alert-info    { background: rgba(0,107,63,0.12); color: var(--primary-color, #006B3F); border: 1px solid rgba(0,107,63,0.25); }
     .alert-success { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
 
     /* Filter tabs */
     .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
     .filter-tabs::-webkit-scrollbar { display: none; }
     .filter-tab { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--card-bg, #fff); color: var(--text-secondary, #6b7280); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .filter-tab.active { background: #6366f1; border-color: #6366f1; color: white; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+    .filter-tab.active { background: var(--primary-color, #006B3F); border-color: var(--primary-color, #006B3F); color: white; box-shadow: 0 4px 12px rgba(0,107,63,0.3); }
     .filter-tab .tab-count { display: inline-flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.12); width: 18px; height: 18px; border-radius: 50%; font-size: 10px; margin-left: 4px; }
     .filter-tab.active .tab-count { background: rgba(255,255,255,0.25); }
 
@@ -74,21 +116,21 @@
     .sub-card.due-soon { border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.03); }
     .sub-card.cancelled { opacity: 0.5; }
     .sub-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .sub-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; font-weight: 700; }
+    .sub-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; font-weight: 700; }
     .sub-name { font-size: 16px; font-weight: 700; color: var(--text-primary, #1f2937); }
     .sub-category { font-size: 12px; color: var(--text-secondary, #6b7280); margin-top: 1px; font-weight: 500; }
     .sub-amount { margin-left: auto; text-align: right; }
-    .sub-amount-value { font-size: 18px; font-weight: 800; color: #6366f1; }
+    .sub-amount-value { font-size: 18px; font-weight: 800; color: var(--primary-color, #006B3F); }
     .sub-amount-freq { font-size: 11px; color: var(--text-secondary, #6b7280); font-weight: 500; }
     .sub-meta { display: flex; align-items: center; justify-content: space-between; }
     .due-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
     .due-badge.overdue { background: rgba(239,68,68,0.1); color: #ef4444; }
     .due-badge.due-soon { background: rgba(245,158,11,0.1); color: #f59e0b; }
-    .due-badge.upcoming { background: rgba(99,102,241,0.1); color: #6366f1; }
+    .due-badge.upcoming { background: rgba(0,107,63,0.1); color: var(--primary-color, #006B3F); }
     .due-badge.paid { background: rgba(34,197,94,0.1); color: #22c55e; }
     .due-badge i { width: 13px; height: 13px; }
     .sub-actions { display: flex; gap: 8px; }
-    .btn-pay { padding: 8px 16px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-pay { padding: 8px 16px; border-radius: 10px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); color: white; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .btn-pay:active { transform: scale(0.95); opacity: 0.9; }
     .btn-icon-action { width: 34px; height: 34px; border-radius: 10px; background: var(--bg-secondary, #f3f4f6); border: 1px solid var(--border-color, #e5e7eb); color: var(--text-secondary, #6b7280); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
     .btn-icon-action i { width: 15px; height: 15px; }
@@ -110,23 +152,20 @@
     .form-group { margin-bottom: 16px; }
     .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
     .form-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); color: var(--text-primary, #1f2937); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
-    .form-input:focus { border-color: #6366f1; background: var(--card-bg, #fff); }
+    .form-input:focus { border-color: var(--primary-color, #006B3F); background: var(--card-bg, #fff); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .currency-input-wrapper { position: relative; }
     .currency-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 700; color: var(--text-secondary, #6b7280); pointer-events: none; }
     .currency-input-wrapper .form-input { padding-left: 28px; }
 
-    /* Service presets */
-    .presets-label { font-size: 13px; font-weight: 600; color: var(--text-secondary, #6b7280); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
-    .presets-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
-    .preset-btn { padding: 10px 4px; border-radius: 12px; border: 1.5px solid var(--border-color, #e5e7eb); background: var(--bg-secondary, #f9fafb); cursor: pointer; transition: all 0.2s; text-align: center; }
-    .preset-btn:active { transform: scale(0.95); }
-    .preset-btn.selected { border-color: #6366f1; background: rgba(99,102,241,0.08); }
-    .preset-emoji { font-size: 20px; display: block; margin-bottom: 3px; }
-    .preset-name { font-size: 10px; font-weight: 600; color: var(--text-secondary, #6b7280); }
+    /* Selected Service Display in Modal */
+    .selected-service-display { background: var(--bg-secondary, #f3f4f6); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+    .selected-service-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .selected-service-name { font-size: 15px; font-weight: 700; color: var(--text-primary, #1f2937); }
+    .selected-service-cat { font-size: 11px; color: var(--text-secondary, #6b7280); }
 
     /* Fab */
-    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; box-shadow: 0 8px 24px rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; transition: all 0.25s; }
+    .fab { position: fixed; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, var(--primary-color, #006B3F), #00a855); color: white; border: none; box-shadow: 0 8px 24px rgba(0,107,63,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; transition: all 0.25s; }
     .fab:active { transform: scale(0.92); }
     .fab i { width: 24px; height: 24px; }
 
@@ -175,6 +214,111 @@
       </div>
     </div>
 
+    <!-- Swipe Cards Section -->
+    <div class="swipe-section">
+      <div class="swipe-section-title">
+        <i data-lucide="sparkles"></i>
+        Add New Subscription
+        <span class="swipe-hint">Swipe to browse →</span>
+      </div>
+      <div class="swipe-container">
+        <div class="swipe-track" id="swipeTrack">
+          <!-- Snapchat -->
+          <div class="swipe-card" data-service="snapchat" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-snapchat">👻</div>
+            <div class="swipe-card-name">Snapchat</div>
+            <div class="swipe-card-category">Social Media</div>
+            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+          </div>
+          <!-- Netflix -->
+          <div class="swipe-card" data-service="netflix" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-netflix">🎬</div>
+            <div class="swipe-card-name">Netflix</div>
+            <div class="swipe-card-category">Entertainment</div>
+            <div class="swipe-card-price">₵49.99 <span>/month</span></div>
+          </div>
+          <!-- Spotify -->
+          <div class="swipe-card" data-service="spotify" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-spotify">🎵</div>
+            <div class="swipe-card-name">Spotify</div>
+            <div class="swipe-card-category">Music</div>
+            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+          </div>
+          <!-- Apple Music -->
+          <div class="swipe-card" data-service="apple-music" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-apple-music">🎧</div>
+            <div class="swipe-card-name">Apple Music</div>
+            <div class="swipe-card-category">Music</div>
+            <div class="swipe-card-price">₵16.99 <span>/month</span></div>
+          </div>
+          <!-- GitHub -->
+          <div class="swipe-card" data-service="github" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-github">💻</div>
+            <div class="swipe-card-name">GitHub</div>
+            <div class="swipe-card-category">Developer Tools</div>
+            <div class="swipe-card-price">₵75.00 <span>/month</span></div>
+          </div>
+          <!-- Apple TV -->
+          <div class="swipe-card" data-service="apple-tv" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-apple-tv">📺</div>
+            <div class="swipe-card-name">Apple TV+</div>
+            <div class="swipe-card-category">Entertainment</div>
+            <div class="swipe-card-price">₵39.99 <span>/month</span></div>
+          </div>
+          <!-- DSTV -->
+          <div class="swipe-card" data-service="dstv" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-dstv">📡</div>
+            <div class="swipe-card-name">DStv</div>
+            <div class="swipe-card-category">Entertainment</div>
+            <div class="swipe-card-price">₵150.00 <span>/month</span></div>
+          </div>
+          <!-- Apple Storage (iCloud) -->
+          <div class="swipe-card" data-service="icloud" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-icloud">☁️</div>
+            <div class="swipe-card-name">iCloud Storage</div>
+            <div class="swipe-card-category">Cloud Storage</div>
+            <div class="swipe-card-price">₵14.99 <span>/month</span></div>
+          </div>
+          <!-- Google Storage -->
+          <div class="swipe-card" data-service="google-storage" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-google-storage">🔵</div>
+            <div class="swipe-card-name">Google One</div>
+            <div class="swipe-card-category">Cloud Storage</div>
+            <div class="swipe-card-price">₵12.99 <span>/month</span></div>
+          </div>
+          <!-- X (Twitter) -->
+          <div class="swipe-card" data-service="x" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-x">𝕏</div>
+            <div class="swipe-card-name">X Premium</div>
+            <div class="swipe-card-category">Social Media</div>
+            <div class="swipe-card-price">₵60.00 <span>/month</span></div>
+          </div>
+          <!-- YouTube -->
+          <div class="swipe-card" data-service="youtube" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-youtube">▶️</div>
+            <div class="swipe-card-name">YouTube Premium</div>
+            <div class="swipe-card-category">Entertainment</div>
+            <div class="swipe-card-price">₵22.99 <span>/month</span></div>
+          </div>
+          <!-- ChatGPT -->
+          <div class="swipe-card" data-service="chatgpt" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-chatgpt">🤖</div>
+            <div class="swipe-card-name">ChatGPT Plus</div>
+            <div class="swipe-card-category">AI Tools</div>
+            <div class="swipe-card-price">₵85.99 <span>/month</span></div>
+          </div>
+          <!-- Others -->
+          <div class="swipe-card" data-service="other" onclick="selectServiceCard(this)">
+            <div class="swipe-card-icon icon-other">➕</div>
+            <div class="swipe-card-name">Other</div>
+            <div class="swipe-card-category">Custom Service</div>
+            <div class="swipe-card-price">Specify <span>amount</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="swipe-indicators" id="swipeIndicators"></div>
+    </div>
+
     <!-- Alerts -->
     <div id="alertsContainer"></div>
 
@@ -204,22 +348,19 @@
       <div class="modal-handle"></div>
       <div id="modalTitle" class="modal-title">New Subscription</div>
 
-      <!-- Service Presets -->
-      <div class="presets-label">Quick Add</div>
-      <div class="presets-grid" id="presetGrid">
-        <button class="preset-btn" onclick="applyPreset('Netflix','Netflix','Entertainment',49.99)" data-name="Netflix"><span class="preset-emoji">📺</span><span class="preset-name">Netflix</span></button>
-        <button class="preset-btn" onclick="applyPreset('Spotify','Spotify','Entertainment',14.99)" data-name="Spotify"><span class="preset-emoji">🎵</span><span class="preset-name">Spotify</span></button>
-        <button class="preset-btn" onclick="applyPreset('Prime','Amazon Prime','Entertainment',24.99)" data-name="Prime"><span class="preset-emoji">📦</span><span class="preset-name">Prime</span></button>
-        <button class="preset-btn" onclick="applyPreset('YouTube','YouTube Premium','Entertainment',19.99)" data-name="YouTube"><span class="preset-emoji">▶️</span><span class="preset-name">YouTube</span></button>
-        <button class="preset-btn" onclick="applyPreset('Canva','Canva Pro','Software',29.99)" data-name="Canva"><span class="preset-emoji">🎨</span><span class="preset-name">Canva</span></button>
-        <button class="preset-btn" onclick="applyPreset('ChatGPT','ChatGPT Plus','Software',85.99)" data-name="ChatGPT"><span class="preset-emoji">🤖</span><span class="preset-name">ChatGPT</span></button>
-        <button class="preset-btn" onclick="applyPreset('Showmax','Showmax','Entertainment',39.99)" data-name="Showmax"><span class="preset-emoji">🎬</span><span class="preset-name">Showmax</span></button>
-        <button class="preset-btn" onclick="applyPreset('iCloud','iCloud Storage','Software',9.99)" data-name="iCloud"><span class="preset-emoji">☁️</span><span class="preset-name">iCloud</span></button>
+      <!-- Selected Service Display -->
+      <div id="selectedServiceDisplay" class="selected-service-display" style="display:none;">
+        <div id="selectedServiceIcon" class="selected-service-icon icon-other">➕</div>
+        <div>
+          <div id="selectedServiceName" class="selected-service-name">Service</div>
+          <div id="selectedServiceCat" class="selected-service-cat">Category</div>
+        </div>
       </div>
 
       <form id="subForm" onsubmit="handleSubmitSub(event)">
         <input type="hidden" id="editSubId">
-        <div class="form-group">
+        <input type="hidden" id="selectedService" value="">
+        <div class="form-group" id="serviceNameGroup">
           <label class="form-label">Service Name</label>
           <input type="text" class="form-input" id="subName" placeholder="e.g., Netflix" required>
         </div>
@@ -246,6 +387,11 @@
             <label class="form-label">Category</label>
             <select class="form-input" id="subCategory">
               <option value="Entertainment">Entertainment</option>
+              <option value="Music">Music</option>
+              <option value="Social Media">Social Media</option>
+              <option value="Cloud Storage">Cloud Storage</option>
+              <option value="Developer Tools">Developer Tools</option>
+              <option value="AI Tools">AI Tools</option>
               <option value="Software">Software</option>
               <option value="Health">Health</option>
               <option value="Education">Education</option>
@@ -266,7 +412,7 @@
         </div>
         <div style="display:flex; gap:10px; margin-top:4px;">
           <button type="button" class="btn" style="flex:1; background:var(--bg-secondary,#f3f4f6); color:var(--text-secondary,#6b7280); border:none;" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn" style="flex:2; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; border:none; font-weight:700;" id="formSubmitBtn">Save Subscription</button>
+          <button type="submit" class="btn" style="flex:2; background:linear-gradient(135deg,var(--primary-color,#006B3F),#00a855); color:white; border:none; font-weight:700;" id="formSubmitBtn">Save Subscription</button>
         </div>
       </form>
     </div>
@@ -280,6 +426,192 @@
 
     let allSubscriptions = [];
     let currentFilter = 'all';
+    let selectedServiceData = null;
+
+    // ─── Service Data ───────────────────────────────────────────────────────────
+    const servicePresets = {
+      'snapchat': { name: 'Snapchat+', category: 'Social Media', amount: 14.99, icon: '👻', iconClass: 'icon-snapchat' },
+      'netflix': { name: 'Netflix', category: 'Entertainment', amount: 49.99, icon: '🎬', iconClass: 'icon-netflix' },
+      'spotify': { name: 'Spotify', category: 'Music', amount: 14.99, icon: '🎵', iconClass: 'icon-spotify' },
+      'apple-music': { name: 'Apple Music', category: 'Music', amount: 16.99, icon: '🎧', iconClass: 'icon-apple-music' },
+      'github': { name: 'GitHub Pro', category: 'Developer Tools', amount: 75.00, icon: '💻', iconClass: 'icon-github' },
+      'apple-tv': { name: 'Apple TV+', category: 'Entertainment', amount: 39.99, icon: '📺', iconClass: 'icon-apple-tv' },
+      'dstv': { name: 'DStv', category: 'Entertainment', amount: 150.00, icon: '📡', iconClass: 'icon-dstv' },
+      'icloud': { name: 'iCloud Storage', category: 'Cloud Storage', amount: 14.99, icon: '☁️', iconClass: 'icon-icloud' },
+      'google-storage': { name: 'Google One', category: 'Cloud Storage', amount: 12.99, icon: '🔵', iconClass: 'icon-google-storage' },
+      'x': { name: 'X Premium', category: 'Social Media', amount: 60.00, icon: '𝕏', iconClass: 'icon-x' },
+      'youtube': { name: 'YouTube Premium', category: 'Entertainment', amount: 22.99, icon: '▶️', iconClass: 'icon-youtube' },
+      'chatgpt': { name: 'ChatGPT Plus', category: 'AI Tools', amount: 85.99, icon: '🤖', iconClass: 'icon-chatgpt' },
+      'other': { name: '', category: 'Other', amount: 0, icon: '➕', iconClass: 'icon-other' }
+    };
+
+    // ─── Swipe Card Functionality ───────────────────────────────────────────────
+
+    let swipeTrack, swipeCards, currentIndex = 0;
+    let isDragging = false, startX = 0, currentX = 0, translateX = 0;
+    const cardWidth = 292; // 280px card + 12px margin
+
+    function initSwipeCards() {
+      swipeTrack = document.getElementById('swipeTrack');
+      swipeCards = document.querySelectorAll('.swipe-card');
+      
+      // Create indicators
+      const indicatorsContainer = document.getElementById('swipeIndicators');
+      indicatorsContainer.innerHTML = '';
+      const numIndicators = Math.ceil(swipeCards.length / 1);
+      for (let i = 0; i < Math.min(numIndicators, 13); i++) {
+        const dot = document.createElement('div');
+        dot.className = 'swipe-dot' + (i === 0 ? ' active' : '');
+        indicatorsContainer.appendChild(dot);
+      }
+
+      // Touch events
+      swipeTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
+      swipeTrack.addEventListener('touchmove', handleTouchMove, { passive: false });
+      swipeTrack.addEventListener('touchend', handleTouchEnd);
+      
+      // Mouse events for desktop
+      swipeTrack.addEventListener('mousedown', handleMouseDown);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    function handleTouchStart(e) {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      swipeTrack.classList.add('dragging');
+    }
+
+    function handleTouchMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
+      const maxTranslate = -(swipeCards.length - 1) * cardWidth;
+      let newTranslate = translateX + diff;
+      newTranslate = Math.max(maxTranslate, Math.min(0, newTranslate));
+      swipeTrack.style.transform = `translateX(${newTranslate}px)`;
+    }
+
+    function handleTouchEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      swipeTrack.classList.remove('dragging');
+      
+      const diff = currentX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0 && currentIndex < swipeCards.length - 1) {
+          currentIndex++;
+        } else if (diff > 0 && currentIndex > 0) {
+          currentIndex--;
+        }
+      }
+      
+      translateX = -currentIndex * cardWidth;
+      swipeTrack.style.transform = `translateX(${translateX}px)`;
+      updateIndicators();
+    }
+
+    function handleMouseDown(e) {
+      isDragging = true;
+      startX = e.clientX;
+      swipeTrack.classList.add('dragging');
+      e.preventDefault();
+    }
+
+    function handleMouseMove(e) {
+      if (!isDragging) return;
+      currentX = e.clientX;
+      const diff = currentX - startX;
+      const maxTranslate = -(swipeCards.length - 1) * cardWidth;
+      let newTranslate = translateX + diff;
+      newTranslate = Math.max(maxTranslate, Math.min(0, newTranslate));
+      swipeTrack.style.transform = `translateX(${newTranslate}px)`;
+    }
+
+    function handleMouseUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      swipeTrack.classList.remove('dragging');
+      
+      const diff = currentX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0 && currentIndex < swipeCards.length - 1) {
+          currentIndex++;
+        } else if (diff > 0 && currentIndex > 0) {
+          currentIndex--;
+        }
+      }
+      
+      translateX = -currentIndex * cardWidth;
+      swipeTrack.style.transform = `translateX(${translateX}px)`;
+      updateIndicators();
+    }
+
+    function updateIndicators() {
+      const dots = document.querySelectorAll('.swipe-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function selectServiceCard(card) {
+      // Remove previous selection
+      document.querySelectorAll('.swipe-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      
+      const serviceKey = card.dataset.service;
+      selectedServiceData = servicePresets[serviceKey];
+      
+      // Open modal with pre-filled data
+      openModalWithService(serviceKey);
+    }
+
+    function openModalWithService(serviceKey) {
+      const service = servicePresets[serviceKey];
+      
+      document.getElementById('editSubId').value = '';
+      document.getElementById('modalTitle').textContent = 'New Subscription';
+      document.getElementById('formSubmitBtn').textContent = 'Save Subscription';
+      document.getElementById('subForm').reset();
+      document.getElementById('selectedService').value = serviceKey;
+      
+      // Show selected service display
+      const displayEl = document.getElementById('selectedServiceDisplay');
+      const iconEl = document.getElementById('selectedServiceIcon');
+      const nameEl = document.getElementById('selectedServiceName');
+      const catEl = document.getElementById('selectedServiceCat');
+      const nameGroupEl = document.getElementById('serviceNameGroup');
+      
+      if (serviceKey === 'other') {
+        displayEl.style.display = 'none';
+        nameGroupEl.style.display = 'block';
+        document.getElementById('subName').value = '';
+        document.getElementById('subAmount').value = '';
+        document.getElementById('subCategory').value = 'Other';
+      } else {
+        displayEl.style.display = 'flex';
+        nameGroupEl.style.display = 'none';
+        iconEl.className = 'selected-service-icon ' + service.iconClass;
+        iconEl.textContent = service.icon;
+        nameEl.textContent = service.name;
+        catEl.textContent = service.category;
+        
+        document.getElementById('subName').value = service.name;
+        document.getElementById('subAmount').value = service.amount;
+        document.getElementById('subCategory').value = service.category;
+      }
+      
+      document.getElementById('subFrequency').value = 'monthly';
+      
+      // Default next due = today + 1 month
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1);
+      document.getElementById('subNextDue').value = d.toISOString().split('T')[0];
+      
+      document.getElementById('subModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
 
     // ─── Load & Render ──────────────────────────────────────────────────────────
 
@@ -338,6 +670,16 @@
       }
     }
 
+    function getServiceIcon(name) {
+      const lowName = name.toLowerCase();
+      for (const [key, data] of Object.entries(servicePresets)) {
+        if (lowName.includes(key) || data.name.toLowerCase().includes(lowName)) {
+          return { icon: data.icon, iconClass: data.iconClass };
+        }
+      }
+      return { icon: name.charAt(0).toUpperCase(), iconClass: 'icon-other' };
+    }
+
     function renderList() {
       const container = document.getElementById('subscriptionsContainer');
       let filtered = allSubscriptions;
@@ -352,7 +694,7 @@
           <div class="empty-state">
             <i data-lucide="credit-card"></i>
             <h3>No subscriptions here</h3>
-            <p>Tap <strong>+</strong> to add your first subscription.</p>
+            <p>Swipe the cards above to add your first subscription.</p>
           </div>`;
         lucide.createIcons({ node: container });
         return;
@@ -373,13 +715,13 @@
       else if (s.is_due_soon) { badgeClass = 'due-soon'; badgeIcon = 'clock'; badgeText = `Due in ${s.days_until_due}d`; }
       else { badgeClass = 'upcoming'; badgeIcon = 'calendar'; badgeText = s.days_until_due === 0 ? 'Due today' : `Due in ${s.days_until_due}d`; }
 
-      const initial = s.name.charAt(0).toUpperCase();
+      const serviceInfo = getServiceIcon(s.name);
       const freqLabel = { weekly: '/wk', monthly: '/mo', quarterly: '/qtr', yearly: '/yr' }[s.frequency] || '/mo';
 
       return `
         <div class="${classes}">
           <div class="sub-header">
-            <div class="sub-icon">${initial}</div>
+            <div class="sub-icon ${serviceInfo.iconClass}" style="font-size:20px;">${serviceInfo.icon}</div>
             <div style="flex:1; min-width:0;">
               <div class="sub-name">${escHtml(s.name)}</div>
               <div class="sub-category">${escHtml(s.category)}</div>
@@ -461,7 +803,13 @@
       document.getElementById('modalTitle').textContent = 'New Subscription';
       document.getElementById('formSubmitBtn').textContent = 'Save Subscription';
       document.getElementById('subForm').reset();
-      clearPresetHighlight();
+      document.getElementById('selectedService').value = '';
+      document.getElementById('selectedServiceDisplay').style.display = 'none';
+      document.getElementById('serviceNameGroup').style.display = 'block';
+      
+      // Clear swipe card selection
+      document.querySelectorAll('.swipe-card').forEach(c => c.classList.remove('selected'));
+      
       // Default next due = today + 1 month
       const d = new Date();
       d.setMonth(d.getMonth() + 1);
@@ -482,7 +830,16 @@
       document.getElementById('subCategory').value = s.category;
       document.getElementById('subNextDue').value = s.next_due_date ? s.next_due_date.split('T')[0] : '';
       document.getElementById('subNotes').value = s.notes || '';
-      clearPresetHighlight();
+      
+      // Show service display if it matches a preset
+      const serviceInfo = getServiceIcon(s.name);
+      document.getElementById('selectedServiceDisplay').style.display = 'flex';
+      document.getElementById('selectedServiceIcon').className = 'selected-service-icon ' + serviceInfo.iconClass;
+      document.getElementById('selectedServiceIcon').textContent = serviceInfo.icon;
+      document.getElementById('selectedServiceName').textContent = s.name;
+      document.getElementById('selectedServiceCat').textContent = s.category;
+      document.getElementById('serviceNameGroup').style.display = 'none';
+      
       document.getElementById('subModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -490,6 +847,8 @@
     function closeModal() {
       document.getElementById('subModal').classList.remove('active');
       document.body.style.overflow = '';
+      // Clear selection
+      document.querySelectorAll('.swipe-card').forEach(c => c.classList.remove('selected'));
     }
 
     document.getElementById('subModal').addEventListener('click', e => {
@@ -526,21 +885,6 @@
       }
     }
 
-    // ─── Presets ───────────────────────────────────────────────────────────────
-
-    function applyPreset(dataName, fullName, category, amount) {
-      document.getElementById('subName').value = fullName;
-      document.getElementById('subAmount').value = amount;
-      document.getElementById('subCategory').value = category;
-      document.getElementById('subFrequency').value = 'monthly';
-      clearPresetHighlight();
-      document.querySelector(`[data-name="${dataName}"]`)?.classList.add('selected');
-    }
-
-    function clearPresetHighlight() {
-      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
-    }
-
     // ─── Utility ───────────────────────────────────────────────────────────────
 
     function escHtml(str) {
@@ -556,6 +900,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = utils.getCurrencySymbol(); });
+      initSwipeCards();
       loadAll();
     });
   </script>
