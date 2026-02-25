@@ -46,9 +46,18 @@ app.use(helmet({
 }));
 
 // CORS configuration
+const allowedOrigins = [
+  'https://kudisave.com',
+  'https://www.kudisave.com',
+  'https://aduseimedia-eng.github.io',
+  'http://localhost:5000',
+  'http://localhost:8080',
+  'http://127.0.0.1:5500'
+];
+
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? (process.env.CORS_ORIGIN || '').split(',')
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : allowedOrigins)
     : true, // Allow all origins in development
   credentials: true,
   optionsSuccessStatus: 200
