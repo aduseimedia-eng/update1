@@ -4,21 +4,19 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const { Pool } = require('pg');
 const fs = require('fs');
 
-const dbUrl = process.env.DATABASE_URL;
+// Use DATABASE_PUBLIC_URL for external access
+const dbUrl = 'postgresql://postgres:HqBCBQHyrxnBodPVcKKQdvdIMHlHQezX@mainline.proxy.rlwy.net:48302/railway';
 
 console.log('=== KudiSave Migration Script ===');
-console.log('DATABASE_URL exists:', !!dbUrl);
-console.log('URL preview:', dbUrl?.substring(0, 30) + '...');
+console.log('Using Railway public proxy URL');
 
-if (!dbUrl) {
-  console.error('ERROR: No DATABASE_URL found in .env');
-  process.exit(1);
-}
-
-// Connect without SSL for Railway proxy
+// Connect with SSL for external proxy
 const pool = new Pool({
   connectionString: dbUrl,
-  connectionTimeoutMillis: 30000
+  ssl: {
+    rejectUnauthorized: false
+  },
+  connectionTimeoutMillis: 60000
 });
 
 async function run() {
