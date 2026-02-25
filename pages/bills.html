@@ -1201,20 +1201,36 @@
       if (detailsContent) lucide.createIcons({ node: detailsContent });
     }
 
-    function markAsPaid(billId) {
+    async function markAsPaid(billId) {
       const index = bills.findIndex(b => b.id === billId);
       if (index !== -1) {
+        const bill = bills[index];
         bills[index].status = 'paid';
         bills[index].paidDate = new Date().toISOString();
         localStorage.setItem('kudisave_bills', JSON.stringify(bills));
         closeModal('billDetailsModal');
         renderBills();
         updateSummary();
-        utils.showAlert('Bill marked as paid! 🎉', 'success');
+
+        // Also record as an expense so it deducts from income and shows in Reports
+        try {
+          await api.createExpense({
+            amount: bill.amount,
+            category: bill.category || 'Bills',
+            payment_method: 'other',
+            expense_date: new Date().toISOString().split('T')[0],
+            note: `Bill payment: ${bill.name}`,
+            is_recurring: bill.frequency !== 'once'
+          });
+          utils.showAlert('Bill paid & recorded as expense! 🎉', 'success');
+        } catch (err) {
+          console.error('Failed to record bill expense:', err);
+          utils.showAlert('Bill marked as paid! (expense sync failed)', 'warning');
+        }
       }
     }
 
-    function markAsUnpaid(billId) {
+    async function markAsUnpaid(billId) {
       const index = bills.findIndex(b => b.id === billId);
       if (index !== -1) {
         bills[index].status = 'pending';
