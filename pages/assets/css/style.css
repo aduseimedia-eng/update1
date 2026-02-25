@@ -455,11 +455,11 @@ textarea {
 
 /* ===== PREMIUM MOBILE SIDE MENU ===== */
 
-/* Menu Panel */
+/* Menu Panel — AirtelTigo left-slide style */
 .mobile-menu {
   position: fixed;
   top: 0;
-  right: -100%;
+  left: -100%;
   width: 310px;
   max-width: 85vw;
   height: 100vh;
@@ -467,15 +467,15 @@ textarea {
   background: var(--card-bg);
   z-index: 102;
   padding-top: env(safe-area-inset-top, 0px);
-  padding-right: var(--safe-area-right);
+  padding-left: var(--safe-area-right);
   padding-bottom: var(--safe-area-bottom);
-  transition: right 0.45s cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: -12px 0 60px rgba(0,0,0,0.18);
+  transition: left 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 12px 0 60px rgba(0,0,0,0.22);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(0,0,0,0.04);
+  border-right: 1px solid rgba(0,0,0,0.06);
 }
 
 /* Accent line at top of menu */
@@ -497,7 +497,7 @@ textarea {
 }
 
 .mobile-menu.active {
-  right: 0;
+  left: 0;
 }
 
 /* Frosted Overlay */
@@ -513,7 +513,7 @@ textarea {
   z-index: 101;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: opacity 0.32s ease;
 }
 
 .mobile-menu-overlay.active {
@@ -691,7 +691,7 @@ textarea {
 .mobile-menu.active .mobile-menu-link,
 .mobile-menu.active .menu-section-label,
 .mobile-menu.active .menu-theme-row {
-  animation: menuItemSlide 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: menuItemSlide 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .mobile-menu.active .menu-section-label:nth-child(1) { animation-delay: 0.05s; }
@@ -711,12 +711,35 @@ textarea {
 @keyframes menuItemSlide {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(-28px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+/* AirtelTigo-style push effect — page content shifts right when menu opens */
+.mtn-header,
+.container {
+  transition: transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              border-radius 0.32s ease,
+              box-shadow 0.32s ease;
+  transform-origin: right center;
+  will-change: transform;
+}
+
+body.menu-open .mtn-header {
+  transform: translateX(72vw) scale(0.9);
+  border-radius: 0 0 24px 24px;
+  pointer-events: none;
+}
+
+body.menu-open .container {
+  transform: translateX(72vw) scale(0.9);
+  border-radius: 24px;
+  box-shadow: -24px 0 60px rgba(0,0,0,0.2);
+  pointer-events: none;
 }
 
 /* Icon container for nav links */

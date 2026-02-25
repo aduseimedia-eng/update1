@@ -2214,6 +2214,7 @@
       if (hamburger) hamburger.classList.toggle('active');
       menu.classList.toggle('active');
       overlay.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
       document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
       // Re-render icons inside menu
       if (menu.classList.contains('active')) {
