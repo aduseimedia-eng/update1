@@ -141,8 +141,9 @@
 
     .profile-joined {
       font-size: 13px;
-      color: rgba(255,255,255,0.6);
-      margin-top: 6px;
+      color: var(--text-secondary, #6b7280);
+      margin-top: 2px;
+      margin-bottom: 10px;
     }
 
     .settings-section {
@@ -423,7 +424,7 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
     .mtn-header-spacer { height: 200px; }
-    .container { padding-top: 30px; padding-bottom: 100px; }
+    .container { padding-top: 10px; padding-bottom: 100px; }
   </style>
 </head>
 <body>
@@ -452,7 +453,6 @@
     <!-- Hidden file input for avatar -->
     <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)" style="display:none">
     <div class="profile-joined" id="profileJoined">Member since ...</div>
-    </div>
 
     <!-- Profile Information -->
     <div class="settings-section">
