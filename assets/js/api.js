@@ -148,14 +148,17 @@ class APIService {
     }
   }
 
-  // Get authorization headers
+  // Get authorization headers - always reads fresh token from localStorage
   getHeaders(includeAuth = true) {
     const headers = {
       'Content-Type': 'application/json'
     };
 
-    if (includeAuth && this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+    if (includeAuth) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
     }
 
     return headers;

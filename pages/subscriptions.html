@@ -621,6 +621,14 @@
 
     async function loadAll() {
       try {
+        // Check if user has a token
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.warn('No auth token found');
+          window.location.href = '../index.html';
+          return;
+        }
+
         const [subsResp, insightsResp] = await Promise.all([
           api.getSubscriptions(),
           api.getSubscriptionInsights()
@@ -631,13 +639,32 @@
         renderList();
         updateCounts();
       } catch (err) {
-        console.error(err);
+        console.error('Subscriptions load error:', err);
+        
+        let errorMsg = 'Check your connection and try again.';
+        let iconName = 'wifi-off';
+        
+        // Handle specific error types
+        if (err.status === 401 || err.message?.includes('token')) {
+          errorMsg = 'Session expired. Please log in again.';
+          iconName = 'log-in';
+          // Clear invalid token and redirect
+          localStorage.removeItem('token');
+          setTimeout(() => window.location.href = '../index.html', 2000);
+        } else if (err.status === 403) {
+          errorMsg = 'Access denied. Please log in again.';
+          iconName = 'shield-x';
+        } else if (err.message?.includes('Failed to fetch')) {
+          errorMsg = 'Server unavailable. Please try again later.';
+          iconName = 'server-off';
+        }
+        
         utils.showAlert('Failed to load subscriptions', 'error');
         document.getElementById('subscriptionsContainer').innerHTML = `
           <div class="empty-state">
-            <i data-lucide="wifi-off"></i>
+            <i data-lucide="${iconName}"></i>
             <h3>Couldn't load data</h3>
-            <p>Check your connection and try again.</p>
+            <p>${errorMsg}</p>
           </div>`;
         lucide.createIcons({ node: document.getElementById('subscriptionsContainer') });
       }
