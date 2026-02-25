@@ -49,23 +49,36 @@ app.use(helmet({
 const allowedOrigins = [
   'https://kudisave.com',
   'https://www.kudisave.com',
-  'https://aduseimedia-eng.github.io',
-  'http://localhost:5000',
-  'http://localhost:5500',
-  'http://localhost:5501',
-  'http://localhost:8080',
-  'http://localhost:3000',
-  'http://127.0.0.1:5000',
-  'http://127.0.0.1:5500',
-  'http://127.0.0.1:5501',
-  'http://127.0.0.1:8080',
-  'http://127.0.0.1:3000'
+  'https://aduseimedia-eng.github.io'
 ];
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : allowedOrigins)
-    : true, // Allow all origins in development
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow all localhost/127.0.0.1 origins (any port)
+    if (origin.startsWith('http://localhost:') || 
+        origin.startsWith('http://127.0.0.1:') ||
+        origin === 'http://localhost' ||
+        origin === 'http://127.0.0.1') {
+      return callback(null, true);
+    }
+    
+    // Allow specific production origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Allow GitHub Pages subpaths
+    if (origin.includes('github.io')) {
+      return callback(null, true);
+    }
+    
+    // Block other origins in production
+    console.log('CORS blocked origin:', origin);
+    callback(null, false);
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
