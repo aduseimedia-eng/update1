@@ -1762,11 +1762,42 @@
         </button>
       </div>
       <div class="menu-profile-area">
-        <div class="menu-avatar" id="menuAvatarInitials">U</div>
+        <div class="menu-avatar" id="menuAvatarInitials">U
+          <div class="menu-avatar-badge" id="menuLevelBadge">1</div>
+        </div>
         <div class="menu-profile-info">
           <div class="menu-profile-name" id="menuUserName">Welcome!</div>
           <div class="menu-profile-email" id="menuUserEmail">Manage your finances</div>
         </div>
+      </div>
+      <!-- XP Progress Bar -->
+      <div class="menu-xp-bar">
+        <div class="menu-xp-info">
+          <span class="menu-xp-label"><span class="xp-star">⭐</span> Level <span id="menuXpLevel">1</span></span>
+          <span class="menu-xp-value" id="menuXpText">0 / 100 XP</span>
+        </div>
+        <div class="menu-xp-track">
+          <div class="menu-xp-fill" id="menuXpFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="menu-stats-row">
+      <div class="menu-stat-item">
+        <div class="menu-stat-icon">🔥</div>
+        <div class="menu-stat-value" id="menuStreakCount">0</div>
+        <div class="menu-stat-label">Day Streak</div>
+      </div>
+      <div class="menu-stat-item">
+        <div class="menu-stat-icon">🏆</div>
+        <div class="menu-stat-value" id="menuBadgeCount">0</div>
+        <div class="menu-stat-label">Badges</div>
+      </div>
+      <div class="menu-stat-item">
+        <div class="menu-stat-icon">🎯</div>
+        <div class="menu-stat-value" id="menuGoalCount">0</div>
+        <div class="menu-stat-label">Goals</div>
       </div>
     </div>
 
@@ -1788,9 +1819,10 @@
       <a href="bills.html" class="mobile-menu-link">
         <div class="menu-icon-wrap menu-icon-bills"><i data-lucide="calendar-clock" class="icon-menu"></i></div>
         Bills & Payments
+        <span class="menu-link-badge" id="menuBillsBadge" style="display:none;">0</span>
       </a>
       <a href="subscriptions.html" class="mobile-menu-link">
-        <div class="menu-icon-wrap menu-icon-bills"><i data-lucide="repeat" class="icon-menu"></i></div>
+        <div class="menu-icon-wrap menu-icon-subscriptions"><i data-lucide="repeat" class="icon-menu"></i></div>
         Subscriptions
       </a>
       <a href="reports.html" class="mobile-menu-link">
@@ -1802,6 +1834,7 @@
       <a href="achievements.html" class="mobile-menu-link">
         <div class="menu-icon-wrap menu-icon-achievements"><i data-lucide="trophy" class="icon-menu"></i></div>
         Achievements
+        <span class="menu-link-badge gold" id="menuAchievementBadge" style="display:none;">0</span>
       </a>
       <a href="challenges.html" class="mobile-menu-link">
         <div class="menu-icon-wrap menu-icon-challenges"><i data-lucide="swords" class="icon-menu"></i></div>
@@ -1836,7 +1869,7 @@
 
     <!-- Footer -->
     <div class="menu-footer">
-      <span class="menu-footer-brand">KudiSave</span>
+      <span class="menu-footer-brand"><span class="brand-dot"></span> KudiSave</span>
       <span class="menu-footer-version">v1.0</span>
     </div>
   </div>
@@ -2285,6 +2318,152 @@
             link.classList.remove('active-page');
           }
         });
+        // Populate gamified menu data
+        populateMenuStats();
+      }
+    }
+
+    // Gamified menu data
+    function populateMenuStats() {
+      try {
+        // Calculate XP from user activity
+        var xpData = calculateUserXP();
+        var lvl = xpData.level;
+        var xp = xpData.currentXP;
+        var needed = xpData.xpForNext;
+        var pct = needed > 0 ? Math.min((xp / needed) * 100, 100) : 0;
+
+        var levelEl = document.getElementById('menuLevelBadge');
+        var xpLevelEl = document.getElementById('menuXpLevel');
+        var xpTextEl = document.getElementById('menuXpText');
+        var xpFillEl = document.getElementById('menuXpFill');
+
+        if (levelEl) levelEl.textContent = lvl;
+        if (xpLevelEl) xpLevelEl.textContent = lvl;
+        if (xpTextEl) xpTextEl.textContent = xp + ' / ' + needed + ' XP';
+        if (xpFillEl) xpFillEl.style.width = pct + '%';
+
+        // Streak count (days with at least one logged expense)
+        var streak = calculateStreak();
+        var streakEl = document.getElementById('menuStreakCount');
+        if (streakEl) streakEl.textContent = streak;
+
+        // Badge count from achievements
+        var badgeCount = countEarnedBadges();
+        var badgeEl = document.getElementById('menuBadgeCount');
+        if (badgeEl) badgeEl.textContent = badgeCount;
+
+        // Goal count & pending bills
+        populateMenuCounts();
+      } catch(e) {
+        console.log('Menu stats error:', e);
+      }
+    }
+
+    function calculateUserXP() {
+      // XP sources: expenses logged, goals created, bills paid, challenges, logins
+      var totalXP = 0;
+
+      // Logged expenses = 5 XP each (from dashboard data if loaded)
+      var expenseEls = document.querySelectorAll('.transaction-item, .expense-item');
+      totalXP += expenseEls.length * 5;
+
+      // Goals = 20 XP each
+      var savedGoals = localStorage.getItem('kudisave_goals_count');
+      if (savedGoals) totalXP += parseInt(savedGoals) * 20;
+
+      // Bills paid = 15 XP each
+      var bills = JSON.parse(localStorage.getItem('kudisave_bills') || '[]');
+      var paidBills = bills.filter(function(b) { return b.status === 'paid'; });
+      totalXP += paidBills.length * 15;
+
+      // Daily login bonus = 10 XP per day
+      var loginDays = parseInt(localStorage.getItem('kudisave_login_days') || '0');
+      if (!loginDays) {
+        var firstSeen = localStorage.getItem('kudisave_first_seen');
+        if (!firstSeen) {
+          localStorage.setItem('kudisave_first_seen', new Date().toISOString());
+          loginDays = 1;
+        } else {
+          var daysDiff = Math.floor((Date.now() - new Date(firstSeen).getTime()) / 86400000);
+          loginDays = Math.max(1, daysDiff);
+        }
+        localStorage.setItem('kudisave_login_days', loginDays.toString());
+      }
+      totalXP += loginDays * 10;
+
+      // Minimum base XP
+      totalXP = Math.max(totalXP, 10);
+
+      // Level calculation: each level needs 100 * level XP
+      var level = 1;
+      var xpUsed = 0;
+      while (totalXP - xpUsed >= 100 * level) {
+        xpUsed += 100 * level;
+        level++;
+      }
+
+      return {
+        level: level,
+        currentXP: totalXP - xpUsed,
+        xpForNext: 100 * level,
+        totalXP: totalXP
+      };
+    }
+
+    function calculateStreak() {
+      var lastLogin = localStorage.getItem('kudisave_last_login');
+      var streak = parseInt(localStorage.getItem('kudisave_streak') || '0');
+      var today = new Date().toDateString();
+
+      if (lastLogin === today) return streak;
+
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (lastLogin === yesterday.toDateString()) {
+        streak++;
+      } else if (lastLogin !== today) {
+        streak = 1;
+      }
+
+      localStorage.setItem('kudisave_last_login', today);
+      localStorage.setItem('kudisave_streak', streak.toString());
+      return streak;
+    }
+
+    function countEarnedBadges() {
+      // Count badges from localStorage or DOM
+      var badges = document.querySelectorAll('.badge-card.earned, .badge-item.earned');
+      if (badges.length > 0) return badges.length;
+
+      var savedBadges = localStorage.getItem('kudisave_badges_earned');
+      return savedBadges ? parseInt(savedBadges) : 0;
+    }
+
+    async function populateMenuCounts() {
+      try {
+        // Goal count
+        var goalResp = await api.getGoals();
+        var goals = goalResp.data || [];
+        var goalEl = document.getElementById('menuGoalCount');
+        if (goalEl) goalEl.textContent = goals.length;
+        localStorage.setItem('kudisave_goals_count', goals.length.toString());
+
+        // Pending bills badge
+        var bills = JSON.parse(localStorage.getItem('kudisave_bills') || '[]');
+        var pending = bills.filter(function(b) { return b.status === 'pending' || b.status === 'overdue'; });
+        var billsBadge = document.getElementById('menuBillsBadge');
+        if (billsBadge) {
+          if (pending.length > 0) {
+            billsBadge.textContent = pending.length;
+            billsBadge.style.display = 'flex';
+          } else {
+            billsBadge.style.display = 'none';
+          }
+        }
+      } catch(e) {
+        // Silently fail
       }
     }
 
