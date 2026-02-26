@@ -30,6 +30,13 @@
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script>
     (function() {
+      // First-time visitors see onboarding before anything else
+      const hasCompletedOnboarding = localStorage.getItem('onboardingComplete');
+      if (!hasCompletedOnboarding) {
+        window.location.href = 'pages/onboarding.html';
+        return;
+      }
+      // Returning visitors see splash once per session
       const hasSeenSplash = sessionStorage.getItem('splashShown');
       if (!hasSeenSplash) {
         sessionStorage.setItem('splashShown', 'true');

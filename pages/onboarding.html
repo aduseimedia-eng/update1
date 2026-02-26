@@ -309,7 +309,8 @@
 
     function getStarted() {
       localStorage.setItem('onboardingComplete', 'true');
-      window.location.href = '../index.html#register';
+      sessionStorage.setItem('splashShown', 'true');
+      window.location.href = 'splash.html';
     }
 
     // Init
