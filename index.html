@@ -173,23 +173,23 @@
       padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* ===== Card (no box) ===== */
+    /* ===== Card ===== */
     .auth-card {
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 0 20px;
-      max-width: 560px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 28px;
+      padding: 36px 24px 28px;
+      max-width: 440px;
       width: 100%;
       position: relative;
       overflow: visible;
-      box-shadow: none;
+      box-shadow: 0 8px 40px rgba(0, 107, 63, 0.08), 0 1px 3px rgba(0,0,0,0.04);
       animation: cardEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
       transform: translateY(30px);
     }
-
-    .auth-card::before { display: none; }
 
     @keyframes cardEnter {
       to { opacity: 1; transform: translateY(0); }
@@ -210,28 +210,26 @@
     }
 
     .auth-logo-wrap img.auth-logo-img {
-      width: 90vw;
-      max-width: 500px;
+      width: 70vw;
+      max-width: 280px;
       height: auto;
       object-fit: contain;
       display: block;
-      transform: scale(2);
-      transform-origin: center center;
     }
 
     .auth-title {
       font-family: 'Cal Sans', sans-serif;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 600;
       color: #111827;
       letter-spacing: -0.5px;
-      margin-top: 0;
+      margin-top: 4px;
       margin-bottom: 6px;
     }
 
     .auth-subtitle {
       color: #6b7280;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 400;
       line-height: 1.5;
     }
@@ -305,39 +303,81 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== Google Button ===== */
+    /* ===== Google Button (Hero) ===== */
     .google-btn {
       width: 100%;
-      padding: 13px 20px;
+      padding: 15px 20px;
       background: #ffffff;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #374151;
-      transition: all 0.25s ease;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .google-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(66,133,244,0.04), rgba(52,168,83,0.04), rgba(251,188,5,0.04), rgba(234,67,53,0.04));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
     }
 
     .google-btn:hover {
-      background: #f9fafb;
-      border-color: #d1d5db;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-color: #c5c9d0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+
+    .google-btn:hover::after {
+      opacity: 1;
     }
 
     .google-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.98) translateY(0);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
     .google-btn svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .google-btn span,
+    .google-btn .google-btn-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .google-btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #006B3F;
+      background: rgba(0, 107, 63, 0.08);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      letter-spacing: 0.3px;
+      position: relative;
+      z-index: 1;
     }
 
     /* ===== Divider ===== */
@@ -749,28 +789,28 @@
     /* ===== Responsive ===== */
     @media (max-width: 440px) {
       .auth-card {
-        padding: 28px 20px 24px;
-        border-radius: 20px;
-      }
-      .auth-logo-wrap {
-        width: 64px;
-        height: 64px;
-        border-radius: 18px;
+        padding: 28px 18px 24px;
+        border-radius: 24px;
+        margin: 0 8px;
       }
       .auth-title {
-        font-size: 22px;
+        font-size: 24px;
+      }
+      .auth-logo-wrap img.auth-logo-img {
+        max-width: 220px;
       }
     }
 
     @media (max-width: 360px) {
-      .auth-logo-wrap img.auth-logo-img { max-width: 100%; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 180px; }
+      .auth-card { padding: 24px 16px 20px; }
     }
 
     /* ===== Landscape safety ===== */
     @media (max-height: 600px) {
       .auth-container { justify-content: flex-start; padding-top: 16px; }
-      .auth-header { margin-bottom: 20px; }
-      .auth-logo-wrap img.auth-logo-img { max-width: 150%; }
+      .auth-header { margin-bottom: 16px; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 160px; }
     }
   </style>
 </head>
@@ -826,7 +866,8 @@
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Continue with Google
+          <span class="google-btn-text">Continue with Google</span>
+          <span class="google-btn-badge">Quick</span>
         </button>
 
         <div class="divider"><span>or</span></div>
@@ -886,7 +927,8 @@
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Sign up with Google
+          <span class="google-btn-text">Sign up with Google</span>
+          <span class="google-btn-badge">Recommended</span>
         </button>
 
         <div class="divider"><span>or</span></div>
@@ -967,10 +1009,10 @@
           </div>
           <span class="strength-text" id="strengthText"></span>
           <div id="passwordHints" style="margin-top: 4px; display: flex; flex-direction: column; gap: 2px;">
-            <small id="hint-length" style="color: rgba(255,255,255,0.4); font-size: 11px; transition: color 0.2s;">&#9675; At least 8 characters</small>
-            <small id="hint-upper" style="color: rgba(255,255,255,0.4); font-size: 11px; transition: color 0.2s;">&#9675; One uppercase letter (A-Z)</small>
-            <small id="hint-lower" style="color: rgba(255,255,255,0.4); font-size: 11px; transition: color 0.2s;">&#9675; One lowercase letter (a-z)</small>
-            <small id="hint-number" style="color: rgba(255,255,255,0.4); font-size: 11px; transition: color 0.2s;">&#9675; One number (0-9)</small>
+            <small id="hint-length" style="color: #9ca3af; font-size: 11px; transition: color 0.2s;">&#9675; At least 8 characters</small>
+            <small id="hint-upper" style="color: #9ca3af; font-size: 11px; transition: color 0.2s;">&#9675; One uppercase letter (A-Z)</small>
+            <small id="hint-lower" style="color: #9ca3af; font-size: 11px; transition: color 0.2s;">&#9675; One lowercase letter (a-z)</small>
+            <small id="hint-number" style="color: #9ca3af; font-size: 11px; transition: color 0.2s;">&#9675; One number (0-9)</small>
           </div>
         </div>
 
@@ -1082,7 +1124,7 @@
       checks.forEach(c => {
         const el = document.getElementById(c.id);
         if (el) {
-          el.style.color = c.pass ? '#34d399' : 'rgba(255,255,255,0.4)';
+          el.style.color = c.pass ? '#10b981' : '#9ca3af';
           el.textContent = (c.pass ? '\u2713 ' : '\u25CB ') + el.textContent.replace(/^\S+\s/, '');
         }
       });
@@ -1153,22 +1195,49 @@
 
     function signInWithGoogle() {
       if (typeof google !== 'undefined' && google.accounts) {
+        // Show loading state on Google buttons
+        const googleBtns = document.querySelectorAll('.google-btn');
+        googleBtns.forEach(b => { 
+          b.disabled = true; 
+          b.style.opacity = '0.7';
+          const textEl = b.querySelector('.google-btn-text');
+          if (textEl) textEl.textContent = 'Connecting...';
+        });
+
+        const resetBtns = () => {
+          googleBtns.forEach(b => { 
+            b.disabled = false; 
+            b.style.opacity = '';
+            const textEl = b.querySelector('.google-btn-text');
+            if (textEl) {
+              const isLogin = document.getElementById('loginForm').classList.contains('active');
+              textEl.textContent = isLogin ? 'Continue with Google' : 'Sign up with Google';
+            }
+          });
+        };
+
         google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            // One Tap blocked � fall back to OAuth2 token flow
+            // One Tap blocked - fall back to OAuth2 token flow
             google.accounts.oauth2.initTokenClient({
               client_id: GOOGLE_CLIENT_ID,
               scope: 'email profile',
               callback: async (response) => {
                 if (response.access_token) {
                   await sendGoogleToken(null, response.access_token);
+                } else {
+                  resetBtns();
                 }
-              }
+              },
+              error_callback: () => { resetBtns(); }
             }).requestAccessToken();
           }
         });
+
+        // Timeout reset in case prompt is dismissed
+        setTimeout(resetBtns, 30000);
       } else {
-        showToast('Google Sign-In is not available right now. Try refreshing.', 'error');
+        showToast('Google Sign-In is loading. Please try again in a moment.', 'warning');
       }
     }
 
@@ -1194,8 +1263,19 @@
 
     function completeGoogleLogin(data) {
       localStorage.setItem('onboardingComplete', 'true');
-      showToast('Signed in with Google!');
-      setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 500);
+      const userName = data.user?.name || '';
+      const greeting = userName ? `Welcome, ${userName.split(' ')[0]}!` : 'Signed in with Google!';
+      showToast(greeting);
+
+      // Show splash overlay for smooth transition
+      const splash = document.getElementById('splashOverlay');
+      if (splash) {
+        splash.classList.remove('hidden');
+        const subtitleEl = splash.querySelector('.splash-subtitle');
+        if (subtitleEl) subtitleEl.textContent = greeting;
+      }
+
+      setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 800);
     }
 
 
