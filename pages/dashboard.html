@@ -131,7 +131,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 20px 16px 28px 16px;
+      padding: 20px 16px 14px 16px;
       position: relative;
       z-index: 1;
     }
@@ -191,9 +191,90 @@
       text-overflow: ellipsis;
     }
 
+    /* ===== Header Balance Section ===== */
+    .header-balance {
+      text-align: center;
+      padding: 4px 20px 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-balance-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .header-balance-label::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #34d399, #10b981);
+      box-shadow: 0 0 8px rgba(52,211,153,0.5);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .header-balance-amount {
+      font-size: 30px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header-balance-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .header-balance-item {
+      text-align: center;
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .header-balance-item-label {
+      font-size: 9px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .header-balance-item-value {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .header-balance-item-value.income {
+      color: #6ee7b7;
+    }
+
+    .header-balance-item-value.expense {
+      color: #fca5a5;
+    }
+
     /* Spacer for fixed header */
     .mtn-header-spacer {
-      height: 170px;
+      height: 290px;
     }
 
     /* Override default body padding-top since we use spacer */
@@ -1928,6 +2009,22 @@
       </div>
     </div>
 
+    <!-- Balance inside header -->
+    <div class="header-balance">
+      <div class="header-balance-label">Available Balance</div>
+      <div class="header-balance-amount" id="balanceAmount">GHS 0.00</div>
+      <div class="header-balance-row">
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Income</div>
+          <div class="header-balance-item-value income" id="totalIncome">+GHS 0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Expenses</div>
+          <div class="header-balance-item-value expense" id="totalExpenses">-GHS 0</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Curved bottom edge -->
     <div class="mtn-header-curve"></div>
   </header>
@@ -2055,22 +2152,6 @@
   <div class="mtn-header-spacer"></div>
 
   <div class="container" style="padding-bottom: 80px;">
-    <!-- Balance Card -->
-    <div class="balance-card">
-      <div class="balance-label">Available Balance</div>
-      <div class="balance-amount" id="balanceAmount">GHS 0.00</div>
-      <div class="balance-row">
-        <div class="balance-item">
-          <div class="balance-item-label">Income</div>
-          <div class="balance-item-value income" id="totalIncome">+GHS 0</div>
-        </div>
-        <div class="balance-item">
-          <div class="balance-item-label">Expenses</div>
-          <div class="balance-item-value expense" id="totalExpenses">-GHS 0</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Modern Stats -->
     <div class="modern-stats">
       <div class="modern-stat">
