@@ -711,6 +711,54 @@ async function loadWidgets() {
       }
     } catch (e) { /* Achievements API not available */ }
 
+    // Load active subscriptions count & due notifications
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subs = subsResponse.data || [];
+      const activeSubsEl = document.getElementById('activeSubscriptions');
+      if (activeSubsEl) {
+        activeSubsEl.textContent = subs.length;
+        activeSubsEl.classList.toggle('subs-active', subs.length > 0);
+      }
+
+      // Check for subscriptions due soon (within 3 days) or overdue
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let subsDueSoon = 0, subsOverdue = 0;
+      subs.forEach(sub => {
+        if (!sub.next_due_date) return;
+        const dueDate = new Date(sub.next_due_date); dueDate.setHours(0, 0, 0, 0);
+        const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+        if (diff < 0) subsOverdue++;
+        else if (diff <= 3) subsDueSoon++;
+      });
+
+      // Show subscriptions alert banner
+      const subsBanner = document.getElementById('subsAlertBanner');
+      if (subsBanner) {
+        if (subsOverdue > 0 || subsDueSoon > 0) {
+          const isRed = subsOverdue > 0;
+          let title, desc;
+          if (subsOverdue > 0 && subsDueSoon > 0) {
+            title = `${subsOverdue} overdue + ${subsDueSoon} renewal${subsDueSoon !== 1 ? 's' : ''} due soon`;
+            desc = 'Tap to manage your subscriptions';
+          } else if (subsOverdue > 0) {
+            title = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
+            desc = 'These subscriptions are past their renewal date';
+          } else {
+            title = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
+            desc = 'Tap to view and manage renewals';
+          }
+          document.getElementById('subsAlertTitle').textContent = title;
+          document.getElementById('subsAlertDesc').textContent = desc;
+          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
+          subsBanner.classList.toggle('overdue', isRed);
+          subsBanner.style.display = 'flex';
+        } else {
+          subsBanner.style.display = 'none';
+        }
+      }
+    } catch (e) { /* Subscriptions API not available */ }
+
     // Load spending insights
     loadSpendingInsights();
 
@@ -929,7 +977,7 @@ function setupInsightsSlider(container, total) {
     setTimeout(() => resumeAutoPlay(), 5000);
   }, { passive: true });
 
-  // Start auto-play (every 5 seconds)
+  // Start auto-play (every 10 seconds)
   startAutoPlay(total);
 }
 
@@ -941,7 +989,7 @@ function startAutoPlay(total) {
     if (insightsSliderState.paused) return;
     const newIdx = (insightsSliderState.index + 1) % total;
     scrollToInsight(newIdx);
-  }, 5000);
+  }, 10000);
 }
 
 function pauseAutoPlay() {
@@ -1493,6 +1541,9 @@ function initCurrencyDisplay() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+  // Always scroll to top on page load/refresh
+  window.scrollTo(0, 0);
+
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();

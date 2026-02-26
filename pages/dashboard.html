@@ -1860,19 +1860,28 @@
       color: var(--text-muted); font-size: 16px;
     }
 
-    /* Subscriptions alert banner overdue state */
-    #subsAlertBanner {
-      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(167,139,250,0.12));
-      border: 1px solid rgba(139,92,246,0.3);
+    /* Subscriptions alert banner on dashboard */
+    .subs-alert-banner {
+      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(167,139,250,0.12)) !important;
+      border-color: rgba(139,92,246,0.3) !important;
     }
-    #subsAlertBanner.overdue {
-      background: linear-gradient(135deg, rgba(220,53,69,0.12), rgba(239,83,80,0.12));
-      border-color: rgba(220,53,69,0.3);
+    .subs-alert-banner .bills-alert-banner-icon {
+      background: rgba(139,92,246,0.2); color: #8b5cf6;
     }
-    #subsAlertBanner.overdue .subs-alert-banner-icon {
+    .subs-alert-banner .bills-alert-banner-title {
+      color: #7c3aed;
+    }
+    .subs-alert-banner.overdue {
+      background: linear-gradient(135deg, rgba(220,53,69,0.12), rgba(239,83,80,0.12)) !important;
+      border-color: rgba(220,53,69,0.3) !important;
+    }
+    .subs-alert-banner.overdue .bills-alert-banner-icon {
       background: rgba(220,53,69,0.15); color: #dc3545;
     }
-    #subsAlertBanner.overdue .bills-alert-banner-title { color: #dc3545; }
+    .subs-alert-banner.overdue .bills-alert-banner-title { color: #dc3545; }
+
+    /* Subscription widget counter active style */
+    .widget-counter.subs-active { background: rgba(139,92,246,0.13); color: #8b5cf6; }
 
     /* Dashboard card override — modern wrapper */
     .container > .card {
@@ -2045,7 +2054,7 @@
   <!-- Header Spacer -->
   <div class="mtn-header-spacer"></div>
 
-  <div class="container" style="padding-bottom: 30px;">
+  <div class="container" style="padding-bottom: 80px;">
     <!-- Balance Card -->
     <div class="balance-card">
       <div class="balance-label">Available Balance</div>
@@ -2111,11 +2120,11 @@
     </a>
 
     <!-- Subscriptions Due Alert Banner -->
-    <a href="subscriptions.html" class="bills-alert-banner" id="subsAlertBanner" style="display:none;">
-      <div class="subs-alert-banner-icon" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);color:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;">🔔</div>
+    <a href="subscriptions.html" class="bills-alert-banner subs-alert-banner" id="subsAlertBanner" style="display:none;">
+      <div class="bills-alert-banner-icon subs-alert-banner-icon">🔔</div>
       <div class="bills-alert-banner-text">
-        <div class="bills-alert-banner-title" id="subsAlertTitle" style="color:#7c3aed;">Subscriptions Due Soon</div>
-        <div class="bills-alert-banner-desc" id="subsAlertDesc">Tap to view and manage your subscriptions</div>
+        <div class="bills-alert-banner-title" id="subsAlertTitle">Subscriptions Due Soon</div>
+        <div class="bills-alert-banner-desc" id="subsAlertDesc">Tap to manage your subscriptions</div>
       </div>
       <span class="bills-alert-banner-arrow">›</span>
     </a>
@@ -2499,22 +2508,29 @@
       }
     }
 
-    // Gamified menu data — always references the dashboard's live data
+    // Gamified menu data
     function populateMenuStats() {
       try {
-        // Read level from dashboard DOM (source of truth, set by loadGamificationData)
-        var dashLevel = document.getElementById('levelBadge');
-        var lvl = dashLevel ? parseInt(dashLevel.textContent) || 1 : 1;
+        // Use API-cached values if available, otherwise fall back to client-side calc
+        var apiLevel = localStorage.getItem('kudisave_api_level');
+        var apiXP = localStorage.getItem('kudisave_api_xp');
+        var apiXPNext = localStorage.getItem('kudisave_api_xp_next');
+        var apiXPPct = localStorage.getItem('kudisave_api_xp_pct');
+        
+        var lvl, xp, needed, pct;
+        if (apiLevel && apiXP) {
+          lvl = parseInt(apiLevel);
+          xp = parseInt(apiXP);
+          needed = parseInt(apiXPNext || '100');
+          pct = parseFloat(apiXPPct || '0');
+        } else {
+          var xpData = calculateUserXP();
+          lvl = xpData.level;
+          xp = xpData.currentXP;
+          needed = xpData.xpForNext;
+          pct = needed > 0 ? Math.min((xp / needed) * 100, 100) : 0;
+        }
 
-        // Read XP text from dashboard DOM
-        var dashXpText = document.getElementById('xpText');
-        var xpString = dashXpText ? dashXpText.textContent : '0 / 100 XP';
-
-        // Read XP bar width from dashboard DOM
-        var dashXpBar = document.getElementById('xpProgress');
-        var pct = dashXpBar ? parseFloat(dashXpBar.style.width) || 0 : 0;
-
-        // Sync to menu elements
         var levelEl = document.getElementById('menuLevelBadge');
         var xpLevelEl = document.getElementById('menuXpLevel');
         var xpTextEl = document.getElementById('menuXpText');
@@ -2522,26 +2538,22 @@
 
         if (levelEl) levelEl.textContent = lvl;
         if (xpLevelEl) xpLevelEl.textContent = lvl;
-        if (xpTextEl) xpTextEl.textContent = xpString;
+        if (xpTextEl) xpTextEl.textContent = xp + ' / ' + needed + ' XP';
         if (xpFillEl) xpFillEl.style.width = pct + '%';
 
-        // Streak — read from dashboard's #currentStreak element
-        var dashStreak = document.getElementById('currentStreak');
-        var streak = 0;
-        if (dashStreak) {
-          var streakMatch = dashStreak.textContent.match(/(\d+)/);
-          streak = streakMatch ? parseInt(streakMatch[1]) : 0;
-        }
+        // Streak count - use API value if available
+        var apiStreak = localStorage.getItem('kudisave_api_streak');
+        var streak = apiStreak ? parseInt(apiStreak) : calculateStreak();
         var streakEl = document.getElementById('menuStreakCount');
         if (streakEl) streakEl.textContent = streak;
 
-        // Badges — count earned badges from the dashboard DOM
-        var earnedBadges = document.querySelectorAll('#badgesContainer .badge-item.earned');
-        var badgeCount = earnedBadges.length;
+        // Badge count - use API value if available
+        var apiBadges = localStorage.getItem('kudisave_api_badges');
+        var badgeCount = apiBadges ? parseInt(apiBadges) : countEarnedBadges();
         var badgeEl = document.getElementById('menuBadgeCount');
         if (badgeEl) badgeEl.textContent = badgeCount;
 
-        // Goal count & pending bills (fetched from API)
+        // Goal count & pending bills
         populateMenuCounts();
       } catch(e) {
         console.log('Menu stats error:', e);

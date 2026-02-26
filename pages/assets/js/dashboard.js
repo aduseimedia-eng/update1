@@ -724,57 +724,6 @@ async function loadWidgets() {
       }
     } catch (e) { /* ignore */ }
 
-    // Load active subscriptions count from API
-    try {
-      const subsResponse = await api.getSubscriptions('active');
-      const subscriptions = subsResponse.data || [];
-      const activeCount = subscriptions.length;
-      const subsCountEl = document.getElementById('activeSubscriptions');
-      if (subsCountEl) {
-        subsCountEl.textContent = activeCount;
-        subsCountEl.classList.toggle('challenges-active', activeCount > 0);
-      }
-
-      // Check for subscriptions due soon (within 3 days) or overdue
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      let subsDueSoon = 0, subsOverdue = 0;
-      subscriptions.forEach(sub => {
-        if (sub.next_payment_date) {
-          const nextPayment = new Date(sub.next_payment_date);
-          nextPayment.setHours(0, 0, 0, 0);
-          const diff = Math.ceil((nextPayment - today) / (1000 * 60 * 60 * 24));
-          if (diff < 0) subsOverdue++;
-          else if (diff <= 3) subsDueSoon++;
-        }
-      });
-
-      // Show subscription alert banner on dashboard
-      const subsBanner = document.getElementById('subsAlertBanner');
-      if (subsBanner) {
-        if (subsOverdue > 0 || subsDueSoon > 0) {
-          let subsTitle, subsDesc;
-          const isSubsRed = subsOverdue > 0;
-          if (subsOverdue > 0 && subsDueSoon > 0) {
-            subsTitle = `${subsOverdue} overdue + ${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due soon`;
-            subsDesc = 'Tap to view and manage your subscriptions';
-          } else if (subsOverdue > 0) {
-            subsTitle = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
-            subsDesc = 'These subscriptions are past their payment date';
-          } else {
-            subsTitle = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
-            subsDesc = 'Tap to view and manage your subscriptions';
-          }
-          document.getElementById('subsAlertTitle').textContent = subsTitle;
-          document.getElementById('subsAlertDesc').textContent = subsDesc;
-          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isSubsRed ? '🚨' : '🔔';
-          subsBanner.classList.toggle('overdue', isSubsRed);
-          subsBanner.style.display = 'flex';
-        } else {
-          subsBanner.style.display = 'none';
-        }
-      }
-    } catch (e) { /* subscriptions api error - ignore */ }
-
     // Load active challenges from API
     try {
       const challengesResponse = await api.get('/challenges/stats');
@@ -800,6 +749,54 @@ async function loadWidgets() {
         }
       }
     } catch (e) { /* Achievements API not available */ }
+
+    // Load active subscriptions count & due notifications
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subs = subsResponse.data || [];
+      const activeSubsEl = document.getElementById('activeSubscriptions');
+      if (activeSubsEl) {
+        activeSubsEl.textContent = subs.length;
+        activeSubsEl.classList.toggle('subs-active', subs.length > 0);
+      }
+
+      // Check for subscriptions due soon (within 3 days) or overdue
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let subsDueSoon = 0, subsOverdue = 0;
+      subs.forEach(sub => {
+        if (!sub.next_due_date) return;
+        const dueDate = new Date(sub.next_due_date); dueDate.setHours(0, 0, 0, 0);
+        const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+        if (diff < 0) subsOverdue++;
+        else if (diff <= 3) subsDueSoon++;
+      });
+
+      // Show subscriptions alert banner
+      const subsBanner = document.getElementById('subsAlertBanner');
+      if (subsBanner) {
+        if (subsOverdue > 0 || subsDueSoon > 0) {
+          const isRed = subsOverdue > 0;
+          let title, desc;
+          if (subsOverdue > 0 && subsDueSoon > 0) {
+            title = `${subsOverdue} overdue + ${subsDueSoon} renewal${subsDueSoon !== 1 ? 's' : ''} due soon`;
+            desc = 'Tap to manage your subscriptions';
+          } else if (subsOverdue > 0) {
+            title = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
+            desc = 'These subscriptions are past their renewal date';
+          } else {
+            title = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
+            desc = 'Tap to view and manage renewals';
+          }
+          document.getElementById('subsAlertTitle').textContent = title;
+          document.getElementById('subsAlertDesc').textContent = desc;
+          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
+          subsBanner.classList.toggle('overdue', isRed);
+          subsBanner.style.display = 'flex';
+        } else {
+          subsBanner.style.display = 'none';
+        }
+      }
+    } catch (e) { /* Subscriptions API not available */ }
 
     // Load spending insights
     loadSpendingInsights();
@@ -1019,7 +1016,7 @@ function setupInsightsSlider(container, total) {
     setTimeout(() => resumeAutoPlay(), 5000);
   }, { passive: true });
 
-  // Start auto-play (every 5 seconds)
+  // Start auto-play (every 10 seconds)
   startAutoPlay(total);
 }
 
@@ -1031,7 +1028,7 @@ function startAutoPlay(total) {
     if (insightsSliderState.paused) return;
     const newIdx = (insightsSliderState.index + 1) % total;
     scrollToInsight(newIdx);
-  }, 5000);
+  }, 10000);
 }
 
 function pauseAutoPlay() {
@@ -1590,14 +1587,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initDashboard();
   loadWidgets();
   
-  // After 10 seconds, auto-slide to the Smart Insights section
-  setTimeout(() => {
-    const insightsSection = document.getElementById('insightsSection');
-    if (insightsSection) {
-      insightsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, 10000);
-
   // Add fun entrance animations
   setTimeout(() => {
     document.querySelector('.mtn-profile-section')?.classList.add('animate-slide-up');
