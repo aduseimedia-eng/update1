@@ -2478,12 +2478,25 @@
     // Gamified menu data
     function populateMenuStats() {
       try {
-        // Calculate XP from user activity
-        var xpData = calculateUserXP();
-        var lvl = xpData.level;
-        var xp = xpData.currentXP;
-        var needed = xpData.xpForNext;
-        var pct = needed > 0 ? Math.min((xp / needed) * 100, 100) : 0;
+        // Use API-cached values if available, otherwise fall back to client-side calc
+        var apiLevel = localStorage.getItem('kudisave_api_level');
+        var apiXP = localStorage.getItem('kudisave_api_xp');
+        var apiXPNext = localStorage.getItem('kudisave_api_xp_next');
+        var apiXPPct = localStorage.getItem('kudisave_api_xp_pct');
+        
+        var lvl, xp, needed, pct;
+        if (apiLevel && apiXP) {
+          lvl = parseInt(apiLevel);
+          xp = parseInt(apiXP);
+          needed = parseInt(apiXPNext || '100');
+          pct = parseFloat(apiXPPct || '0');
+        } else {
+          var xpData = calculateUserXP();
+          lvl = xpData.level;
+          xp = xpData.currentXP;
+          needed = xpData.xpForNext;
+          pct = needed > 0 ? Math.min((xp / needed) * 100, 100) : 0;
+        }
 
         var levelEl = document.getElementById('menuLevelBadge');
         var xpLevelEl = document.getElementById('menuXpLevel');
@@ -2495,13 +2508,15 @@
         if (xpTextEl) xpTextEl.textContent = xp + ' / ' + needed + ' XP';
         if (xpFillEl) xpFillEl.style.width = pct + '%';
 
-        // Streak count (days with at least one logged expense)
-        var streak = calculateStreak();
+        // Streak count - use API value if available
+        var apiStreak = localStorage.getItem('kudisave_api_streak');
+        var streak = apiStreak ? parseInt(apiStreak) : calculateStreak();
         var streakEl = document.getElementById('menuStreakCount');
         if (streakEl) streakEl.textContent = streak;
 
-        // Badge count from achievements
-        var badgeCount = countEarnedBadges();
+        // Badge count - use API value if available
+        var apiBadges = localStorage.getItem('kudisave_api_badges');
+        var badgeCount = apiBadges ? parseInt(apiBadges) : countEarnedBadges();
         var badgeEl = document.getElementById('menuBadgeCount');
         if (badgeEl) badgeEl.textContent = badgeCount;
 

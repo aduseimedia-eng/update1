@@ -278,7 +278,13 @@ async function loadGamificationData() {
     // Load streak
     const streakResponse = await api.getStreak();
     const streak = streakResponse.data;
-    document.getElementById('currentStreak').textContent = `${streak.current_streak || 0} days`;
+    const streakValue = streak.current_streak || 0;
+    document.getElementById('currentStreak').textContent = `${streakValue} days`;
+    
+    // Sync streak to menu
+    localStorage.setItem('kudisave_api_streak', streakValue.toString());
+    const menuStreakEl = document.getElementById('menuStreakCount');
+    if (menuStreakEl) menuStreakEl.textContent = streakValue;
     
     // Celebrate streaks (only once per session)
     const streakKey = `streakCelebrated_${streak.current_streak}`;
@@ -309,12 +315,28 @@ async function loadGamificationData() {
     document.getElementById('xpProgress').style.width = `${Math.min(100, progressPercent)}%`;
     document.getElementById('xpText').textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
 
+    // Sync XP/level to menu
+    localStorage.setItem('kudisave_api_level', level.toString());
+    localStorage.setItem('kudisave_api_xp', (xp.total_xp || 0).toString());
+    localStorage.setItem('kudisave_api_xp_next', nextLevelXp.toString());
+    localStorage.setItem('kudisave_api_xp_pct', Math.min(100, progressPercent).toString());
+    const menuLevelBadge = document.getElementById('menuLevelBadge');
+    const menuXpLevel = document.getElementById('menuXpLevel');
+    const menuXpText = document.getElementById('menuXpText');
+    const menuXpFill = document.getElementById('menuXpFill');
+    if (menuLevelBadge) menuLevelBadge.textContent = level;
+    if (menuXpLevel) menuXpLevel.textContent = level;
+    if (menuXpText) menuXpText.textContent = `${xp.total_xp || 0} / ${nextLevelXp} XP`;
+    if (menuXpFill) menuXpFill.style.width = `${Math.min(100, progressPercent)}%`;
+
     // Load badges with animation
     const badgesResponse = await api.getBadges();
     const badges = badgesResponse.data || [];
     
     const badgesContainer = document.getElementById('badgesContainer');
     const badgeEmojis = ['💰', '🎯', '📊', '⭐', '🔥', '💎'];
+    
+    let earnedCount = 0;
     
     if (badges.length === 0) {
       badgesContainer.innerHTML = badgeEmojis.map(emoji => 
@@ -333,9 +355,16 @@ async function loadGamificationData() {
       
       badgesContainer.innerHTML = badgeEmojis.map((emoji, idx) => {
         const isBadgeEarned = badges.length > idx;
+        if (isBadgeEarned) earnedCount++;
         return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
       }).join('');
     }
+    
+    // Sync badge count to menu
+    localStorage.setItem('kudisave_api_badges', earnedCount.toString());
+    localStorage.setItem('kudisave_badges_earned', earnedCount.toString());
+    const menuBadgeEl = document.getElementById('menuBadgeCount');
+    if (menuBadgeEl) menuBadgeEl.textContent = earnedCount;
 
     // Set motivational message
     const quotes = [
