@@ -48,7 +48,20 @@ async function initDashboard() {
     userData = profileResponse.data;
     
     document.getElementById('userName').textContent = userData.name || 'Welcome!';
-    
+
+    // Set motivational message immediately (no delay)
+    const quotes = [
+      "Every cedi saved is a cedi earned! 💪",
+      "Small steps lead to big wins! 🚀",
+      "Your future self will thank you! 🌟",
+      "Building wealth, one day at a time! 📈",
+      "Stay consistent, stay wealthy! 💰"
+    ];
+    const motivationalEl = document.getElementById('motivationalMessage');
+    if (motivationalEl) {
+      motivationalEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
     // Sync menu profile
     const menuName = document.getElementById('menuUserName');
     const menuInitials = document.getElementById('menuAvatarInitials');
@@ -335,19 +348,6 @@ async function loadGamificationData() {
         const isBadgeEarned = badges.length > idx;
         return `<span class="badge-item ${isBadgeEarned ? 'earned' : ''}" title="${isBadgeEarned ? 'Earned' : 'Locked'}">${emoji}</span>`;
       }).join('');
-    }
-
-    // Set motivational message
-    const quotes = [
-      "Every cedi saved is a cedi earned! 💪",
-      "Small steps lead to big wins! 🚀",
-      "Your future self will thank you! 🌟",
-      "Building wealth, one day at a time! 📈",
-      "Stay consistent, stay wealthy! 💰"
-    ];
-    const motivationalEl = document.getElementById('motivationalMessage');
-    if (motivationalEl) {
-      motivationalEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
     }
 
   } catch (error) {
