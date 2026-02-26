@@ -774,24 +774,44 @@
     /* ===== Modern Header for Reports ===== */
     body { padding-top: 0 !important; }
     .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: 24px; overflow: hidden; }
-    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
-    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; animation: floatOrb1 8s ease-in-out infinite; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; animation: floatOrb2 10s ease-in-out infinite; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
     .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; }
     .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
     .mtn-back-btn i { width: 18px; height: 18px; }
     .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
     .mtn-topbar-spacer { width: 38px; }
-    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px 12px 16px; position: relative; z-index: 1; text-align: center; }
-    .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.12); color: white; }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px 12px 16px; position: relative; z-index: 1; text-align: center; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+    .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.12); color: white; animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both; }
     .mtn-info-icon i { width: 22px; height: 22px; }
     .mtn-info-text { flex: 1; min-width: 0; }
-    .mtn-info-title { font-size: 18px; font-weight: 700; color: white; line-height: 1.2; letter-spacing: -0.3px; margin-top: 2px; }
-    .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; }
+    .mtn-info-title { font-size: 18px; font-weight: 700; color: white; line-height: 1.2; letter-spacing: -0.3px; margin-top: 2px; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+    .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
     .mtn-header-curve { position: absolute; bottom: -1px; left: 0; right: 0; height: 24px; background: var(--bg-primary, #f5f6fa); border-radius: 24px 24px 0 0; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
     .mtn-header-spacer { height: 200px; }
+
+    /* Header shimmer sweep */
+    .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
+
+    /* Floating particles */
+    .header-particles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+    .header-particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); animation: particleFloat linear infinite; }
+    .header-particle:nth-child(1) { left: 10%; bottom: -5px; animation-duration: 12s; animation-delay: 0s; width: 2px; height: 2px; }
+    .header-particle:nth-child(2) { left: 30%; bottom: -5px; animation-duration: 14s; animation-delay: 2s; width: 4px; height: 4px; background: rgba(52,211,153,0.12); }
+    .header-particle:nth-child(3) { left: 55%; bottom: -5px; animation-duration: 10s; animation-delay: 4s; }
+    .header-particle:nth-child(4) { left: 75%; bottom: -5px; animation-duration: 16s; animation-delay: 1s; width: 2px; height: 2px; background: rgba(110,231,183,0.1); }
+    .header-particle:nth-child(5) { left: 90%; bottom: -5px; animation-duration: 11s; animation-delay: 3s; }
+
+    /* Header animation keyframes */
+    @keyframes floatOrb1 { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(15px, 20px) scale(1.05); } 66% { transform: translate(-10px, -15px) scale(0.95); } }
+    @keyframes floatOrb2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -25px) scale(1.1); } }
+    @keyframes headerShimmer { 0% { left: -100%; } 40%, 100% { left: 200%; } }
+    @keyframes particleFloat { 0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.5; } 100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
     .container { padding-top: 30px; padding-bottom: 100px; }
 
     /* Spending Insights Cards */
@@ -837,6 +857,16 @@
 <body>
   <!-- MTN-Style Header -->
   <header class="mtn-header">
+    <!-- Shimmer sweep -->
+    <div class="mtn-header-shimmer"></div>
+    <!-- Floating particles -->
+    <div class="header-particles">
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+    </div>
     <div class="mtn-topbar">
       <a href="dashboard.html" class="mtn-back-btn">
         <i data-lucide="arrow-left"></i>
