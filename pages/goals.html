@@ -19,21 +19,62 @@
   <style>
     body { padding-top: 0 !important; }
     .mtn-header { background: linear-gradient(160deg, var(--primary-color, #006B3F) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-bottom: 24px; overflow: hidden; }
-    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: floatOrb1 8s ease-in-out infinite; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: floatOrb2 10s ease-in-out infinite; }
     .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
     .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
     .mtn-back-btn i { width: 18px; height: 18px; }
     .mtn-page-title { font-size: 17px; font-weight: 700; color: white; }
     .mtn-add-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.15); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .mtn-add-btn i { width: 20px; height: 20px; }
-    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px 12px 16px; position: relative; z-index: 1; text-align: center; }
-    .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px 12px 16px; position: relative; z-index: 1; text-align: center; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+    .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 16px rgba(0,0,0,0.12); animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both; }
     .mtn-info-icon i { width: 22px; height: 22px; }
-    .mtn-info-title { font-size: 18px; font-weight: 700; color: white; letter-spacing: -0.3px; margin-top: 2px; }
-    .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; }
+    .mtn-info-title { font-size: 18px; font-weight: 700; color: white; letter-spacing: -0.3px; margin-top: 2px; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+    .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
     .mtn-header-curve { position: absolute; bottom: -1px; left: 0; right: 0; height: 24px; background: var(--bg-primary, #f5f6fa); border-radius: 24px 24px 0 0; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
-    .mtn-header-spacer { height: 200px; }
+    .mtn-header-spacer { height: 310px; }
+
+    /* ===== Header Balance Section ===== */
+    .header-balance { text-align: center; padding: 4px 20px 18px; position: relative; z-index: 1; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+    .header-balance-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 0 8px rgba(52,211,153,0.5); animation: pulse-dot 2s ease-in-out infinite; }
+    .header-balance-amount { font-size: 30px; font-weight: 800; color: #ffffff; letter-spacing: -1px; line-height: 1.2; margin-bottom: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: balanceGlow 3s ease-in-out infinite; }
+    .header-balance-sub { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; margin-bottom: 10px; }
+    .header-balance-row { display: flex; justify-content: center; gap: 10px; }
+    .header-balance-item { text-align: center; flex: 1; padding: 8px 6px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; transition: transform 0.2s ease, background 0.2s ease; }
+    .header-balance-item:nth-child(1) { animation-delay: 0.5s; }
+    .header-balance-item:nth-child(2) { animation-delay: 0.6s; }
+    .header-balance-item:nth-child(3) { animation-delay: 0.7s; }
+    .header-balance-item:active { transform: scale(0.96); background: rgba(255,255,255,0.15); }
+    .header-balance-item-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px; }
+    .header-balance-item-value { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+    .header-balance-item-value.goals-count { color: #6ee7b7; }
+    .header-balance-item-value.completed-count { color: #a5b4fc; }
+    .header-balance-item-value.saved-amount { color: #fde68a; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+    @keyframes balanceGlow { 0%, 100% { text-shadow: 0 2px 8px rgba(0,0,0,0.15); } 50% { text-shadow: 0 2px 16px rgba(52,211,153,0.3), 0 2px 8px rgba(0,0,0,0.15); } }
+
+    /* Header shimmer sweep */
+    .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
+
+    /* Floating particles */
+    .header-particles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+    .header-particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); animation: particleFloat linear infinite; }
+    .header-particle:nth-child(1) { left: 10%; bottom: -5px; animation-duration: 12s; animation-delay: 0s; width: 2px; height: 2px; }
+    .header-particle:nth-child(2) { left: 30%; bottom: -5px; animation-duration: 14s; animation-delay: 2s; width: 4px; height: 4px; background: rgba(52,211,153,0.12); }
+    .header-particle:nth-child(3) { left: 55%; bottom: -5px; animation-duration: 10s; animation-delay: 4s; }
+    .header-particle:nth-child(4) { left: 75%; bottom: -5px; animation-duration: 16s; animation-delay: 1s; width: 2px; height: 2px; background: rgba(110,231,183,0.1); }
+    .header-particle:nth-child(5) { left: 90%; bottom: -5px; animation-duration: 11s; animation-delay: 3s; }
+
+    /* Header animation keyframes */
+    @keyframes floatOrb1 { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(15px, 20px) scale(1.05); } 66% { transform: translate(-10px, -15px) scale(0.95); } }
+    @keyframes floatOrb2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -25px) scale(1.1); } }
+    @keyframes headerShimmer { 0% { left: -100%; } 40%, 100% { left: 200%; } }
+    @keyframes particleFloat { 0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.5; } 100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
     .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
     .stat-card { background: var(--card-bg, #fff); border-radius: 16px; padding: 14px 12px; text-align: center; border: 1px solid var(--border-color, #e5e7eb); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     .stat-value { font-size: 20px; font-weight: 800; color: var(--primary-color, #006B3F); letter-spacing: -0.5px; }
@@ -100,6 +141,16 @@
 </head>
 <body>
   <header class="mtn-header">
+    <!-- Shimmer sweep -->
+    <div class="mtn-header-shimmer"></div>
+    <!-- Floating particles -->
+    <div class="header-particles">
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+    </div>
     <div class="mtn-topbar">
       <a href="dashboard.html" class="mtn-back-btn"><i data-lucide="arrow-left"></i></a>
       <span class="mtn-page-title">Savings Goals</span>
@@ -110,25 +161,34 @@
       <div class="mtn-info-title">Savings Goals</div>
       <div class="mtn-info-subtitle">Set targets &amp; track your progress</div>
     </div>
+
+    <!-- Goals summary inside header -->
+    <div class="header-balance">
+      <div class="header-balance-label">Total Saved</div>
+      <div class="header-balance-amount" id="headerSaved">&#8373;0</div>
+      <div class="header-balance-sub">Across all goals</div>
+      <div class="header-balance-row">
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Goals</div>
+          <div class="header-balance-item-value goals-count" id="headerGoals">0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Completed</div>
+          <div class="header-balance-item-value completed-count" id="headerCompleted">0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">In Progress</div>
+          <div class="header-balance-item-value saved-amount" id="headerActive">0</div>
+        </div>
+      </div>
+    </div>
+
     <div class="mtn-header-curve"></div>
   </header>
   <div class="mtn-header-spacer"></div>
 
   <div class="container" style="padding-bottom: 100px;">
-    <div class="summary-row" id="summaryRow" style="display:none;">
-      <div class="stat-card">
-        <div class="stat-value" id="statGoals">0</div>
-        <div class="stat-label">Total Goals</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statCompleted" style="color:#22c55e;">0</div>
-        <div class="stat-label">Completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statSaved">0</div>
-        <div class="stat-label">Total Saved</div>
-      </div>
-    </div>
+
     <div id="goalsContainer">
       <div class="skeleton"></div>
       <div class="skeleton"></div>
@@ -219,15 +279,14 @@
     }
 
     function renderSummary() {
-      const row = document.getElementById('summaryRow');
-      if (allGoals.length === 0) { row.style.display = 'none'; return; }
-      row.style.display = 'grid';
       const completed = allGoals.filter(g => g.status === 'completed').length;
+      const active = allGoals.filter(g => g.status !== 'completed').length;
       const totalSaved = allGoals.reduce((s, g) => s + parseFloat(g.current_amount || 0), 0);
       const sym = utils.getCurrencySymbol();
-      document.getElementById('statGoals').textContent = allGoals.length;
-      document.getElementById('statCompleted').textContent = completed;
-      document.getElementById('statSaved').textContent = sym + totalSaved.toLocaleString('en', { maximumFractionDigits: 0 });
+      document.getElementById('headerSaved').textContent = sym + totalSaved.toLocaleString('en', { maximumFractionDigits: 0 });
+      document.getElementById('headerGoals').textContent = allGoals.length;
+      document.getElementById('headerCompleted').textContent = completed;
+      document.getElementById('headerActive').textContent = active;
     }
 
     function renderGoals() {
