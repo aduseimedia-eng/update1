@@ -11,480 +11,290 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <title>Welcome - KudiSave</title>
-  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: linear-gradient(135deg, #006B3F 0%, #004d2c 50%, #003822 100%);
-      min-height: 100vh;
-      overflow: hidden;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    .onboarding-container {
+      background: linear-gradient(160deg, #006B3F 0%, #004d2c 40%, #003822 100%);
       min-height: 100vh;
       min-height: 100dvh;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
-      padding: 20px;
-      padding-top: calc(80px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(180px + env(safe-area-inset-bottom, 0px));
-      position: relative;
     }
 
-    .skip-btn {
-      position: fixed;
-      top: calc(20px + env(safe-area-inset-top, 0px));
-      right: 20px;
-      z-index: 100;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 8px 18px;
-      border-radius: 20px;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .skip-btn:active {
-      background: rgba(255,255,255,0.3);
-      transform: scale(0.96);
-    }
-
-    .slides-container {
+    /* ── Layout ── */
+    .onboarding-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: visible;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      padding-top: calc(40px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+      gap: 32px;
       position: relative;
     }
 
-    .slides-wrapper {
-      display: flex;
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      width: 300%;
-      height: 100%;
+    /* ── Image ── */
+    .onboarding-image {
+      width: 100%;
+      max-width: 320px;
+      animation: gentleFloat 4s ease-in-out infinite;
     }
 
-    .slide {
-      width: 33.333%;
-      flex-shrink: 0;
-      padding: 0 20px;
+    .onboarding-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 24px;
+      filter: drop-shadow(0 16px 40px rgba(0,0,0,0.25));
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* ── Rotating text area ── */
+    .text-area {
+      text-align: center;
+      max-width: 340px;
+      min-height: 120px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
-    }
-
-    .slide-image-wrap {
-      margin-bottom: 40px;
-      animation: float 3s ease-in-out infinite;
-      width: 100%;
-      max-width: 300px;
-      height: 240px;
-      display: flex;
-      align-items: center;
       justify-content: center;
     }
 
-    .slide-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 20px;
-      filter: drop-shadow(0 12px 32px rgba(0,0,0,0.3));
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-
-    .slide-title {
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 16px;
+    .rotating-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
       line-height: 1.2;
       letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: textIn 0.5s ease forwards;
     }
 
-    .slide-description {
+    .rotating-title .highlight {
+      color: #FCD116;
+    }
+
+    .rotating-desc {
       font-size: 15px;
       font-weight: 400;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.6;
-      max-width: 320px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.65;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: textIn 0.5s 0.15s ease forwards;
     }
 
-    .slide-highlight {
-      color: #ffffff;
-      font-weight: 700;
+    @keyframes textIn {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Navigation */
-    .nav-section {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 20px;
-      padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-      background: linear-gradient(to top, rgba(0, 61, 34, 0.95) 0%, rgba(0, 61, 34, 0.8) 70%, transparent 100%);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 100;
+    .text-area.fade-out .rotating-title,
+    .text-area.fade-out .rotating-desc {
+      animation: textOut 0.35s ease forwards;
     }
 
-    .dots-container {
+    @keyframes textOut {
+      to { opacity: 0; transform: translateY(-14px); }
+    }
+
+    /* ── Progress dots ── */
+    .progress-dots {
       display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
     }
 
-    .dot {
+    .progress-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.4);
-      transition: all 0.3s ease;
-      cursor: pointer;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.4s ease;
     }
 
-    .dot.active {
+    .progress-dot.active {
       width: 24px;
       border-radius: 4px;
-      background: #ffffff;
+      background: #FCD116;
     }
 
-    .buttons-container {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn-onboard {
-      flex: 1;
-      padding: 18px 24px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
+    /* ── Get Started button ── */
+    .get-started-btn {
+      width: 100%;
+      max-width: 340px;
+      padding: 18px 32px;
       border: none;
-      min-height: 56px;
-      letter-spacing: -0.2px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-onboard:active {
-      transform: scale(0.98);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 2px solid rgba(255,255,255,0.4);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .btn-primary {
-      background: #006B3F;
-      color: white;
-      box-shadow: 0 4px 20px rgba(0, 107, 63, 0.4);
+      border-radius: 16px;
+      background: #ffffff;
+      color: #006B3F;
+      font-size: 17px;
       font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn-gold {
-      background: #006B3F;
-      color: white;
-      box-shadow: 0 4px 20px rgba(0, 107, 63, 0.4);
-      font-weight: 800;
+    .get-started-btn::after {
+      content: ' →';
+      font-weight: 400;
+      transition: transform 0.2s ease;
+      display: inline-block;
     }
 
-    /* Ghana colors bar */
+    .get-started-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    .get-started-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    /* ── Ghana colors bar ── */
     .ghana-colors {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 4px;
       display: flex;
+      z-index: 10;
     }
 
-    .ghana-colors span {
-      flex: 1;
-    }
-
+    .ghana-colors span { flex: 1; }
     .ghana-colors span:nth-child(1) { background: #CE1126; }
     .ghana-colors span:nth-child(2) { background: #FCD116; }
     .ghana-colors span:nth-child(3) { background: #006B3F; }
+
+    /* ── Responsive ── */
+    @media (max-height: 640px) {
+      .onboarding-image { max-width: 220px; }
+      .onboarding-screen { gap: 20px; padding: 24px 20px; }
+      .rotating-title { font-size: 24px; }
+      .text-area { min-height: 90px; }
+    }
+
+    @media (min-width: 600px) {
+      .onboarding-image { max-width: 360px; }
+      .rotating-title { font-size: 32px; }
+      .rotating-desc { font-size: 16px; }
+    }
   </style>
 </head>
 <body>
-  <div class="onboarding-container">
-    <button class="skip-btn" onclick="skipOnboarding()">Skip</button>
 
-    <div class="slides-container">
-      <div class="slides-wrapper" id="slidesWrapper">
-        <!-- Slide 1 -->
-        <div class="slide">
-          <div class="slide-image-wrap">
-            <img src="../assets/Images/20944292.png" alt="Track your finances">
-          </div>
-          <h2 class="slide-title">Track Your<br><span class="slide-highlight">Finances</span></h2>
-          <p class="slide-description">Easily track all your income and expenses in one place. Know exactly where your money goes every month.</p>
-        </div>
+  <div class="onboarding-screen">
 
-        <!-- Slide 2 -->
-        <div class="slide">
-          <div class="slide-image-wrap">
-            <img src="../assets/Images/2009.i518.001_crowdfunding_set-07.png" alt="Set savings goals">
-          </div>
-          <h2 class="slide-title">Set Goals &<br><span class="slide-highlight">Achieve More</span></h2>
-          <p class="slide-description">Create savings goals for what matters most to you. Whether it's a new phone, school fees, or your dream car.</p>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="slide">
-          <div class="slide-image-wrap">
-            <img src="../assets/Images/Jan-Business_team_3.png" alt="Build money habits">
-          </div>
-          <h2 class="slide-title">Build Better<br><span class="slide-highlight">Money Habits</span></h2>
-          <p class="slide-description">Get insights with beautiful reports, earn badges for good habits, and level up your financial game!</p>
-        </div>
-      </div>
+    <!-- Single onboarding image -->
+    <div class="onboarding-image">
+      <img src="../onboarding.png" alt="Welcome to KudiSave">
     </div>
 
-    <div class="nav-section">
-      <div class="dots-container">
-        <div class="dot active" onclick="goToSlide(0)"></div>
-        <div class="dot" onclick="goToSlide(1)"></div>
-        <div class="dot" onclick="goToSlide(2)"></div>
-      </div>
-
-      <div class="buttons-container">
-        <button class="btn-onboard btn-secondary" id="backBtn" onclick="prevSlide()" style="display: none;">Back</button>
-        <button class="btn-onboard btn-primary" id="nextBtn" onclick="nextSlide()">Next</button>
-      </div>
+    <!-- Rotating text -->
+    <div class="text-area" id="textArea">
+      <h2 class="rotating-title" id="rotatingTitle"></h2>
+      <p class="rotating-desc" id="rotatingDesc"></p>
     </div>
+
+    <!-- Progress dots -->
+    <div class="progress-dots" id="progressDots">
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+    <!-- Get Started -->
+    <button class="get-started-btn" onclick="getStarted()">Get Started</button>
+
   </div>
 
   <div class="ghana-colors">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </div>
 
   <script>
-    let currentSlide = 0;
-    const totalSlides = 3;
-
-    function updateSlide() {
-      // Move slides
-      const wrapper = document.getElementById('slidesWrapper');
-      wrapper.style.transform = `translateX(-${currentSlide * 33.333}%)`;
-
-      // Update dots
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-      });
-
-      // Update buttons
-      const backBtn = document.getElementById('backBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      backBtn.style.display = currentSlide === 0 ? 'none' : 'block';
-      
-      if (currentSlide === totalSlides - 1) {
-        nextBtn.textContent = 'Get Started';
-        nextBtn.classList.remove('btn-primary');
-        nextBtn.classList.add('btn-gold');
-      } else {
-        nextBtn.textContent = 'Next';
-        nextBtn.classList.remove('btn-gold');
-        nextBtn.classList.add('btn-primary');
+    const slides = [
+      {
+        title: 'Track Your <span class="highlight">Finances</span>',
+        desc: 'Easily track all your income and expenses in one place. Know exactly where your money goes.'
+      },
+      {
+        title: 'Set Goals & <span class="highlight">Achieve More</span>',
+        desc: 'Create savings goals for what matters most — a new phone, school fees, or your dream car.'
+      },
+      {
+        title: 'Build Better <span class="highlight">Money Habits</span>',
+        desc: 'Earn badges, level up your streak, and get beautiful reports on your financial journey!'
       }
+    ];
+
+    let current = 0;
+    let interval;
+
+    const titleEl = document.getElementById('rotatingTitle');
+    const descEl  = document.getElementById('rotatingDesc');
+    const textArea = document.getElementById('textArea');
+    const dots = document.querySelectorAll('.progress-dot');
+
+    function showSlide(index) {
+      // Fade out
+      textArea.classList.add('fade-out');
+
+      setTimeout(() => {
+        titleEl.innerHTML = slides[index].title;
+        descEl.textContent = slides[index].desc;
+
+        // Update dots
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+        // Remove fade-out, reset animations
+        textArea.classList.remove('fade-out');
+        titleEl.style.animation = 'none';
+        descEl.style.animation = 'none';
+        // Trigger reflow
+        void titleEl.offsetWidth;
+        titleEl.style.animation = 'textIn 0.5s ease forwards';
+        descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+      }, 350);
     }
 
-    function nextSlide() {
-      if (currentSlide < totalSlides - 1) {
-        currentSlide++;
-        updateSlide();
-      } else {
-        completeOnboarding();
-      }
+    function startRotation() {
+      // Show first immediately
+      titleEl.innerHTML = slides[0].title;
+      descEl.textContent = slides[0].desc;
+      titleEl.style.animation = 'textIn 0.5s ease forwards';
+      descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+
+      interval = setInterval(() => {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }, 3500);
     }
 
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateSlide();
-      }
-    }
-
-    function goToSlide(index) {
-      currentSlide = index;
-      updateSlide();
-    }
-
-    function skipOnboarding() {
-      completeOnboarding();
-    }
-
-    function completeOnboarding() {
+    function getStarted() {
       localStorage.setItem('onboardingComplete', 'true');
-      window.location.href = '../index.html';
+      window.location.href = '../index.html#register';
     }
 
-    // Touch/Swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    document.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-
-    function handleSwipe() {
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
-      }
-    }
-
-    // Images are used directly — no Lottie needed
-
-    function _unused_initLottieAnimations() {
-      try {
-        // Animation 1: Wallet
-        const container1 = document.querySelector('#lottie-1 .lottie-container');
-        if (container1) {
-          console.log('Container 1 found, loading wallet animation...');
-          
-          animationInstances.anim1 = lottie.loadAnimation({
-            container: container1,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/animations/wallet.json'
-          });
-          
-          animationInstances.anim1.addEventListener('DOMLoaded', () => {
-            console.log('✓ Wallet animation loaded successfully');
-          });
-          
-          animationInstances.anim1.addEventListener('data_failed', () => {
-            console.error('✗ Wallet animation failed to load');
-          });
-        }
-
-        // Animation 2: Target
-        const container2 = document.querySelector('#lottie-2 .lottie-container');
-        if (container2) {
-          console.log('Container 2 found, loading target animation...');
-          
-          animationInstances.anim2 = lottie.loadAnimation({
-            container: container2,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/animations/target.json'
-          });
-          
-          animationInstances.anim2.addEventListener('DOMLoaded', () => {
-            console.log('✓ Target animation loaded successfully');
-          });
-          
-          animationInstances.anim2.addEventListener('data_failed', () => {
-            console.error('✗ Target animation failed to load');
-          });
-        }
-
-        // Animation 3: Growth
-        const container3 = document.querySelector('#lottie-3 .lottie-container');
-        if (container3) {
-          console.log('Container 3 found, loading growth animation...');
-          
-          animationInstances.anim3 = lottie.loadAnimation({
-            container: container3,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/animations/growth.json'
-          });
-          
-          animationInstances.anim3.addEventListener('DOMLoaded', () => {
-            console.log('✓ Growth animation loaded successfully');
-          });
-          
-          animationInstances.anim3.addEventListener('data_failed', () => {
-            console.error('✗ Growth animation failed to load');
-          });
-        }
-        
-        console.log('Lottie initialization complete');
-      } catch (error) {
-        console.error('Error initializing Lottie:', error);
-      }
-    }
-
-    function showFallbackIcons() {
-      console.log('Using fallback Lucide icons');
-      const containers = [
-        document.querySelector('#lottie-1 .lottie-container'),
-        document.querySelector('#lottie-2 .lottie-container'),
-        document.querySelector('#lottie-3 .lottie-container')
-      ];
-      
-      const icons = [
-        '<i data-lucide="wallet" style="width:140px;height:140px;stroke-width:1.5;color:white"></i>',
-        '<i data-lucide="target" style="width:140px;height:140px;stroke-width:1.5;color:white"></i>',
-        '<i data-lucide="trending-up" style="width:140px;height:140px;stroke-width:1.5;color:white"></i>'
-      ];
-      
-      containers.forEach((container, index) => {
-        if (container && !container.querySelector('i[data-lucide]')) {
-          container.innerHTML = icons[index];
-        }
-      });
-      
-      lucide.createIcons();
-    }
-
-    // Initialize Lucide icons
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
-
-    window.addEventListener('load', () => {
-      lucide.createIcons();
-    });
+    // Init
+    startRotation();
   </script>
 </body>
 </html>
