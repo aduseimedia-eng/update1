@@ -175,17 +175,17 @@
 
     /* ===== Card ===== */
     .auth-card {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: 28px;
-      padding: 36px 24px 28px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0 20px;
       max-width: 440px;
       width: 100%;
       position: relative;
       overflow: visible;
-      box-shadow: 0 8px 40px rgba(0, 107, 63, 0.08), 0 1px 3px rgba(0,0,0,0.04);
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       animation: cardEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
       transform: translateY(30px);
