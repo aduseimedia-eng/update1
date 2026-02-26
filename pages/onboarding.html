@@ -18,7 +18,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: linear-gradient(160deg, #006B3F 0%, #004d2c 40%, #003822 100%);
+      background: #003822;
       min-height: 100vh;
       min-height: 100dvh;
       overflow: hidden;
@@ -27,38 +27,53 @@
       flex-direction: column;
     }
 
+    /* ── Full-screen background image ── */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .bg-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Dark gradient overlay for text readability */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.10) 0%,
+        rgba(0,0,0,0.05) 30%,
+        rgba(0,0,0,0.25) 60%,
+        rgba(0,0,0,0.65) 100%
+      );
+      z-index: 1;
+    }
+
     /* ── Layout ── */
     .onboarding-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       padding: 40px 24px;
       padding-top: calc(40px + env(safe-area-inset-top, 0px));
       padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
-      gap: 32px;
+      gap: 24px;
       position: relative;
-    }
-
-    /* ── Image ── */
-    .onboarding-image {
-      width: 100%;
-      max-width: 320px;
-      animation: gentleFloat 4s ease-in-out infinite;
-    }
-
-    .onboarding-image img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 24px;
-      filter: drop-shadow(0 16px 40px rgba(0,0,0,0.25));
-    }
-
-    @keyframes gentleFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
+      z-index: 2;
     }
 
     /* ── Rotating text area ── */
@@ -82,6 +97,7 @@
       opacity: 0;
       transform: translateY(18px);
       animation: textIn 0.5s ease forwards;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
     .rotating-title .highlight {
@@ -91,11 +107,12 @@
     .rotating-desc {
       font-size: 15px;
       font-weight: 400;
-      color: rgba(255,255,255,0.85);
+      color: rgba(255,255,255,0.95);
       line-height: 1.65;
       opacity: 0;
       transform: translateY(14px);
       animation: textIn 0.5s 0.15s ease forwards;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.35);
     }
 
     @keyframes textIn {
@@ -185,14 +202,12 @@
 
     /* ── Responsive ── */
     @media (max-height: 640px) {
-      .onboarding-image { max-width: 220px; }
-      .onboarding-screen { gap: 20px; padding: 24px 20px; }
+      .onboarding-screen { gap: 16px; padding: 20px 20px; }
       .rotating-title { font-size: 24px; }
-      .text-area { min-height: 90px; }
+      .text-area { min-height: 80px; }
     }
 
     @media (min-width: 600px) {
-      .onboarding-image { max-width: 360px; }
       .rotating-title { font-size: 32px; }
       .rotating-desc { font-size: 16px; }
     }
@@ -200,12 +215,13 @@
 </head>
 <body>
 
-  <div class="onboarding-screen">
+  <!-- Full-screen background image -->
+  <div class="bg-image">
+    <img src="../onboarding.png" alt="Welcome to KudiSave">
+  </div>
+  <div class="bg-overlay"></div>
 
-    <!-- Single onboarding image -->
-    <div class="onboarding-image">
-      <img src="../onboarding.png" alt="Welcome to KudiSave">
-    </div>
+  <div class="onboarding-screen">
 
     <!-- Rotating text -->
     <div class="text-area" id="textArea">
