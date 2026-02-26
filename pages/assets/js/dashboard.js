@@ -724,6 +724,57 @@ async function loadWidgets() {
       }
     } catch (e) { /* ignore */ }
 
+    // Load active subscriptions count from API
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subscriptions = subsResponse.data || [];
+      const activeCount = subscriptions.length;
+      const subsCountEl = document.getElementById('activeSubscriptions');
+      if (subsCountEl) {
+        subsCountEl.textContent = activeCount;
+        subsCountEl.classList.toggle('challenges-active', activeCount > 0);
+      }
+
+      // Check for subscriptions due soon (within 3 days) or overdue
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let subsDueSoon = 0, subsOverdue = 0;
+      subscriptions.forEach(sub => {
+        if (sub.next_payment_date) {
+          const nextPayment = new Date(sub.next_payment_date);
+          nextPayment.setHours(0, 0, 0, 0);
+          const diff = Math.ceil((nextPayment - today) / (1000 * 60 * 60 * 24));
+          if (diff < 0) subsOverdue++;
+          else if (diff <= 3) subsDueSoon++;
+        }
+      });
+
+      // Show subscription alert banner on dashboard
+      const subsBanner = document.getElementById('subsAlertBanner');
+      if (subsBanner) {
+        if (subsOverdue > 0 || subsDueSoon > 0) {
+          let subsTitle, subsDesc;
+          const isSubsRed = subsOverdue > 0;
+          if (subsOverdue > 0 && subsDueSoon > 0) {
+            subsTitle = `${subsOverdue} overdue + ${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due soon`;
+            subsDesc = 'Tap to view and manage your subscriptions';
+          } else if (subsOverdue > 0) {
+            subsTitle = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
+            subsDesc = 'These subscriptions are past their payment date';
+          } else {
+            subsTitle = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
+            subsDesc = 'Tap to view and manage your subscriptions';
+          }
+          document.getElementById('subsAlertTitle').textContent = subsTitle;
+          document.getElementById('subsAlertDesc').textContent = subsDesc;
+          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isSubsRed ? '🚨' : '🔔';
+          subsBanner.classList.toggle('overdue', isSubsRed);
+          subsBanner.style.display = 'flex';
+        } else {
+          subsBanner.style.display = 'none';
+        }
+      }
+    } catch (e) { /* subscriptions api error - ignore */ }
+
     // Load active challenges from API
     try {
       const challengesResponse = await api.get('/challenges/stats');
@@ -1532,10 +1583,21 @@ function initCurrencyDisplay() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+  // Always scroll to top on page load/refresh
+  window.scrollTo(0, 0);
+
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
   
+  // After 10 seconds, auto-slide to the Smart Insights section
+  setTimeout(() => {
+    const insightsSection = document.getElementById('insightsSection');
+    if (insightsSection) {
+      insightsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 10000);
+
   // Add fun entrance animations
   setTimeout(() => {
     document.querySelector('.mtn-profile-section')?.classList.add('animate-slide-up');
