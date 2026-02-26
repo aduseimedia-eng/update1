@@ -42,6 +42,7 @@
       height: 260px;
       background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
       border-radius: 50%;
+      animation: floatOrb1 8s ease-in-out infinite;
     }
 
     .mtn-header::after {
@@ -53,6 +54,80 @@
       height: 200px;
       background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
       border-radius: 50%;
+      animation: floatOrb2 10s ease-in-out infinite;
+    }
+
+    /* Header shimmer sweep */
+    .mtn-header-shimmer {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+      z-index: 0;
+      animation: headerShimmer 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Floating particles */
+    .header-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      animation: particleFloat linear infinite;
+    }
+
+    .header-particle:nth-child(1) {
+      left: 10%;
+      bottom: -5px;
+      animation-duration: 12s;
+      animation-delay: 0s;
+      width: 2px;
+      height: 2px;
+    }
+    .header-particle:nth-child(2) {
+      left: 30%;
+      bottom: -5px;
+      animation-duration: 14s;
+      animation-delay: 2s;
+      width: 4px;
+      height: 4px;
+      background: rgba(52,211,153,0.12);
+    }
+    .header-particle:nth-child(3) {
+      left: 55%;
+      bottom: -5px;
+      animation-duration: 10s;
+      animation-delay: 4s;
+    }
+    .header-particle:nth-child(4) {
+      left: 75%;
+      bottom: -5px;
+      animation-duration: 16s;
+      animation-delay: 1s;
+      width: 2px;
+      height: 2px;
+      background: rgba(110,231,183,0.1);
+    }
+    .header-particle:nth-child(5) {
+      left: 90%;
+      bottom: -5px;
+      animation-duration: 11s;
+      animation-delay: 3s;
     }
 
     /* Top bar row: Logo + icons */
@@ -134,6 +209,7 @@
       padding: 20px 16px 14px 16px;
       position: relative;
       z-index: 1;
+      animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
     }
 
     .mtn-avatar {
@@ -151,6 +227,7 @@
       flex-shrink: 0;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
     }
 
     .mtn-avatar img {
@@ -197,6 +274,7 @@
       padding: 4px 20px 18px;
       position: relative;
       z-index: 1;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
     }
 
     .header-balance-label {
@@ -230,6 +308,7 @@
       line-height: 1.2;
       margin-bottom: 10px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      animation: balanceGlow 3s ease-in-out infinite;
     }
 
     .header-balance-row {
@@ -247,6 +326,21 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.1);
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .header-balance-item:first-child {
+      animation-delay: 0.5s;
+    }
+
+    .header-balance-item:last-child {
+      animation-delay: 0.6s;
+    }
+
+    .header-balance-item:active {
+      transform: scale(0.96);
+      background: rgba(255,255,255,0.15);
     }
 
     .header-balance-item-label {
@@ -362,6 +456,45 @@
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* Header animation keyframes */
+    @keyframes floatOrb1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(15px, 20px) scale(1.05); }
+      66% { transform: translate(-10px, -15px) scale(0.95); }
+    }
+
+    @keyframes floatOrb2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(20px, -25px) scale(1.1); }
+    }
+
+    @keyframes headerShimmer {
+      0% { left: -100%; }
+      40%, 100% { left: 200%; }
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes balanceGlow {
+      0%, 100% { text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+      50% { text-shadow: 0 2px 16px rgba(52,211,153,0.3), 0 2px 8px rgba(0,0,0,0.15); }
     }
 
     .balance-amount {
@@ -1983,6 +2116,16 @@
 <body>
   <!-- MTN-Style Unified Header + Profile -->
   <header class="mtn-header">
+    <!-- Shimmer sweep -->
+    <div class="mtn-header-shimmer"></div>
+    <!-- Floating particles -->
+    <div class="header-particles">
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+    </div>
     <!-- Top Bar: Logo + Action Icons -->
     <div class="mtn-topbar">
       <a class="mtn-logo" href="dashboard.html">
