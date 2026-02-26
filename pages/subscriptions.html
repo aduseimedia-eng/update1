@@ -36,7 +36,27 @@
     .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
     .mtn-header-curve { position: absolute; bottom: -1px; left: 0; right: 0; height: 24px; background: var(--bg-primary, #f5f6fa); border-radius: 24px 24px 0 0; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); }
-    .mtn-header-spacer { height: 200px; }
+    .mtn-header-spacer { height: 310px; }
+
+    /* ===== Header Balance Section ===== */
+    .header-balance { text-align: center; padding: 4px 20px 18px; position: relative; z-index: 1; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+    .header-balance-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .header-balance-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 0 8px rgba(52,211,153,0.5); animation: pulse-dot 2s ease-in-out infinite; }
+    .header-balance-amount { font-size: 30px; font-weight: 800; color: #ffffff; letter-spacing: -1px; line-height: 1.2; margin-bottom: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: balanceGlow 3s ease-in-out infinite; }
+    .header-balance-sub { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; margin-bottom: 10px; }
+    .header-balance-row { display: flex; justify-content: center; gap: 10px; }
+    .header-balance-item { text-align: center; flex: 1; padding: 8px 6px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; transition: transform 0.2s ease, background 0.2s ease; }
+    .header-balance-item:nth-child(1) { animation-delay: 0.5s; }
+    .header-balance-item:nth-child(2) { animation-delay: 0.6s; }
+    .header-balance-item:nth-child(3) { animation-delay: 0.7s; }
+    .header-balance-item:active { transform: scale(0.96); background: rgba(255,255,255,0.15); }
+    .header-balance-item-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-bottom: 2px; }
+    .header-balance-item-value { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+    .header-balance-item-value.active-count { color: #6ee7b7; }
+    .header-balance-item-value.due-soon { color: #fde68a; }
+    .header-balance-item-value.overdue { color: #fca5a5; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+    @keyframes balanceGlow { 0%, 100% { text-shadow: 0 2px 8px rgba(0,0,0,0.15); } 50% { text-shadow: 0 2px 16px rgba(52,211,153,0.3), 0 2px 8px rgba(0,0,0,0.15); } }
 
     /* Header shimmer sweep */
     .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
@@ -200,33 +220,33 @@
       <div class="mtn-info-title">Manage Subscriptions</div>
       <div class="mtn-info-subtitle">Track recurring services & payments</div>
     </div>
+
+    <!-- Subscription summary inside header -->
+    <div class="header-balance">
+      <div class="header-balance-label">Monthly Cost</div>
+      <div class="header-balance-amount" id="summaryMonthly">&#8373;0.00</div>
+      <div class="header-balance-sub" id="summaryYearly">&#8373;0.00 / year</div>
+      <div class="header-balance-row">
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Active</div>
+          <div class="header-balance-item-value active-count" id="summaryActive">0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Due Soon</div>
+          <div class="header-balance-item-value due-soon" id="summaryDueSoon">0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Overdue</div>
+          <div class="header-balance-item-value overdue" id="summaryOverdue">0</div>
+        </div>
+      </div>
+    </div>
+
     <div class="mtn-header-curve"></div>
   </header>
   <div class="mtn-header-spacer"></div>
 
   <div class="container" style="padding-bottom: 100px;">
-    <!-- Summary Card -->
-    <div id="summaryCard" class="summary-card" style="display:none;">
-      <div class="summary-title">Monthly Subscriptions</div>
-      <div class="summary-monthly" id="summaryMonthly">&#8373;0.00</div>
-      <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px;" id="summaryYearly">&#8373;0.00 / year</div>
-      <hr class="summary-divider">
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="summary-value" id="summaryActive">0</div>
-          <div class="summary-label">Active</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-value" id="summaryDueSoon" style="color:#fbbf24;">0</div>
-          <div class="summary-label">Due Soon</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-value" id="summaryOverdue" style="color:#f87171;">0</div>
-          <div class="summary-label">Overdue</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Alerts -->
     <div id="alertsContainer"></div>
 
@@ -474,8 +494,6 @@
     function renderInsights(data) {
       if (!data) return;
       var sym = (typeof utils !== 'undefined' && utils.getCurrencySymbol) ? utils.getCurrencySymbol() : '\u20B5';
-      var card = document.getElementById('summaryCard');
-      card.style.display = 'block';
 
       document.getElementById('summaryMonthly').textContent =
         sym + (data.total_monthly_cost || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
