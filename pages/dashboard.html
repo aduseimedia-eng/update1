@@ -2761,6 +2761,17 @@
         if (xpTextEl) xpTextEl.textContent = xp + ' / ' + needed + ' XP';
         if (xpFillEl) xpFillEl.style.width = pct + '%';
 
+        // Also update the homepage level card so both bars match
+        var homeLevelBadge = document.getElementById('levelBadge');
+        var homeUserLevel = document.getElementById('userLevel');
+        var homeXpText = document.getElementById('xpText');
+        var homeXpProgress = document.getElementById('xpProgress');
+
+        if (homeLevelBadge) homeLevelBadge.textContent = lvl;
+        if (homeUserLevel) homeUserLevel.textContent = 'Level ' + lvl;
+        if (homeXpText) homeXpText.textContent = xp + ' / ' + needed + ' XP';
+        if (homeXpProgress) homeXpProgress.style.width = pct + '%';
+
         // Streak count - use API value if available
         var apiStreak = localStorage.getItem('kudisave_api_streak');
         var streak = apiStreak ? parseInt(apiStreak) : calculateStreak();

@@ -2498,6 +2498,33 @@
       populateFavorites();
     }
 
+    // Update homepage level card from cached XP data
+    function updateHomepageLevel() {
+      try {
+        var apiLevel = localStorage.getItem('kudisave_api_level');
+        var apiXP = localStorage.getItem('kudisave_api_xp');
+        var apiXPNext = localStorage.getItem('kudisave_api_xp_next');
+        var apiXPPct = localStorage.getItem('kudisave_api_xp_pct');
+
+        var lvl = apiLevel ? parseInt(apiLevel) : 1;
+        var xp = apiXP ? parseInt(apiXP) : 0;
+        var needed = apiXPNext ? parseInt(apiXPNext) : 100;
+        var pct = apiXPPct ? parseFloat(apiXPPct) : 0;
+
+        var homeLevelBadge = document.getElementById('levelBadge');
+        var homeUserLevel = document.getElementById('userLevel');
+        var homeXpText = document.getElementById('xpText');
+        var homeXpProgress = document.getElementById('xpProgress');
+
+        if (homeLevelBadge) homeLevelBadge.textContent = lvl;
+        if (homeUserLevel) homeUserLevel.textContent = 'Level ' + lvl;
+        if (homeXpText) homeXpText.textContent = xp + ' / ' + needed + ' XP';
+        if (homeXpProgress) homeXpProgress.style.width = pct + '%';
+      } catch(e) {
+        console.log('Homepage level update error:', e);
+      }
+    }
+
     // Check URL param to auto-open currency calculator
     document.addEventListener('DOMContentLoaded', function() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -2505,6 +2532,8 @@
         setTimeout(() => openCurrencyCalculator(), 500);
         window.history.replaceState({}, document.title, window.location.pathname);
       }
+      // Sync homepage level card
+      updateHomepageLevel();
     });
   </script>
 </body>
