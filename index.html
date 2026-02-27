@@ -906,8 +906,42 @@
         </div>
         <h1 class="auth-title">KudiSave</h1>
         <div class="kente-strip"></div>
-        <p class="auth-subtitle">Akwaaba! Master your finances, one cedi at a time 🇬🇭</p>
+        <p class="auth-subtitle"><span id="greetingWord" class="greeting-cycle">Akwaaba!</span> Master your finances, one cedi at a time 🇬🇭</p>
       </div>
+
+      <style>
+        .greeting-cycle {
+          display: inline-block;
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .greeting-cycle.fade-out {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        .greeting-cycle.fade-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      </style>
+
+      <script>
+        (function() {
+          var greetings = ['Akwaaba!', 'Ojekoo!', 'Woezo!', 'Antire!'];
+          var index = 0;
+          var el = document.getElementById('greetingWord');
+          if (!el) return;
+          setInterval(function() {
+            el.classList.add('fade-out');
+            el.classList.remove('fade-in');
+            setTimeout(function() {
+              index = (index + 1) % greetings.length;
+              el.textContent = greetings[index];
+              el.classList.remove('fade-out');
+              el.classList.add('fade-in');
+            }, 400);
+          }, 2000);
+        })();
+      </script>
 
       <!-- Tab Switcher -->
       <div class="auth-tabs">
