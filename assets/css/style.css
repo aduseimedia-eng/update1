@@ -277,6 +277,12 @@ textarea {
   .card, .stat-card, .goal-card { padding: 12px !important; }
 }
 
+/* Ensure main containers have a small top padding on very small screens to prevent
+   content being obscured by fixed headers (covers pages without explicit container padding) */
+@media (max-width: 480px) {
+  .container { padding-top: 8px !important; }
+}
+
 @media (min-width: 481px) and (max-width: 900px) {
   .mtn-header-spacer { height: min(40vh, 320px) !important; }
   .mtn-info-section { padding: 10px 14px 8px 14px !important; }
