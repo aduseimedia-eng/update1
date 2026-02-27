@@ -906,19 +906,24 @@
         </div>
         <h1 class="auth-title">KudiSave</h1>
         <div class="kente-strip"></div>
-        <p class="auth-subtitle"><span id="greetingWord" class="greeting-cycle">Akwaaba!</span> Master your finances, one cedi at a time 🇬🇭</p>
+        <p class="greeting-line" id="greetingWord">Akwaaba!</p>
+        <p class="auth-subtitle">Master your finances, one cedi at a time 🇬🇭</p>
       </div>
 
       <style>
-        .greeting-cycle {
-          display: inline-block;
+        .greeting-line {
+          font-size: 22px;
+          font-weight: 700;
+          color: var(--primary);
+          margin: 0 0 4px 0;
+          min-height: 32px;
           transition: opacity 0.4s ease, transform 0.4s ease;
         }
-        .greeting-cycle.fade-out {
+        .greeting-line.fade-out {
           opacity: 0;
           transform: translateY(-6px);
         }
-        .greeting-cycle.fade-in {
+        .greeting-line.fade-in {
           opacity: 1;
           transform: translateY(0);
         }
