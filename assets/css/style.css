@@ -239,6 +239,52 @@ textarea {
   border-color: var(--border-color);
 }
 
+/* ===== Responsive tweaks for mobile friendliness ===== */
+/* Ensure header spacer and header content scale on small screens */
+.mtn-header-spacer {
+  /* Use viewport-relative sizing but cap to a sensible px value */
+  height: min(35vh, 320px) !important;
+}
+
+@media (max-width: 480px) {
+  .mtn-header-spacer {
+    height: min(48vh, 300px) !important;
+  }
+
+  .mtn-info-section {
+    gap: 6px !important;
+    padding: 8px 12px 6px 12px !important;
+  }
+
+  .header-balance-amount {
+    font-size: 20px !important;
+    line-height: 1.05 !important;
+  }
+
+  .header-balance-sub { margin-bottom: 6px !important; }
+
+  .header-balance-item { padding: 6px 6px !important; }
+  .header-balance-item-value { font-size: 12px !important; }
+
+  .mtn-topbar { padding-left: 12px; padding-right: 12px; }
+
+  /* Make comparison summary scroll better on small devices */
+  .compare-summary { padding: 10px 8px !important; }
+  .compare-summary-inner { min-width: 340px !important; }
+  .summary-row { grid-template-columns: 1fr 80px 80px 70px !important; gap: 6px !important; }
+
+  /* Reduce large card padding to make room */
+  .card, .stat-card, .goal-card { padding: 12px !important; }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+  .mtn-header-spacer { height: min(40vh, 320px) !important; }
+  .mtn-info-section { padding: 10px 14px 8px 14px !important; }
+  .header-balance-amount { font-size: 24px !important; }
+  .compare-summary-inner { min-width: 380px !important; }
+}
+
+
 .modal-content,
 .dropdown-menu {
   border-color: rgba(0, 0, 0, 0.1);
