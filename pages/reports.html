@@ -719,12 +719,18 @@
       padding: 14px;
       margin-bottom: 80px;
       animation: slideUp 0.4s ease-out both;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .compare-summary-inner {
+      min-width: 420px;
     }
 
     .summary-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 80px;
-      gap: 8px;
+      grid-template-columns: minmax(90px, 1.2fr) minmax(85px, 1fr) minmax(85px, 1fr) minmax(80px, 0.9fr);
+      gap: 6px;
       padding: 10px 0;
       border-bottom: 1px solid var(--border-color);
       align-items: center;
@@ -747,9 +753,15 @@
       padding-bottom: 8px;
     }
 
+    .summary-row.header > div {
+      white-space: nowrap;
+      overflow: visible;
+    }
+
     .summary-metric {
       font-size: 12px;
       color: var(--text-secondary);
+      white-space: nowrap;
     }
 
     .summary-value {
@@ -757,14 +769,16 @@
       font-weight: 600;
       color: var(--text-primary);
       text-align: center;
+      white-space: nowrap;
     }
 
     .summary-diff {
       font-size: 11px;
       font-weight: 600;
       text-align: center;
-      padding: 4px 8px;
+      padding: 4px 6px;
       border-radius: 6px;
+      white-space: nowrap;
     }
 
     .summary-diff.better { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
@@ -1188,13 +1202,15 @@
         </div>
       </div>
       <div class="compare-summary" id="compareSummary">
-        <div class="summary-row header">
-          <div>Metric</div>
-          <div style="text-align:center" id="summaryHeader1">Period 1</div>
-          <div style="text-align:center" id="summaryHeader2">Period 2</div>
-          <div style="text-align:center">Difference</div>
+        <div class="compare-summary-inner">
+          <div class="summary-row header">
+            <div>Metric</div>
+            <div style="text-align:center" id="summaryHeader1">Period 1</div>
+            <div style="text-align:center" id="summaryHeader2">Period 2</div>
+            <div style="text-align:center">Change</div>
+          </div>
+          <!-- Summary rows will be inserted here -->
         </div>
-        <!-- Summary rows will be inserted here -->
       </div>
     </div>
   </div>
@@ -1462,10 +1478,11 @@
       ];
 
       const container = document.getElementById('compareSummary');
-      const headerRow = container.querySelector('.summary-row.header');
+      const inner = container.querySelector('.compare-summary-inner');
+      const headerRow = inner.querySelector('.summary-row.header');
       
-      container.innerHTML = '';
-      container.appendChild(headerRow);
+      inner.innerHTML = '';
+      inner.appendChild(headerRow);
 
       metrics.forEach(metric => {
         const val1 = compareData.period1[metric.key];
@@ -1500,7 +1517,7 @@
           <div class="summary-value">${metric.isPercent ? val2.toFixed(1) + '%' : (metric.isNumber ? val2 : utils.formatCurrency(val2))}</div>
           <div class="summary-diff ${diffClass}">${diffText}</div>
         `;
-        container.appendChild(row);
+        inner.appendChild(row);
       });
     }
 
