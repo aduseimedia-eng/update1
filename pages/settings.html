@@ -422,6 +422,8 @@
     .mtn-profile-email { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; }
 
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
+    .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
+    [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
     .mtn-header-spacer { height: 280px; }
     .container { padding-top: 10px; padding-bottom: 80px; }
   </style>
@@ -443,6 +445,7 @@
       <div class="mtn-profile-name" id="headerProfileName">Loading...</div>
       <div class="mtn-profile-email" id="headerProfileEmail">...</div>
     </div>
+    <div class="mtn-header-curve"></div>
   </header>
   <div class="mtn-header-spacer"></div>
 

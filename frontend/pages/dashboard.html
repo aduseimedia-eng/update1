@@ -191,6 +191,18 @@
     }
 
     /* Spacer for fixed header */
+    .mtn-header-curve {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: var(--bg-primary);
+      border-radius: 16px 16px 0 0;
+      opacity: 0.35;
+    }
+    [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
+
     .mtn-header-spacer {
       height: 340px;
     }
@@ -1686,6 +1698,7 @@
       </div>
     </div>
 
+    <div class="mtn-header-curve"></div>
   </header>
 
   <!-- Mobile Menu Overlay -->
