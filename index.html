@@ -116,33 +116,43 @@
 
     .shape-1 {
       width: 6px; height: 6px;
-      background: rgba(0, 160, 94, 0.35);
+      background: rgba(0, 160, 94, 0.45);
       top: 15%; left: 20%;
       animation: float1 12s ease-in-out infinite;
     }
     .shape-2 {
       width: 4px; height: 4px;
-      background: rgba(252, 209, 22, 0.4);
+      background: rgba(252, 209, 22, 0.5);
       top: 25%; right: 25%;
       animation: float2 15s ease-in-out infinite;
     }
     .shape-3 {
       width: 8px; height: 8px;
-      background: rgba(0, 160, 94, 0.25);
+      background: rgba(206, 17, 38, 0.25);
       bottom: 30%; left: 12%;
       animation: float3 18s ease-in-out infinite;
     }
     .shape-4 {
       width: 5px; height: 5px;
-      background: rgba(252, 209, 22, 0.3);
+      background: rgba(252, 209, 22, 0.4);
       bottom: 20%; right: 15%;
       animation: float1 14s ease-in-out infinite reverse;
     }
     .shape-5 {
       width: 3px; height: 3px;
-      background: rgba(0, 160, 94, 0.3);
+      background: rgba(0, 160, 94, 0.35);
       top: 60%; left: 35%;
       animation: float2 10s ease-in-out infinite;
+    }
+    /* Ghana Star accent */
+    .shape-6 {
+      width: 10px; height: 10px;
+      background: rgba(0, 0, 0, 0.08);
+      top: 40%; right: 10%;
+      animation: float3 16s ease-in-out infinite;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      border-radius: 0;
+      opacity: 0.7;
     }
 
     @keyframes floatOrb {
@@ -203,10 +213,47 @@
     }
 
     /* ===== Header ===== */
+    /* ===== Kente-Inspired Strip ===== */
+    .kente-strip {
+      width: 80px;
+      height: 4px;
+      margin: 0 auto 16px;
+      border-radius: 2px;
+      background: repeating-linear-gradient(
+        90deg,
+        #CE1126 0px, #CE1126 8px,
+        #FCD116 8px, #FCD116 16px,
+        #006B3F 16px, #006B3F 24px,
+        #000000 24px, #000000 28px,
+        #006B3F 28px, #006B3F 36px,
+        #FCD116 36px, #FCD116 44px,
+        #CE1126 44px, #CE1126 52px
+      );
+      animation: kenteShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes kenteShimmer {
+      0%, 100% { opacity: 0.85; width: 80px; }
+      50% { opacity: 1; width: 100px; }
+    }
+
+    /* ===== Adinkra Watermark ===== */
+    .adinkra-accent {
+      position: absolute;
+      top: -30px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      opacity: 0.04;
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .auth-header {
       text-align: center;
       margin-top: 0;
       margin-bottom: 28px;
+      position: relative;
     }
 
     .auth-logo-wrap {
@@ -830,6 +877,7 @@
     <div class="floating-shape shape-3"></div>
     <div class="floating-shape shape-4"></div>
     <div class="floating-shape shape-5"></div>
+    <div class="floating-shape shape-6"></div>
   </div>
 
   <!-- Splash Overlay -->
@@ -849,11 +897,16 @@
 
       <!-- Header -->
       <div class="auth-header">
+        <!-- Adinkra Gye Nyame watermark -->
+        <svg class="adinkra-accent" viewBox="0 0 100 100" fill="#006B3F" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5C25.2 5 5 25.2 5 50s20.2 45 45 45 45-20.2 45-45S74.8 5 50 5zm0 10c19.3 0 35 15.7 35 35S69.3 85 50 85 15 69.3 15 50s15.7-35 35-35zm0 8c-3.9 0-7.5 0.8-10.8 2.3C44.5 28 50 35 50 43c0-8 5.5-15 10.8-17.7C57.5 23.8 53.9 23 50 23zm-20 15c-1.5 3.3-2.3 6.9-2.3 10.8 0-3.9-0.8-7.5-2.3-10.8C28 43.5 35 50 43 50c-8 0-15-5.5-17.7-10.8zm40 0C72 43.5 65 50 57 50c8 0 15 5.5 17.7 10.8 1.5-3.3 2.3-6.9 2.3-10.8 0 3.9 0.8 7.5 2.3 10.8zM50 57c0 8-5.5 15-10.8 17.7 3.3 1.5 6.9 2.3 10.8 2.3-3.9 0-7.5-0.8-10.8-2.3C44.5 72 50 65 50 57z"/>
+        </svg>
         <div class="auth-logo-wrap">
           <img src="Secondary_Logo.png" alt="KudiSave" class="auth-logo-img">
         </div>
         <h1 class="auth-title">KudiSave</h1>
-        <p class="auth-subtitle">Master your finances, one cedi at a time</p>
+        <div class="kente-strip"></div>
+        <p class="auth-subtitle">Akwaaba! Master your finances, one cedi at a time 🇬🇭</p>
       </div>
 
       <!-- Tab Switcher -->
@@ -897,11 +950,12 @@
 
       <!-- Footer -->
       <div class="auth-footer">
-        <p>Helping Ghanaian youth build better financial habits</p>
+        <p>✨ Wo sika, wo daakye — Your money, your future ✨</p>
         <div class="secure-badge">
           <i data-lucide="shield-check"></i>
           256-bit encrypted &bull; Your data is safe
         </div>
+        <p style="font-size: 11px; color: #9ca3af; margin-top: 8px;">Made with ❤️ in Ghana 🇬🇭</p>
       </div>
     </div>
   </div>
