@@ -239,6 +239,44 @@ textarea {
   border-color: var(--border-color);
 }
 
+/* ===== UNIFIED MTN HEADER CONSISTENCY ===== */
+/* Standardized height and spacing for all MTN-style headers */
+body {
+  padding-top: 0 !important;
+}
+
+.mtn-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.mtn-header-spacer {
+  /* Use viewport-relative sizing but cap to a sensible px value */
+  height: min(25vh, 250px) !important;
+  /* 5px spacing after header curve before content starts */
+  margin-bottom: 5px;
+}
+
+/* Apply consistent spacing for content containers after header */
+.main-content,
+.container {
+  padding-top: 5px !important;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 120px;
+}
+
+/* Override for pages with different padding requirements */
+.main-content {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-bottom: 120px !important;
+}
+
 /* ===== Responsive tweaks for mobile friendliness ===== */
 /* Ensure header spacer and header content scale on small screens */
 .mtn-header-spacer {
