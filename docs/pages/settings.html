@@ -1521,6 +1521,8 @@
         
         utils.showAlert('Export downloaded successfully!', 'success');
         closeModal('exportModal');
+      } catch (error) {
+        utils.showAlert('Failed to export data', 'error');
       }
     }
 
@@ -1538,7 +1540,6 @@
     const originalOpenModal = openModal;
     window.openModal = function(modalId) {
       originalOpenModal(modalId);
-      if (modalId === 'restoreModal') loadBackups();
       if (modalId === 'exportModal') setDefaultExportDates();
     };
 
