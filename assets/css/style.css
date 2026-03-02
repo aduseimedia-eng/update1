@@ -285,10 +285,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  .mtn-header-spacer {
-    height: min(35vh, 250px) !important;
-  }
-
   .mtn-info-section {
     gap: 6px !important;
     padding: 8px 12px 6px 12px !important;
