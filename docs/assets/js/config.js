@@ -11,7 +11,7 @@
   // PRODUCTION: Set your deployed backend URL here
   // Example: 'https://kudisave-api.onrender.com/api/v1'
   // Comment this out when developing locally!
-  const PRODUCTION_API_URL = null; // Disabled for local development
+  const PRODUCTION_API_URL = 'https://kudisave-api-production.up.railway.app/api/v1'; // Disabled for local development
   
   // Detect if on local network (private IP ranges)
   const isLocalNetwork = /^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(hostname);
