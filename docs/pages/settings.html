@@ -548,11 +548,11 @@
     <div class="settings-section">
       <div class="settings-section-title">Email Notifications</div>
       
-      <div class="settings-item" onclick="openModal('notificationsModal')">
+      <div class="settings-item" style="opacity: 0.6; cursor: not-allowed;">
         <div class="settings-item-left">
           <span class="settings-icon"><i data-lucide="mail" class="icon"></i></span>
           <div class="settings-item-info">
-            <h4>Gmail Notifications</h4>
+            <h4>Gmail Notifications <span style="color: #f59e0b; font-size: 11px; font-weight: 700; margin-left: 8px;">COMING SOON</span></h4>
             <p id="notifStatusText">Manage email alerts</p>
           </div>
         </div>
@@ -564,28 +564,6 @@
     <div class="settings-section">
       <div class="settings-section-title">Data & Backup</div>
       
-      <div class="settings-item" onclick="createBackup()">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="hard-drive" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Create Backup</h4>
-            <p id="backupStatus">Backup your financial data</p>
-          </div>
-        </div>
-        <span class="settings-arrow">›</span>
-      </div>
-
-      <div class="settings-item" onclick="openModal('restoreModal')">
-        <div class="settings-item-left">
-          <span class="settings-icon"><i data-lucide="download" class="icon"></i></span>
-          <div class="settings-item-info">
-            <h4>Restore Data</h4>
-            <p>Restore from a previous backup</p>
-          </div>
-        </div>
-        <span class="settings-arrow">›</span>
-      </div>
-
       <div class="settings-item" onclick="openModal('exportModal')">
         <div class="settings-item-left">
           <span class="settings-icon"><i data-lucide="upload" class="icon"></i></span>
@@ -917,24 +895,6 @@
           </div>
           <span class="settings-arrow" id="check-NGN" style="display:none">✓</span>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Restore Modal -->
-  <div id="restoreModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Restore Data</h2>
-        <button class="close-btn" onclick="closeModal('restoreModal')">&times;</button>
-      </div>
-      <div id="backupsList" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
-        <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Loading backups...</p>
-      </div>
-      <div style="text-align: center; margin-top: 10px;">
-        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Or import from file:</p>
-        <input type="file" id="importFile" accept=".json" style="display: none" onchange="importBackup(event)">
-        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📁 Import JSON File</button>
       </div>
     </div>
   </div>
