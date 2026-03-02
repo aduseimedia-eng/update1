@@ -424,7 +424,7 @@
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
     .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
-    .mtn-header-spacer { height: 260px !important; }
+    .mtn-header-spacer { height: 280px !important; }
     .container { padding-top: 18px; padding-bottom: 80px; }
   </style>
 </head>
@@ -1453,49 +1453,74 @@
       
       const type = document.getElementById('exportType').value;
       const format = document.getElementById('exportFormat').value;
-      const startDate = document.getElementById('exportStartDate').value;
-      const endDate = document.getElementById('exportEndDate').value;
+      const startDate = document.getElementById('exportStartDate').value || null;
+      const endDate = document.getElementById('exportEndDate').value || null;
 
       try {
-        const params = new URLSearchParams({ type, format });
-        if (startDate) params.append('start_date', startDate);
-        if (endDate) params.append('end_date', endDate);
-
-        const response = await api.get(`/export/data?${params}`);
+        // Get all expenses from localStorage
+        const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        const goals = JSON.parse(localStorage.getItem('goals')) || [];
+        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
         
-        if (response.success) {
-          let content, filename, mimeType;
-          
-          if (format === 'csv') {
-            // Convert to CSV
-            const { columns, rows } = response.data;
-            const csvHeader = columns.join(',');
-            const csvRows = rows.map(row => 
-              Object.values(row).map(v => `"${v}"`).join(',')
-            );
-            content = [csvHeader, ...csvRows].join('\n');
-            filename = `${type}_export.csv`;
-            mimeType = 'text/csv';
-          } else {
-            content = JSON.stringify(response.data, null, 2);
-            filename = `${type}_export.json`;
-            mimeType = 'application/json';
-          }
-          
-          // Download file
-          const blob = new Blob([content], { type: mimeType });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          a.click();
-          URL.revokeObjectURL(url);
-          
-          utils.showAlert('Export downloaded successfully!', 'success');
-          closeModal('exportModal');
+        let dataToExport = [];
+        
+        // Filter based on type and date range
+        const filterByDate = (items, dateField) => {
+          return items.filter(item => {
+            const itemDate = new Date(item[dateField]);
+            if (startDate && itemDate < new Date(startDate)) return false;
+            if (endDate && itemDate > new Date(endDate)) return false;
+            return true;
+          });
+        };
+        
+        if (type === 'expenses') {
+          dataToExport = filterByDate(expenses, 'date');
+        } else if (type === 'goals') {
+          dataToExport = filterByDate(goals, 'createdDate');
+        } else if (type === 'summary') {
+          dataToExport = { expenses: filterByDate(expenses, 'date').length, goals: goals.length, total: expenses.reduce((sum, e) => sum + (e.amount || 0), 0) };
+        } else {
+          dataToExport = filterByDate(transactions, 'date');
         }
-      } catch (error) {
-        utils.showAlert('Failed to export data', 'error');
+        
+        let content, filename, mimeType;
+        
+        if (format === 'csv') {
+          // Convert to CSV
+          const arr = Array.isArray(dataToExport) ? dataToExport : [dataToExport];
+          if (arr.length === 0) {
+            utils.showAlert('No data to export', 'info');
+            return;
+          }
+          const headers = Object.keys(arr[0]);
+          const csvHeader = headers.join(',');
+          const csvRows = arr.map(row => 
+            headers.map(h => {
+              const val = row[h];
+              return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
+            }).join(',')
+          );
+          content = [csvHeader, ...csvRows].join('\n');
+          filename = `${type}_export_${new Date().toISOString().slice(0,10)}.csv`;
+          mimeType = 'text/csv';
+        } else {
+          content = JSON.stringify(dataToExport, null, 2);
+          filename = `${type}_export_${new Date().toISOString().slice(0,10)}.json`;
+          mimeType = 'application/json';
+        }
+        
+        // Download file
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        utils.showAlert('Export downloaded successfully!', 'success');
+        closeModal('exportModal');
       }
     }
 
