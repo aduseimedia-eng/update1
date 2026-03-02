@@ -871,16 +871,38 @@ async function loadSpendingInsights() {
       }
 
     } else {
+      // Check if this is a new user's first visit
+      const hasVisitedBefore = localStorage.getItem('kudisave_dashboard_visited');
+      const isNewUser = !hasVisitedBefore;
+      
       // Fun empty state
       if (greetingEl) greetingEl.textContent = '';
       if (footer) footer.style.display = 'none';
-      const emptyMsgs = [
-        { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
-        { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
-        { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
-        { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
-      ];
-      const msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+      
+      let emptyMsgs;
+      let msg;
+      
+      // Special welcome message for new users
+      if (isNewUser) {
+        emptyMsgs = [
+          { icon: 'sparkles', title: '👋 Welcome to KudiSave!', desc: 'You\'re all set! Now let\'s track your first expense and unlock your financial superpowers.' },
+          { icon: 'gift', title: '🎉 Welcome Aboard!', desc: 'Great to see you here! Add your first expense and watch 30 smart insights come to life.' },
+          { icon: 'rocket', title: '🚀 Ready to Start?', desc: 'Your journey to financial freedom starts now. Log your first expense to get going!' }
+        ];
+        msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+        // Mark that user has visited
+        localStorage.setItem('kudisave_dashboard_visited', 'true');
+      } else {
+        // Regular empty state for returning users
+        emptyMsgs = [
+          { icon: 'search', title: 'Nothing to report... yet!', desc: 'Start logging expenses and I\'ll become your personal money detective!' },
+          { icon: 'sprout', title: 'Plant your first expense!', desc: 'Your insights garden is empty. Add expenses and watch brilliant insights bloom!' },
+          { icon: 'gamepad-2', title: 'Level 0: No Data', desc: 'Log some expenses to unlock 30 smart insights. It\'s like a game — but with real money!' },
+          { icon: 'wand-2', title: '30 Insights Waiting!', desc: 'Add expenses, income, goals & budgets to unlock all 30 money insights! Magic awaits!' }
+        ];
+        msg = emptyMsgs[Math.floor(Math.random() * emptyMsgs.length)];
+      }
+      
       container.innerHTML = `
         <div class="insights-empty" style="width: 100%;">
           <div class="insights-empty-icon"><i data-lucide="${msg.icon}" style="width:32px;height:32px;"></i></div>

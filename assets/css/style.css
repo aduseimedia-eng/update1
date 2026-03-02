@@ -3814,4 +3814,331 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .cache-indicator::before {
   content: '•';
   color: var(--success);
-}/* Cache bust: 2026-02-15 19:05:14 */
+}
+
+/* ============================================
+   DESKTOP VIEW STYLES (768px and above)
+   Optimized layout for larger screens
+   ============================================ */
+
+@media (min-width: 768px) {
+  /* Main container max-width for desktop */
+  .container {
+    max-width: 900px;
+    padding: 24px;
+  }
+
+  /* Dashboard cards in grid layout */
+  .dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .dashboard-card {
+    min-height: auto;
+  }
+
+  /* Expense cards in grid */
+  .expense-list,
+  .bills-list,
+  .challenge-card,
+  .achievement-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Card improvements for desktop */
+  .card {
+    padding: 20px;
+  }
+
+  /* Filter tabs with better spacing */
+  .filter-tabs {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .filter-tab {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  /* Header adjustments */
+  .mtn-header {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+  }
+
+  .mtn-header-spacer {
+    height: 300px;
+  }
+
+  /* Icons larger on desktop */
+  .icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Better spacing for sections */
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  /* Modals wider on desktop */
+  .modal-sheet {
+    max-width: 600px;
+  }
+
+  /* Budget progress wider */
+  .budget-progress-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  /* Transaction list improvements */
+  .transaction-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Insights section better layout */
+  .insights-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+  }
+
+  /* Better bottom nav for desktop */
+  .bottom-nav {
+    padding: 0 16px;
+  }
+
+  .nav-item {
+    padding: 12px 16px;
+  }
+
+  /* Goals and challenges grid */
+  .goals-container,
+  .challenges-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  /* Reports section improvements */
+  .overview-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .compare-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Bill cards better layout */
+  .bill-card {
+    padding: 18px;
+    gap: 16px;
+  }
+
+  /* Settings list */
+  .settings-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Achievement badges grid */
+  .badges-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   LARGE DESKTOP VIEW (1024px and above)
+   Enhanced layout for large screens
+   ============================================ */
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    padding: 32px;
+  }
+
+  /* Three-column layout for dashboard */
+  .dashboard-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* Wider card layouts */
+  .card {
+    padding: 24px;
+  }
+
+  /* Three-column grid for expenses and bills */
+  .expense-list,
+  .bills-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Better transaction layout */
+  .transaction-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Insights in responsive grid */
+  .insights-scroll {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  /* Overview cards full width on large screens */
+  .overview-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* Wider modals */
+  .modal-sheet {
+    max-width: 700px;
+  }
+
+  /* Better spacing */
+  .section-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Content max-width for readability */
+  main.main-content,
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Gamification section side by side */
+  .gamification-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Goals and challenges wider grid */
+  .goals-container,
+  .challenges-container {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  /* Settings items in single column for readability */
+  .settings-list {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+}
+
+/* ============================================
+   ULTRA-WIDE DESKTOP (1440px and above)
+   For large monitors and TVs
+   ============================================ */
+
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1400px;
+    padding: 40px;
+  }
+
+  /* Four-column layout for dashboard */
+  .dashboard-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  /* Enhanced card padding */
+  .card {
+    padding: 28px;
+  }
+
+  /* Multiple columns for lists */
+  .expense-list,
+  .bills-list,
+  .transaction-list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* Header adjustments */
+  .mtn-header-spacer {
+    height: 320px;
+  }
+
+  /* Better text sizing */
+  .section-title {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+
+  /* Extra padding for spacing */
+  .insights-scroll {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* ============================================
+   TABLET LANDSCAPE (768px to 1023px)
+   Optimized for tablets in landscape mode
+   ============================================ */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    max-width: 800px;
+  }
+
+  /* Two-column layout for tablets */
+  .dashboard-cards,
+  .expense-list,
+  .bills-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modal-sheet {
+    max-width: 550px;
+  }
+}
+
+/* ============================================
+   HORIZONTAL FOLDABLE SUPPORT
+   For foldable devices in landscape mode
+   ============================================ */
+
+@media (horizontal-viewport-segments: 2) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr env(viewport-segment-right 0 0);
+    gap: 20px;
+  }
+
+  .mtn-header {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-cards {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Cache bust: 2026-02-15 19:05:14 */

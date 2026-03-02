@@ -138,7 +138,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px; /* reduced spacing to bring texts up */
+      margin-bottom: 12px;
     }
 
     .section-title {
@@ -307,18 +307,6 @@
       height: 110px;
       padding: 12px 0;
       gap: 8px;
-    }
-
-    /* line chart support */
-    .line-chart-svg {
-      width: 100%;
-      height: 120px;
-      overflow: visible;
-    }
-    .chart-labels {
-      font-size: 10px;
-      margin-top: 4px;
-      color: var(--text-secondary);
     }
 
     .chart-bar-wrapper {
@@ -818,7 +806,7 @@
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
     .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
-    .mtn-header-spacer { height: 180px; }
+    .mtn-header-spacer { height: 315px; }
 
     /* Header shimmer sweep */
     .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
@@ -1879,32 +1867,18 @@
         if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
         return;
       }
+      
+      const maxAmount = Math.max(...reportData.daily.map(d => d.amount), 1);
 
-      // build line chart data
-      const data = reportData.daily;
-      const maxAmount = Math.max(...data.map(d => d.amount), 1);
-      const points = [];
-      const pointCount = data.length;
-      const viewWidth = pointCount * 20;
-      const viewHeight = 100;
-      const stepX = pointCount > 1 ? viewWidth / (pointCount - 1) : viewWidth;
-
-      data.forEach((d, i) => {
-        const x = stepX * i;
-        const y = viewHeight - (d.amount / maxAmount * viewHeight);
-        points.push(`${x},${y}`);
-      });
-
-      const svg = `
-        <svg class="line-chart-svg" viewBox="0 0 ${viewWidth} ${viewHeight}" preserveAspectRatio="none">
-          <polyline points="${points.join(' ')}" fill="none" stroke="var(--primary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      `;
-
-      // labels
-      const labels = data.map((d, i) => `<div style="width:${stepX}px;text-align:center;">${d.label}</div>`).join('');
-
-      container.innerHTML = svg + `<div class="chart-labels" style="display:flex;">${labels}</div>`;
+      container.innerHTML = reportData.daily.map(day => {
+        const height = (day.amount / maxAmount * 80) + 8;
+        return `
+          <div class="chart-bar-wrapper">
+            <div class="chart-bar ${day.isCurrent ? 'current' : ''}" style="height: ${height}px" title="${utils.formatCurrency(day.amount)}"></div>
+            <div class="chart-label">${day.label}</div>
+          </div>
+        `;
+      }).join('');
     }
 
     function renderCategories() {
