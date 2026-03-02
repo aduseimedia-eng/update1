@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Welcome - KudiSave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #003822;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Full-screen background image ── */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .bg-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Dark gradient overlay for text readability */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.10) 0%,
+        rgba(0,0,0,0.05) 30%,
+        rgba(0,0,0,0.25) 60%,
+        rgba(0,0,0,0.65) 100%
+      );
+      z-index: 1;
+    }
+
+    /* ── Layout ── */
+    .onboarding-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 40px 24px;
+      padding-top: calc(40px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+      gap: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── Rotating text area ── */
+    .text-area {
+      text-align: center;
+      max-width: 340px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.20) 50%, transparent 75%);
+      padding: 24px 28px;
+      border-radius: 24px;
+    }
+
+    .rotating-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: textIn 0.5s ease forwards;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .rotating-title .highlight {
+      color: #FCD116;
+    }
+
+    .rotating-desc {
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.65;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: textIn 0.5s 0.15s ease forwards;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+    }
+
+    @keyframes textIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .text-area.fade-out .rotating-title,
+    .text-area.fade-out .rotating-desc {
+      animation: textOut 0.35s ease forwards;
+    }
+
+    @keyframes textOut {
+      to { opacity: 0; transform: translateY(-14px); }
+    }
+
+    /* ── Progress dots ── */
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.4s ease;
+    }
+
+    .progress-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #FCD116;
+    }
+
+    /* ── Get Started button ── */
+    .get-started-btn {
+      width: 100%;
+      max-width: 340px;
+      padding: 18px 32px;
+      border: none;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #006B3F;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .get-started-btn::after {
+      content: ' →';
+      font-weight: 400;
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .get-started-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    .get-started-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    /* ── Ghana colors bar ── */
+    .ghana-colors {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      display: flex;
+      z-index: 10;
+    }
+
+    .ghana-colors span { flex: 1; }
+    .ghana-colors span:nth-child(1) { background: #CE1126; }
+    .ghana-colors span:nth-child(2) { background: #FCD116; }
+    .ghana-colors span:nth-child(3) { background: #006B3F; }
+
+    /* ── Responsive ── */
+    @media (max-height: 640px) {
+      .onboarding-screen { gap: 16px; padding: 20px 20px; }
+      .rotating-title { font-size: 24px; }
+      .text-area { min-height: 80px; }
+    }
+
+    @media (min-width: 600px) {
+      .rotating-title { font-size: 32px; }
+      .rotating-desc { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Full-screen background image -->
+  <div class="bg-image">
+    <img src="../onboarding.png?v=2" alt="Welcome to KudiSave">
+  </div>
+  <div class="bg-overlay"></div>
+
+  <div class="onboarding-screen">
+
+    <!-- Rotating text -->
+    <div class="text-area" id="textArea">
+      <h2 class="rotating-title" id="rotatingTitle"></h2>
+      <p class="rotating-desc" id="rotatingDesc"></p>
+    </div>
+
+    <!-- Progress dots -->
+    <div class="progress-dots" id="progressDots">
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+    <!-- Get Started -->
+    <button class="get-started-btn" onclick="getStarted()">Get Started</button>
+
+  </div>
+
+  <div class="ghana-colors">
+    <span></span><span></span><span></span>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: 'Track Your <span class="highlight">Finances</span>',
+        desc: 'Easily track all your income and expenses in one place. Know exactly where your money goes.'
+      },
+      {
+        title: 'Set Goals & <span class="highlight">Achieve More</span>',
+        desc: 'Create savings goals for what matters most — a new phone, school fees, or your dream car.'
+      },
+      {
+        title: 'Build Better <span class="highlight">Money Habits</span>',
+        desc: 'Earn badges, level up your streak, and get beautiful reports on your financial journey!'
+      }
+    ];
+
+    let current = 0;
+    let interval;
+
+    const titleEl = document.getElementById('rotatingTitle');
+    const descEl  = document.getElementById('rotatingDesc');
+    const textArea = document.getElementById('textArea');
+    const dots = document.querySelectorAll('.progress-dot');
+
+    function showSlide(index) {
+      // Fade out
+      textArea.classList.add('fade-out');
+
+      setTimeout(() => {
+        titleEl.innerHTML = slides[index].title;
+        descEl.textContent = slides[index].desc;
+
+        // Update dots
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+        // Remove fade-out, reset animations
+        textArea.classList.remove('fade-out');
+        titleEl.style.animation = 'none';
+        descEl.style.animation = 'none';
+        // Trigger reflow
+        void titleEl.offsetWidth;
+        titleEl.style.animation = 'textIn 0.5s ease forwards';
+        descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+      }, 350);
+    }
+
+    function startRotation() {
+      // Show first immediately
+      titleEl.innerHTML = slides[0].title;
+      descEl.textContent = slides[0].desc;
+      titleEl.style.animation = 'textIn 0.5s ease forwards';
+      descEl.style.animation = 'textIn 0.5s 0.15s ease forwards';
+
+      interval = setInterval(() => {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }, 3500);
+    }
+
+    function getStarted() {
+      localStorage.setItem('onboardingComplete', 'true');
+      sessionStorage.setItem('splashShown', 'true');
+      window.location.href = 'splash.html';
+    }
+
+    // Init
+    startRotation();
+  </script>
+</body>
+</html>

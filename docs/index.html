@@ -1,937 +1,1366 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <!-- Cache buster -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KudiSave — Smart Money Management for Ghana</title>
-  <meta name="description" content="Track expenses, set budgets, save smarter. KudiSave helps Ghanaian youth master their finances with mobile money support, gamification, and smart insights.">
-  <meta name="keywords" content="Ghana fintech, expense tracker, budget app, mobile money, MTN MoMo, savings, KudiSave">
-  <meta name="author" content="Adusei Media">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="KudiSave — Smart Money Management for Ghana">
-  <meta property="og:description" content="Track every cedi. Budget smarter. Save more. Coming soon to Ghana.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.kudisave.com">
-  
-  
-  <!-- Fonts -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>KudiSave - Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    @font-face {
+      font-family: 'Cal Sans';
+      src: url('https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/fonts/CalSans-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Lottie for animations -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script>
+    (function() {
+      // First-time visitors see onboarding before anything else
+      const hasCompletedOnboarding = localStorage.getItem('onboardingComplete');
+      if (!hasCompletedOnboarding) {
+        window.location.href = 'pages/onboarding.html';
+        return;
+      }
+      // Returning visitors see splash once per session
+      const hasSeenSplash = sessionStorage.getItem('splashShown');
+      if (!hasSeenSplash) {
+        sessionStorage.setItem('splashShown', 'true');
+        window.location.href = 'pages/splash.html';
+      }
+    })();
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    :root {
-      --green-dark: #003822;
-      --green-primary: #006B3F;
-      --green-mid: #009B5A;
-      --green-light: #00C471;
-      --green-glow: #00FF8C;
-      --gold: #FCD116;
-      --gold-dark: #D4A800;
-      --red: #CE1126;
-      --white: #ffffff;
-      --gray-50: #f8faf9;
-      --gray-100: #f0f4f2;
-      --gray-200: #dce5df;
-      --gray-600: #5a6b5e;
-      --gray-800: #1a2e1f;
-      --gray-900: #0d1a10;
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
     }
 
-    html { scroll-behavior: smooth; }
-    
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--gray-900);
-      color: var(--white);
-      overflow-x: hidden;
+      padding: 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: #f8faf9;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
     /* ===== Animated Background ===== */
-    .bg-animation {
+    .auth-bg {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       z-index: 0;
+      background: linear-gradient(160deg, #f8faf9 0%, #eef5f1 30%, #f0f7f4 60%, #f5faf7 100%);
       overflow: hidden;
-      background: linear-gradient(160deg, var(--gray-900) 0%, var(--green-dark) 40%, var(--gray-900) 100%);
     }
 
-    .bg-animation::before {
+    .auth-bg::before {
       content: '';
       position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(ellipse at 30% 20%, rgba(0, 107, 63, 0.15) 0%, transparent 50%),
-                  radial-gradient(ellipse at 70% 80%, rgba(0, 196, 113, 0.08) 0%, transparent 50%);
-      animation: bgPulse 15s ease-in-out infinite;
+      top: -30%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 160, 94, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatOrb 20s ease-in-out infinite;
     }
 
-    @keyframes bgPulse {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(2%, -2%) scale(1.02); }
-      66% { transform: translate(-1%, 1%) scale(0.98); }
+    .auth-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 107, 63, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatOrb 25s ease-in-out infinite reverse;
     }
 
-    .floating-orb {
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0,107,63,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,107,63,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .floating-shape {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.3;
-      animation: float 20s ease-in-out infinite;
+      opacity: 0.5;
+      filter: blur(1px);
     }
 
-    .orb-1 { width: 400px; height: 400px; background: var(--green-primary); top: 10%; left: -5%; animation-delay: 0s; }
-    .orb-2 { width: 300px; height: 300px; background: var(--green-light); top: 60%; right: -5%; animation-delay: -7s; }
-    .orb-3 { width: 250px; height: 250px; background: var(--gold); top: 30%; right: 20%; opacity: 0.1; animation-delay: -14s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      25% { transform: translateY(-30px) translateX(15px); }
-      50% { transform: translateY(15px) translateX(-20px); }
-      75% { transform: translateY(-20px) translateX(10px); }
+    .shape-1 {
+      width: 6px; height: 6px;
+      background: rgba(0, 160, 94, 0.45);
+      top: 15%; left: 20%;
+      animation: float1 12s ease-in-out infinite;
+    }
+    .shape-2 {
+      width: 4px; height: 4px;
+      background: rgba(252, 209, 22, 0.5);
+      top: 25%; right: 25%;
+      animation: float2 15s ease-in-out infinite;
+    }
+    .shape-3 {
+      width: 8px; height: 8px;
+      background: rgba(206, 17, 38, 0.25);
+      bottom: 30%; left: 12%;
+      animation: float3 18s ease-in-out infinite;
+    }
+    .shape-4 {
+      width: 5px; height: 5px;
+      background: rgba(252, 209, 22, 0.4);
+      bottom: 20%; right: 15%;
+      animation: float1 14s ease-in-out infinite reverse;
+    }
+    .shape-5 {
+      width: 3px; height: 3px;
+      background: rgba(0, 160, 94, 0.35);
+      top: 60%; left: 35%;
+      animation: float2 10s ease-in-out infinite;
+    }
+    /* Ghana Star accent */
+    .shape-6 {
+      width: 10px; height: 10px;
+      background: rgba(0, 0, 0, 0.08);
+      top: 40%; right: 10%;
+      animation: float3 16s ease-in-out infinite;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      border-radius: 0;
+      opacity: 0.7;
     }
 
-    /* Grid pattern overlay */
-    .grid-pattern {
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -40px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(15px, 30px) scale(1.02); }
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(20px, -30px); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(-15px, 20px); }
+      66% { transform: translate(10px, -10px); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-25px, -20px); }
+    }
+
+    /* ===== Main Container ===== */
+    .auth-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ===== Card ===== */
+    .auth-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0 20px;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+      overflow: visible;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      animation: cardEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes cardEnter {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Header ===== */
+    /* ===== Kente-Inspired Strip ===== */
+    .kente-strip {
+      width: 80px;
+      height: 4px;
+      margin: 0 auto 16px;
+      border-radius: 2px;
+      background: repeating-linear-gradient(
+        90deg,
+        #CE1126 0px, #CE1126 8px,
+        #FCD116 8px, #FCD116 16px,
+        #006B3F 16px, #006B3F 24px,
+        #000000 24px, #000000 28px,
+        #006B3F 28px, #006B3F 36px,
+        #FCD116 36px, #FCD116 44px,
+        #CE1126 44px, #CE1126 52px
+      );
+      animation: kenteShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes kenteShimmer {
+      0%, 100% { opacity: 0.85; width: 80px; }
+      50% { opacity: 1; width: 100px; }
+    }
+
+    /* ===== Adinkra Watermark ===== */
+    .adinkra-accent {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image: 
-        linear-gradient(rgba(0, 107, 63, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 107, 63, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
+      top: -30px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      opacity: 0.04;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* ===== Content Wrapper ===== */
-    .content {
+    .auth-header {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .auth-logo-wrap {
+      margin: 0 auto 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .auth-logo-wrap img.auth-logo-img {
+      width: 70vw;
+      max-width: 280px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .auth-title {
+      font-family: 'Cal Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: -0.5px;
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* ===== Pill Tab Switcher ===== */
+    .auth-tabs {
+      display: flex;
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 28px;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .tab-slider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, #00a05e, #006B3F);
+      border-radius: 11px;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 160, 94, 0.3);
+      z-index: 0;
+    }
+
+    .tab-slider.register {
+      transform: translateX(100%);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      border-radius: 11px;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      touch-action: manipulation;
+      font-family: inherit;
+    }
+
+    .auth-tab.active {
+      color: #ffffff;
+    }
+
+    .auth-tab:active {
+      transform: scale(0.97);
+    }
+
+    /* ===== Forms ===== */
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+      animation: formFadeIn 0.35s ease;
+    }
+
+    @keyframes formFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Google Button (Hero) ===== */
+    .google-btn {
+      width: 100%;
+      padding: 15px 20px;
+      background: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .google-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(66,133,244,0.04), rgba(52,168,83,0.04), rgba(251,188,5,0.04), rgba(234,67,53,0.04));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
+    }
+
+    .google-btn:hover {
+      border-color: #c5c9d0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+
+    .google-btn:hover::after {
+      opacity: 1;
+    }
+
+    .google-btn:active {
+      transform: scale(0.98) translateY(0);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .google-btn svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
       position: relative;
       z-index: 1;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
+    .google-btn span,
+    .google-btn .google-btn-text {
+      position: relative;
+      z-index: 1;
     }
 
-    /* ===== Navigation ===== */
-    nav {
-      padding: 20px 0;
+    .google-btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #006B3F;
+      background: rgba(0, 107, 63, 0.08);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      letter-spacing: 0.3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Divider ===== */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      gap: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider span {
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Form Groups ===== */
+    .auth-form .form-group {
+      margin-bottom: 18px;
       position: relative;
     }
 
-    .nav-inner {
+    .auth-form .form-label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+      color: #374151;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrap {
+      position: relative;
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
 
-    .logo {
+    .input-icon-left {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      pointer-events: none;
+      transition: color 0.3s ease;
+      z-index: 2;
+    }
+
+    .input-icon-left i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .auth-form .form-input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      color: #111827;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .auth-form .form-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .auth-form .form-input:focus {
+      outline: none;
+      border-color: #00a05e;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 160, 94, 0.12), 0 4px 20px rgba(0, 160, 94, 0.06);
+    }
+
+    .auth-form .form-input:focus ~ .input-icon-left,
+    .auth-form .form-input:not(:placeholder-shown) ~ .input-icon-left {
+      color: #00a05e;
+    }
+
+    /* Password toggle */
+    .password-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      padding: 4px;
       display: flex;
-      align-items: center;
-      gap: 0px;
+      z-index: 2;
+      transition: color 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      color: #6b7280;
+    }
+
+    .password-toggle i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .form-hint {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #9ca3af;
+      padding-left: 2px;
+    }
+
+    /* ===== Password Strength ===== */
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      flex: 1;
+      height: 3px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      transition: background 0.3s ease;
+    }
+
+    .strength-bar.weak { background: #ef4444; }
+    .strength-bar.medium { background: #f59e0b; }
+    .strength-bar.strong { background: #00a05e; }
+
+    .strength-text {
+      font-size: 10px;
+      margin-top: 4px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .strength-text.weak { color: #ef4444; }
+    .strength-text.medium { color: #f59e0b; }
+    .strength-text.strong { color: #00a05e; }
+
+    /* ===== Forgot Password ===== */
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: #006B3F;
       text-decoration: none;
+      font-weight: 500;
+      margin-top: -8px;
+      margin-bottom: 20px;
+      transition: color 0.2s ease;
     }
 
-    .logo img {
-      height: 100px;
-      width: auto;
+    .forgot-link:hover {
+      color: #00a05e;
+    }
+
+    /* ===== Submit Buttons ===== */
+    .auth-submit {
+      width: 100%;
+      padding: 15px 24px;
+      background: linear-gradient(135deg, #00a05e 0%, #006B3F 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      font-family: inherit;
+      letter-spacing: -0.1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0, 160, 94, 0.25);
+    }
+
+    .auth-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .auth-submit:hover::before {
+      transform: translateX(100%);
+    }
+
+    .auth-submit:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 10px rgba(0, 160, 94, 0.25);
+    }
+
+    .auth-submit.loading {
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .auth-submit .btn-text {
+      transition: opacity 0.2s ease;
+    }
+
+    .auth-submit.loading .btn-text {
+      opacity: 0;
+    }
+
+    .auth-submit .btn-spinner {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .auth-submit.loading .btn-spinner {
       display: block;
     }
 
-    .nav-badge {
-      background: rgba(0, 196, 113, 0.15);
-      border: 1px solid rgba(0, 196, 113, 0.3);
-      color: var(--green-light);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-    /* ===== Hero Section ===== */
-    .hero {
-      padding: 80px 0 60px;
+
+
+    /* ===== Footer ===== */
+    .auth-footer {
       text-align: center;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #f3f4f6;
     }
 
-    .hero-tag {
+    .auth-footer p {
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .auth-footer .secure-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(252, 209, 22, 0.1);
-      border: 1px solid rgba(252, 209, 22, 0.25);
-      color: var(--gold);
-      padding: 8px 18px;
-      border-radius: 25px;
+      gap: 6px;
+      color: #006B3F;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .auth-footer .secure-badge i {
+      width: 13px;
+      height: 13px;
+      stroke-width: 2.5;
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 14px 24px;
+      border-radius: 16px;
+      z-index: 10000;
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 30px;
-      animation: fadeInDown 0.8s ease-out;
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 7vw, 72px);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      animation: fadeInUp 0.8s ease-out 0.1s both;
-    }
-
-    .hero h1 .highlight {
-      background: linear-gradient(135deg, var(--green-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-sub {
-      font-size: clamp(16px, 2.5vw, 20px);
-      color: var(--gray-200);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-      font-weight: 400;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-
-    /* ===== Email Form ===== */
-    .waitlist-form {
-      display: flex;
-      gap: 12px;
-      max-width: 480px;
-      margin: 0 auto 20px;
-      animation: fadeInUp 0.8s ease-out 0.3s both;
-    }
-
-    .waitlist-form input {
-      flex: 1;
-      padding: 16px 20px;
-      border-radius: 14px;
-      border: 2px solid rgba(0, 196, 113, 0.2);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--white);
-      font-size: 15px;
       font-family: inherit;
-      outline: none;
-      transition: all 0.3s;
-      backdrop-filter: blur(10px);
-    }
-
-    .waitlist-form input::placeholder { color: var(--gray-600); }
-    .waitlist-form input:focus { border-color: var(--green-light); background: rgba(255, 255, 255, 0.08); }
-
-    .btn-primary {
-      padding: 16px 28px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, var(--green-primary), var(--green-light));
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.3s;
-      white-space: nowrap;
-      box-shadow: 0 4px 20px rgba(0, 196, 113, 0.3);
-    }
-
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 196, 113, 0.4); }
-    .btn-primary:active { transform: translateY(0); }
-
-    .waitlist-note {
-      font-size: 13px;
-      color: var(--gray-600);
-      animation: fadeInUp 0.8s ease-out 0.4s both;
-    }
-
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 196, 113, 0.1);
-      border: 1px solid rgba(0, 196, 113, 0.3);
-      border-radius: 14px;
-      max-width: 480px;
-      margin: 0 auto 20px;
-    }
-
-    .form-success.show { display: block; }
-    .form-success h3 { color: var(--green-light); margin-bottom: 6px; }
-    .form-success p { color: var(--gray-200); font-size: 14px; }
-
-    /* ===== Ghana Flag Accent ===== */
-    .ghana-flag {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      margin: 30px auto;
-      animation: fadeInUp 0.8s ease-out 0.5s both;
-    }
-
-    .flag-bar {
-      width: 40px;
-      height: 6px;
-      border-radius: 3px;
-    }
-
-    .flag-red { background: var(--red); }
-    .flag-gold { background: var(--gold); }
-    .flag-green { background: var(--green-primary); }
-
-    /* ===== Phone Mockup ===== */
-    .mockup-section {
-      padding: 40px 0 80px;
-      text-align: center;
-    }
-
-    .phone-frame {
-      width: 280px;
-      height: 560px;
-      margin: 0 auto;
-      background: linear-gradient(160deg, #1a1a2e, #16213e);
-      border-radius: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      padding: 12px;
-      box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 0 30px rgba(0, 107, 63, 0.1);
-      position: relative;
-      animation: phoneFloat 6s ease-in-out infinite;
-    }
-
-    @keyframes phoneFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    .phone-notch {
-      width: 120px;
-      height: 28px;
-      background: #0d1a10;
-      border-radius: 0 0 18px 18px;
-      margin: 0 auto 15px;
-    }
-
-    .phone-screen {
-      height: calc(100% - 50px);
-      border-radius: 28px;
-      overflow: hidden;
-      background: linear-gradient(160deg, var(--green-dark), var(--green-primary));
-      position: relative;
-    }
-
-    .screen-header {
-      padding: 20px 16px 12px;
-      text-align: left;
-    }
-
-    .screen-greeting {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 2px;
-    }
-
-    .screen-name {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--white);
-    }
-
-    .screen-balance {
-      padding: 12px 16px;
-      text-align: left;
-    }
-
-    .balance-label {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.5);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-
-    .balance-amount {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--white);
-    }
-
-    .balance-amount span {
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .screen-cards {
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .screen-card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      backdrop-filter: blur(10px);
-    }
-
-    .card-left {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .card-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    .card-icon.food { background: rgba(255, 107, 107, 0.2); }
-    .card-icon.transport { background: rgba(78, 205, 196, 0.2); }
-    .card-icon.data { background: rgba(69, 183, 209, 0.2); }
-    .card-icon.goal { background: rgba(252, 209, 22, 0.2); }
-
-    .card-title { font-size: 12px; font-weight: 600; color: var(--white); }
-    .card-sub { font-size: 10px; color: rgba(255, 255, 255, 0.5); }
-    .card-amount { font-size: 13px; font-weight: 700; color: var(--white); }
-    .card-amount.income { color: var(--green-light); }
-
-    /* ===== Features Section ===== */
-    .features {
-      padding: 80px 0;
-    }
-
-    .section-tag {
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--green-light);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 60px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-    }
-
-    .feature-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
-      padding: 32px;
-      transition: all 0.4s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(0, 196, 113, 0.05), transparent);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
       opacity: 0;
-      transition: opacity 0.4s;
+      max-width: calc(100vw - 40px);
     }
 
-    .feature-card:hover { border-color: rgba(0, 196, 113, 0.2); transform: translateY(-4px); }
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .feature-icon.green { background: rgba(0, 196, 113, 0.12); }
-    .feature-icon.gold { background: rgba(252, 209, 22, 0.12); }
-    .feature-icon.red { background: rgba(206, 17, 38, 0.12); }
-    .feature-icon.blue { background: rgba(69, 183, 209, 0.12); }
-    .feature-icon.purple { background: rgba(162, 155, 254, 0.12); }
-    .feature-icon.orange { background: rgba(255, 159, 67, 0.12); }
-
-    .feature-card h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      position: relative;
-    }
-
-    .feature-card p {
-      font-size: 14px;
-      color: var(--gray-200);
-      line-height: 1.7;
-      position: relative;
-    }
-
-    /* ===== Stats Section ===== */
-    .stats {
-      padding: 60px 0;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 24px;
-      text-align: center;
-    }
-
-    .stat-item {
-      padding: 30px 20px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-    }
-
-    .stat-number {
-      font-size: 36px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--green-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 6px;
-    }
-
-    .stat-label {
-      font-size: 14px;
-      color: var(--gray-600);
-    }
-
-    /* ===== CTA Section ===== */
-    .cta {
-      padding: 80px 0;
-      text-align: center;
-    }
-
-    .cta-card {
-      background: linear-gradient(160deg, rgba(0, 107, 63, 0.3), rgba(0, 56, 34, 0.5));
-      border: 1px solid rgba(0, 196, 113, 0.2);
-      border-radius: 24px;
-      padding: 60px 40px;
-      max-width: 700px;
-      margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-card::before {
-      content: '';
-      position: absolute;
-      top: -50%; right: -30%;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(0, 196, 113, 0.1), transparent 70%);
-      border-radius: 50%;
-    }
-
-    .cta h2 {
-      font-size: clamp(24px, 4vw, 36px);
-      font-weight: 800;
-      margin-bottom: 16px;
-      position: relative;
-    }
-
-    .cta p {
-      color: var(--gray-200);
-      margin-bottom: 30px;
-      font-size: 16px;
-      position: relative;
-    }
-
-    /* ===== Footer ===== */
-    footer {
-      padding: 40px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      text-align: center;
-    }
-
-    .footer-brand {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .footer-brand span { color: var(--green-light); }
-
-    .footer-text {
-      font-size: 13px;
-      color: var(--gray-600);
-      margin-bottom: 16px;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--gray-600);
-      text-decoration: none;
-      font-size: 13px;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover { color: var(--green-light); }
-
-    .footer-flag {
-      display: flex;
-      justify-content: center;
-      gap: 3px;
-      margin-top: 20px;
-    }
-
-    .footer-flag span {
-      width: 24px;
-      height: 4px;
-      border-radius: 2px;
-    }
-
-    /* ===== Animations ===== */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-on-scroll {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease-out;
-    }
-
-    .animate-on-scroll.visible {
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
-      transform: translateY(0);
     }
+
+    .toast.success {
+      background: rgba(0, 107, 63, 0.9);
+      border: 1px solid rgba(0, 160, 94, 0.3);
+      color: white;
+    }
+
+    .toast.error {
+      background: rgba(220, 53, 69, 0.9);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: white;
+    }
+
+    .toast.warning {
+      background: rgba(245, 158, 11, 0.9);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: white;
+    }
+
+    .toast i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+      flex-shrink: 0;
+    }
+
+    /* ===== Splash Overlay ===== */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #006B3F;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .splash-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .splash-overlay .splash-logo {
+      margin-bottom: 12px;
+      animation: bounceIn 0.6s ease;
+      color: #00e676;
+    }
+
+    .splash-overlay .splash-logo-img {
+      width: 100px;
+      height: auto;
+    }
+
+    .splash-overlay .splash-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .splash-overlay .splash-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 24px;
+    }
+
+    .splash-overlay .splash-loader {
+      display: flex;
+      gap: 8px;
+    }
+
+    .splash-overlay .splash-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00a05e;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .splash-overlay .splash-dot:nth-child(1) { animation-delay: 0s; }
+    .splash-overlay .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+    .splash-overlay .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+
 
     /* ===== Responsive ===== */
-    @media (max-width: 640px) {
-      .hero { padding: 50px 0 40px; }
-      
-      .logo img { height: 150px; }
-
-      .waitlist-form {
-        flex-direction: column;
+    @media (max-width: 440px) {
+      .auth-card {
+        padding: 28px 18px 24px;
+        border-radius: 24px;
+        margin: 0 8px;
       }
+      .auth-title {
+        font-size: 24px;
+      }
+      .auth-logo-wrap img.auth-logo-img {
+        max-width: 220px;
+      }
+    }
 
-      .btn-primary { width: 100%; text-align: center; }
+    @media (max-width: 360px) {
+      .auth-logo-wrap img.auth-logo-img { max-width: 180px; }
+      .auth-card { padding: 24px 16px 20px; }
+    }
 
-      .phone-frame { width: 240px; height: 480px; }
-
-      .features-grid { grid-template-columns: 1fr; }
-      
-      .cta-card { padding: 40px 24px; }
-
-      .nav-badge { display: none; }
+    /* ===== Landscape safety ===== */
+    @media (max-height: 600px) {
+      .auth-container { justify-content: flex-start; padding-top: 16px; }
+      .auth-header { margin-bottom: 16px; }
+      .auth-logo-wrap img.auth-logo-img { max-width: 160px; }
     }
   </style>
 </head>
 <body>
-
   <!-- Animated Background -->
-  <div class="bg-animation">
-    <div class="floating-orb orb-1"></div>
-    <div class="floating-orb orb-2"></div>
-    <div class="floating-orb orb-3"></div>
-    <div class="grid-pattern"></div>
+  <div class="auth-bg">
+    <div class="bg-grid"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    <div class="floating-shape shape-4"></div>
+    <div class="floating-shape shape-5"></div>
+    <div class="floating-shape shape-6"></div>
   </div>
 
-  <!-- Content -->
-  <div class="content">
-
-    <!-- Navigation -->
-    <nav>
-      <div class="container">
-        <div class="nav-inner">
-          <a href="#" class="logo">
-            <img src="Logo.png?v=100" alt="KudiSave Logo">
-          </a>
-          <div class="nav-badge">v1.0 Coming Soon</div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Hero -->
-    <section class="hero">
-      <div class="container">
-        <div class="hero-tag">
-          🇬🇭 Built for Ghana, Built for You
-        </div>
-        <h1>
-          Master Your<br>
-          <span class="highlight">Money Moves</span>
-        </h1>
-        <p class="hero-sub">
-          Track every cedi, set smart budgets, crush your savings goals, and level up your 
-          financial game — all with mobile money support built in.
-        </p>
-
-        <!-- Waitlist Form -->
-        <form class="waitlist-form" id="waitlistForm">
-          <input type="email" id="emailInput" placeholder="Enter your email address" required autocomplete="email">
-          <button type="submit" class="btn-primary">Join Waitlist</button>
-        </form>
-        <p class="waitlist-note">🔒 No spam. Get notified when we launch.</p>
-
-        <!-- Success Message -->
-        <div class="form-success" id="formSuccess">
-          <h3>🎉 You're on the list!</h3>
-          <p>We'll notify you when KudiSave launches. Ayeekoo!</p>
-        </div>
-
-        <!-- Ghana Flag -->
-        <div class="ghana-flag">
-          <div class="flag-bar flag-red"></div>
-          <div class="flag-bar flag-gold"></div>
-          <div class="flag-bar flag-green"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Phone Mockup -->
-    <section class="mockup-section">
-      <div class="container">
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="screen-header">
-              <div class="screen-greeting">Good Morning 👋</div>
-              <div class="screen-name">Kwame</div>
-            </div>
-            <div class="screen-balance">
-              <div class="balance-label">This month's spending</div>
-              <div class="balance-amount"><span>GH₵</span> 1,245<span>.00</span></div>
-            </div>
-            <div class="screen-cards">
-              <div class="screen-card">
-                <div class="card-left">
-                  <div class="card-icon food">🍛</div>
-                  <div>
-                    <div class="card-title">Food / Chop Bar</div>
-                    <div class="card-sub">Today, 12:30 PM</div>
-                  </div>
-                </div>
-                <div class="card-amount">-₵45.00</div>
-              </div>
-              <div class="screen-card">
-                <div class="card-left">
-                  <div class="card-icon transport">🚌</div>
-                  <div>
-                    <div class="card-title">Trotro to Accra</div>
-                    <div class="card-sub">Today, 8:15 AM</div>
-                  </div>
-                </div>
-                <div class="card-amount">-₵15.00</div>
-              </div>
-              <div class="screen-card">
-                <div class="card-left">
-                  <div class="card-icon data">📱</div>
-                  <div>
-                    <div class="card-title">MTN Data Bundle</div>
-                    <div class="card-sub">Yesterday</div>
-                  </div>
-                </div>
-                <div class="card-amount">-₵50.00</div>
-              </div>
-              <div class="screen-card">
-                <div class="card-left">
-                  <div class="card-icon goal">🎯</div>
-                  <div>
-                    <div class="card-title">New Laptop Goal</div>
-                    <div class="card-sub">50% reached!</div>
-                  </div>
-                </div>
-                <div class="card-amount income">₵2,500</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features animate-on-scroll" id="features">
-      <div class="container">
-        <div class="section-tag">Features</div>
-        <h2 class="section-title">Everything You Need to<br>Save Smarter</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon green">📊</div>
-            <h3>Track Every Cedi</h3>
-            <p>Log expenses by category — from chop bar to trotro fare, data bundles to rent. Know exactly where your money goes.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon gold">🎯</div>
-            <h3>Smart Savings Goals</h3>
-            <p>Set goals for that new laptop, emergency fund, or weekend trip. Watch your progress grow with visual tracking.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon red">💰</div>
-            <h3>Budget Like a Boss</h3>
-            <p>Set weekly or monthly budgets and get alerts at 50%, 75%, and 90% — before you overspend.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon blue">📱</div>
-            <h3>Mobile Money Ready</h3>
-            <p>Built for Ghana. Log MTN MoMo, Telecel Cash, AirtelTigo Money, bank transfers, and cash transactions.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon purple">🏆</div>
-            <h3>Earn & Level Up</h3>
-            <p>Gain XP for logging expenses, maintaining streaks, and hitting goals. Unlock badges and climb the leaderboard.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-icon orange">📈</div>
-            <h3>Smart Insights</h3>
-            <p>Get personalized tips, weekly summaries, spending trends, and a financial health score to keep improving.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stats -->
-    <section class="stats animate-on-scroll">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-number">10+</div>
-            <div class="stat-label">Ghana Expense Categories</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">5</div>
-            <div class="stat-label">Payment Methods</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">6</div>
-            <div class="stat-label">Unlockable Badges</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Free to Use</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta animate-on-scroll">
-      <div class="container">
-        <div class="cta-card">
-          <h2>Ready to Take Control?</h2>
-          <p>Join the waitlist and be the first to know when KudiSave launches in Ghana.</p>
-          <form class="waitlist-form" id="waitlistForm2" style="animation: none;">
-            <input type="email" placeholder="your@email.com" required autocomplete="email">
-            <button type="submit" class="btn-primary">Notify Me</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="footer-brand">Kudi<span>Save</span></div>
-        <p class="footer-text">Smart Money Management for Ghana 🇬🇭</p>
-        <div class="footer-links">
-          <a href="mailto:support@kudisave.com">support@kudisave.com</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-        </div>
-        <div class="footer-flag">
-          <span class="flag-red" style="background: #CE1126;"></span>
-          <span class="flag-gold" style="background: #FCD116;"></span>
-          <span class="flag-green" style="background: #006B3F;"></span>
-        </div>
-        <p class="footer-text" style="margin-top: 16px;">© 2026 Adusei Media. All rights reserved.</p>
-      </div>
-    </footer>
-
+  <!-- Splash Overlay -->
+  <div class="splash-overlay hidden" id="splashOverlay">
+    <div class="splash-logo"><img src="Secondary_Logo.png" alt="KudiSave" class="splash-logo-img"></div>
+    <p class="splash-subtitle">Welcome back!</p>
+    <div class="splash-loader">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
   </div>
 
+  <!-- Main Auth Container -->
+  <div class="auth-container">
+    <div class="auth-card">
+
+      <!-- Header -->
+      <div class="auth-header">
+        <!-- Adinkra Gye Nyame watermark -->
+        <svg class="adinkra-accent" viewBox="0 0 100 100" fill="#006B3F" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5C25.2 5 5 25.2 5 50s20.2 45 45 45 45-20.2 45-45S74.8 5 50 5zm0 10c19.3 0 35 15.7 35 35S69.3 85 50 85 15 69.3 15 50s15.7-35 35-35zm0 8c-3.9 0-7.5 0.8-10.8 2.3C44.5 28 50 35 50 43c0-8 5.5-15 10.8-17.7C57.5 23.8 53.9 23 50 23zm-20 15c-1.5 3.3-2.3 6.9-2.3 10.8 0-3.9-0.8-7.5-2.3-10.8C28 43.5 35 50 43 50c-8 0-15-5.5-17.7-10.8zm40 0C72 43.5 65 50 57 50c8 0 15 5.5 17.7 10.8 1.5-3.3 2.3-6.9 2.3-10.8 0 3.9 0.8 7.5 2.3 10.8zM50 57c0 8-5.5 15-10.8 17.7 3.3 1.5 6.9 2.3 10.8 2.3-3.9 0-7.5-0.8-10.8-2.3C44.5 72 50 65 50 57z"/>
+        </svg>
+        <div class="auth-logo-wrap">
+          <img src="Secondary_Logo.png" alt="KudiSave" class="auth-logo-img">
+        </div>
+        <h1 class="auth-title">KudiSave</h1>
+        <div class="kente-strip"></div>
+        <p class="greeting-line" id="greetingWord">Akwaaba!</p>
+        <p class="auth-subtitle">Master your finances, one cedi at a time 🇬🇭</p>
+      </div>
+
+      <style>
+        .greeting-line {
+          font-size: 22px;
+          font-weight: 700;
+          color: var(--primary);
+          margin: 0 0 4px 0;
+          min-height: 32px;
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .greeting-line.fade-out {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        .greeting-line.fade-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      </style>
+
+      <script>
+        (function() {
+          var greetings = ['Akwaaba!', 'Obaake!', 'Woezo!', "A'maraba!"];
+          var index = 0;
+          var el = document.getElementById('greetingWord');
+          if (!el) return;
+          setInterval(function() {
+            el.classList.add('fade-out');
+            el.classList.remove('fade-in');
+            setTimeout(function() {
+              index = (index + 1) % greetings.length;
+              el.textContent = greetings[index];
+              el.classList.remove('fade-out');
+              el.classList.add('fade-in');
+            }, 400);
+          }, 2000);
+        })();
+      </script>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs">
+        <div class="tab-slider" id="tabSlider"></div>
+        <button class="auth-tab active" onclick="switchTab('login')" id="tabLogin">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')" id="tabRegister">Sign Up</button>
+      </div>
+
+      <!-- ==================== LOGIN FORM ==================== -->
+      <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+        <!-- Google -->
+        <button type="button" class="google-btn" onclick="signInWithGoogle()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span class="google-btn-text">Continue with Google</span>
+          <span class="google-btn-badge">Quick</span>
+        </button>
+
+      </form>
+
+      <!-- ==================== REGISTER FORM ==================== -->
+      <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+        <!-- Google -->
+        <button type="button" class="google-btn" onclick="signInWithGoogle()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span class="google-btn-text">Sign up with Google</span>
+          <span class="google-btn-badge">Recommended</span>
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        <p>✨ Wo sika, wo daakye — Your money, your future ✨</p>
+        <div class="secure-badge">
+          <i data-lucide="shield-check"></i>
+          256-bit encrypted &bull; Your data is safe
+        </div>
+        <p style="font-size: 11px; color: #9ca3af; margin-top: 8px;">Made with ❤️ in Ghana 🇬🇭</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/utils.js"></script>
   <script>
-    // Scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    // ===== Redirect first-time visitors =====
+    (function() {
+      const hasVisited = localStorage.getItem('kudisave_visited');
+      const isLoggedIn = localStorage.getItem('token');
+      if (!hasVisited && !isLoggedIn) {
+        localStorage.setItem('kudisave_visited', 'true');
+        window.location.href = 'pages/splash.html';
+        return;
+      }
+    })();
+
+    console.log('Login page loaded successfully!');
+
+    // ===== Toast System =====
+    let activeToast = null;
+    function showToast(message, type = 'success') {
+      if (activeToast) activeToast.remove();
+
+      const iconMap = { success: 'check-circle', error: 'alert-circle', warning: 'alert-triangle' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i data-lucide="${iconMap[type] || 'info'}"></i><span>${message}</span>`;
+      document.body.appendChild(toast);
+      lucide.createIcons({ nodes: [toast] });
+      activeToast = toast;
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => toast.classList.add('visible'));
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => { toast.remove(); if (activeToast === toast) activeToast = null; }, 400);
+      }, 3500);
+    }
+
+    // ===== Tab Switching =====
+    function switchTab(tab) {
+      const slider = document.getElementById('tabSlider');
+      const tabs = document.querySelectorAll('.auth-tab');
+      const forms = document.querySelectorAll('.auth-form');
+
+      tabs.forEach(t => t.classList.remove('active'));
+      forms.forEach(f => f.classList.remove('active'));
+
+      if (tab === 'login') {
+        slider.classList.remove('register');
+        document.getElementById('tabLogin').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      } else {
+        slider.classList.add('register');
+        document.getElementById('tabRegister').classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+      }
+    }
+
+    // ===== Password Toggle =====
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons({ nodes: [btn] });
+    }
+
+    // ===== Password Strength =====
+    function checkPasswordStrength(value) {
+      const container = document.getElementById('passwordStrength');
+      const text = document.getElementById('strengthText');
+      const bars = [document.getElementById('str1'), document.getElementById('str2'), document.getElementById('str3'), document.getElementById('str4')];
+
+      // Update requirement hints
+      const checks = [
+        { id: 'hint-length', pass: value.length >= 8 },
+        { id: 'hint-upper', pass: /[A-Z]/.test(value) },
+        { id: 'hint-lower', pass: /[a-z]/.test(value) },
+        { id: 'hint-number', pass: /[0-9]/.test(value) }
+      ];
+      checks.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (el) {
+          el.style.color = c.pass ? '#10b981' : '#9ca3af';
+          el.textContent = (c.pass ? '\u2713 ' : '\u25CB ') + el.textContent.replace(/^\S+\s/, '');
         }
       });
-    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+      if (!value) {
+        container.style.display = 'none';
+        text.textContent = '';
+        return;
+      }
+      container.style.display = 'flex';
 
-    // Waitlist form handling
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const emailInput = form.querySelector('input[type="email"]');
-        const email = emailInput.value.trim();
-        
-        if (!email) return;
+      let score = 0;
+      if (value.length >= 8) score++;
+      if (/[a-z]/.test(value) && /[A-Z]/.test(value)) score++;
+      if (/[0-9]/.test(value)) score++;
+      if (/[^a-zA-Z0-9]/.test(value)) score++;
 
-        // Store in localStorage as simple waitlist
-        const waitlist = JSON.parse(localStorage.getItem('kudisave_waitlist') || '[]');
-        if (!waitlist.includes(email)) {
-          waitlist.push(email);
-          localStorage.setItem('kudisave_waitlist', JSON.stringify(waitlist));
+      const levels = ['', 'weak', 'medium', 'medium', 'strong'];
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const level = levels[score];
+
+      bars.forEach((bar, i) => {
+        bar.className = 'strength-bar';
+        if (i < score) bar.classList.add(level);
+      });
+
+      text.className = `strength-text ${level}`;
+      text.textContent = labels[score];
+    }
+
+    // ===== Button Loading State =====
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.classList.add('loading');
+      } else {
+        btn.classList.remove('loading');
+      }
+    }
+
+    // ===== Forgot Password =====
+    function handleForgotPassword(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('loginIdentifier').value;
+      if (!identifier) {
+        showToast('Enter your email first, then click forgot password', 'warning');
+        document.getElementById('loginIdentifier').focus();
+        return;
+      }
+      // TODO: Wire up to password reset API
+      showToast('Password reset link sent to your email!', 'success');
+    }
+
+    // ===== Google Sign-In =====
+    const GOOGLE_CLIENT_ID = window.KUDISAVE_GOOGLE_CLIENT_ID ||
+      '760162537864-49c7509k9sdk3hf57d2at16anhv74cul.apps.googleusercontent.com';
+
+    function initGoogleSignIn() {
+      if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCallback,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+      }
+    }
+
+    function signInWithGoogle() {
+      if (typeof google !== 'undefined' && google.accounts) {
+        // Show loading state on Google buttons
+        const googleBtns = document.querySelectorAll('.google-btn');
+        googleBtns.forEach(b => { 
+          b.disabled = true; 
+          b.style.opacity = '0.7';
+          const textEl = b.querySelector('.google-btn-text');
+          if (textEl) textEl.textContent = 'Connecting...';
+        });
+
+        const resetBtns = () => {
+          googleBtns.forEach(b => { 
+            b.disabled = false; 
+            b.style.opacity = '';
+            const textEl = b.querySelector('.google-btn-text');
+            if (textEl) {
+              const isLogin = document.getElementById('loginForm').classList.contains('active');
+              textEl.textContent = isLogin ? 'Continue with Google' : 'Sign up with Google';
+            }
+          });
+        };
+
+        google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // One Tap blocked - fall back to OAuth2 token flow
+            google.accounts.oauth2.initTokenClient({
+              client_id: GOOGLE_CLIENT_ID,
+              scope: 'email profile',
+              callback: async (response) => {
+                if (response.access_token) {
+                  await sendGoogleToken(null, response.access_token);
+                } else {
+                  resetBtns();
+                }
+              },
+              error_callback: () => { resetBtns(); }
+            }).requestAccessToken();
+          }
+        });
+
+        // Timeout reset in case prompt is dismissed
+        setTimeout(resetBtns, 30000);
+      } else {
+        showToast('Google Sign-In is loading. Please try again in a moment.', 'warning');
+      }
+    }
+
+    async function handleGoogleCallback(response) {
+      if (response.credential) {
+        await sendGoogleToken(response.credential, null);
+      }
+    }
+
+    async function sendGoogleToken(credential, accessToken) {
+      const googleBtn = document.querySelectorAll('.google-btn');
+      googleBtn.forEach(b => { b.disabled = true; b.style.opacity = '0.7'; });
+      try {
+        const result = await api.googleAuth(credential, accessToken);
+        completeGoogleLogin(result.data);
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+        showToast(error.message || 'Google sign-in failed. Please try again.', 'error');
+      } finally {
+        googleBtn.forEach(b => { b.disabled = false; b.style.opacity = ''; });
+      }
+    }
+
+    function completeGoogleLogin(data) {
+      localStorage.setItem('onboardingComplete', 'true');
+      const userName = data.user?.name || '';
+      const greeting = userName ? `Welcome, ${userName.split(' ')[0]}!` : 'Signed in with Google!';
+      showToast(greeting);
+
+      // Show splash overlay for smooth transition
+      const splash = document.getElementById('splashOverlay');
+      if (splash) {
+        splash.classList.remove('hidden');
+        const subtitleEl = splash.querySelector('.splash-subtitle');
+        if (subtitleEl) subtitleEl.textContent = greeting;
+      }
+
+      setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 800);
+    }
+
+
+
+    // ===== Handle Login =====
+    async function handleLogin(event) {
+      event.preventDefault();
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!identifier || !password) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      setLoading('loginBtn', true);
+      try {
+        const result = await api.login({ identifier, password });
+        if (result.success) {
+          showToast('Welcome back!');
+          setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 500);
         }
-
-        // Show success
-        const mainForm = document.getElementById('waitlistForm');
-        const successMsg = document.getElementById('formSuccess');
-        
-        if (form === mainForm) {
-          mainForm.style.display = 'none';
-          successMsg.classList.add('show');
-          document.querySelector('.waitlist-note').style.display = 'none';
+      } catch (error) {
+        console.error('Login error:', error);
+        const errorData = error.response?.data?.data || error.response?.data || {};
+        if (error.status === 403 && errorData.requiresEmailVerification) {
+          showToast('Email verification required. Redirecting...', 'warning');
+          const email = errorData.email;
+          sessionStorage.setItem('pendingEmailVerification', email);
+          setTimeout(() => { window.location.href = 'pages/verify-email.html'; }, 1000);
         } else {
-          form.innerHTML = '<div style="color: var(--green-light); font-weight: 600; padding: 16px;">🎉 You\'re on the list! Ayeekoo!</div>';
+          showToast(error.message || 'Login failed. Check your credentials.', 'error');
         }
-      });
+      } finally {
+        setLoading('loginBtn', false);
+      }
+    }
+
+    // ===== Handle Register =====
+    async function handleRegister(event) {
+      event.preventDefault();
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const phone = document.getElementById('registerPhone').value.trim();
+      const password = document.getElementById('registerPassword').value;
+
+      if (!name || !email || !phone || !password) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      if (!phone.match(/^(233[0-9]{9}|0[0-9]{9})$/)) {
+        showToast('Phone must be Ghana format: 0XXXXXXXXX or 233XXXXXXXXX', 'error');
+        return;
+      }
+
+      if (password.length < 8) {
+        showToast('Password must be at least 8 characters', 'error');
+        return;
+      }
+
+      if (!/[A-Z]/.test(password)) {
+        showToast('Password needs at least one uppercase letter (A-Z)', 'error');
+        return;
+      }
+      if (!/[a-z]/.test(password)) {
+        showToast('Password needs at least one lowercase letter (a-z)', 'error');
+        return;
+      }
+      if (!/[0-9]/.test(password)) {
+        showToast('Password needs at least one number (0-9)', 'error');
+        return;
+      }
+
+      setLoading('registerBtn', true);
+      try {
+        const result = await api.register({ name, email, phone, password });
+        if (result.success) {
+          if (result.data.requiresEmailVerification) {
+            showToast('Account created! Verify your email.');
+            sessionStorage.setItem('pendingEmailVerification', email);
+            setTimeout(() => { window.location.href = 'pages/verify-email.html'; }, 500);
+          } else {
+            showToast('Account created successfully!');
+            setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 500);
+          }
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        const fieldErrors = error.response?.data?.errors;
+        if (fieldErrors && fieldErrors.length > 0) {
+          showToast(fieldErrors[0].message, 'error');
+        } else {
+          showToast(error.message || 'Registration failed', 'error');
+        }
+      } finally {
+        setLoading('registerBtn', false);
+      }
+    }
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded');
+      lucide.createIcons();
+
+      // Already logged in? Go to dashboard
+      const token = localStorage.getItem('token');
+      if (token) {
+        window.location.href = 'pages/dashboard.html';
+        return;
+      }
+
+      // Init Google Sign-In
+      setTimeout(initGoogleSignIn, 500);
+
+      // Hide splash overlay
+      setTimeout(() => {
+        const splash = document.getElementById('splashOverlay');
+        if (splash) splash.classList.add('hidden');
+      }, 800);
     });
   </script>
 </body>

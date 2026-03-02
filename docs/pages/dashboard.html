@@ -1,0 +1,3153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Dashboard - KudiSave</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ===== Modern Header ===== */
+    .mtn-header {
+      background: linear-gradient(160deg, #006B3F 0%, #004d2c 40%, #003822 80%, #002a19 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+      overflow: hidden;
+    }
+
+    .mtn-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatOrb1 8s ease-in-out infinite;
+    }
+
+    .mtn-header::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -15%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatOrb2 10s ease-in-out infinite;
+    }
+
+    /* Header shimmer sweep */
+    .mtn-header-shimmer {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%);
+      z-index: 0;
+      animation: headerShimmer 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Floating particles */
+    .header-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      animation: particleFloat linear infinite;
+    }
+
+    .header-particle:nth-child(1) {
+      left: 10%;
+      bottom: -5px;
+      animation-duration: 12s;
+      animation-delay: 0s;
+      width: 2px;
+      height: 2px;
+    }
+    .header-particle:nth-child(2) {
+      left: 30%;
+      bottom: -5px;
+      animation-duration: 14s;
+      animation-delay: 2s;
+      width: 4px;
+      height: 4px;
+      background: rgba(52,211,153,0.12);
+    }
+    .header-particle:nth-child(3) {
+      left: 55%;
+      bottom: -5px;
+      animation-duration: 10s;
+      animation-delay: 4s;
+    }
+    .header-particle:nth-child(4) {
+      left: 75%;
+      bottom: -5px;
+      animation-duration: 16s;
+      animation-delay: 1s;
+      width: 2px;
+      height: 2px;
+      background: rgba(110,231,183,0.1);
+    }
+    .header-particle:nth-child(5) {
+      left: 90%;
+      bottom: -5px;
+      animation-duration: 11s;
+      animation-delay: 3s;
+    }
+
+    /* Top bar row: Logo + icons */
+    .mtn-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mtn-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mtn-logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+      transform: scale(2.2);
+      transform-origin: left center;
+    }
+
+    .mtn-topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mtn-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .mtn-icon-btn:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.18);
+    }
+
+    .mtn-icon-btn i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mtn-notification-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: #FF4444;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+    }
+
+    /* Profile section inside header */
+    .mtn-profile-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 16px 14px 16px;
+      position: relative;
+      z-index: 1;
+      animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    }
+
+    .mtn-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary-color);
+      border: 2px solid rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
+    }
+
+    .mtn-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mtn-greeting-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mtn-greeting-time {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .mtn-greeting-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-top: 3px;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .mtn-greeting-quote {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 5px;
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ===== Header Balance Section ===== */
+    .header-balance {
+      text-align: center;
+      padding: 4px 20px 18px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    }
+
+    .header-balance-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .header-balance-label::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #34d399, #10b981);
+      box-shadow: 0 0 8px rgba(52,211,153,0.5);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .header-balance-amount {
+      font-size: 30px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      animation: balanceGlow 3s ease-in-out infinite;
+    }
+
+    .header-balance-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .header-balance-item {
+      text-align: center;
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .header-balance-item:first-child {
+      animation-delay: 0.5s;
+    }
+
+    .header-balance-item:last-child {
+      animation-delay: 0.6s;
+    }
+
+    .header-balance-item:active {
+      transform: scale(0.96);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .header-balance-item-label {
+      font-size: 9px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .header-balance-item-value {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .header-balance-item-value.income {
+      color: #6ee7b7;
+    }
+
+    .header-balance-item-value.expense {
+      color: #fca5a5;
+    }
+
+    /* Spacer for fixed header */
+    .mtn-header-curve {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: var(--bg-primary);
+      border-radius: 16px 16px 0 0;
+      opacity: 0.35;
+    }
+    [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
+
+    .mtn-header-spacer {
+      height: 290px;
+    }
+
+    /* Override default body padding-top since we use spacer */
+    body {
+      padding-top: 0 !important;
+    }
+
+    /* Balance Card - Glass Morphism */
+    .balance-card {
+      background: linear-gradient(145deg, rgba(0,107,63,0.06) 0%, rgba(0,160,94,0.1) 50%, rgba(0,107,63,0.06) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(0,107,63,0.15);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      margin-bottom: 18px;
+      text-align: center;
+      animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,107,63,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      animation: shimmer 4s infinite;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      right: -30%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,160,94,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .balance-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .balance-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 0 8px rgba(16,185,129,0.4);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* Header animation keyframes */
+    @keyframes floatOrb1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(15px, 20px) scale(1.05); }
+      66% { transform: translate(-10px, -15px) scale(0.95); }
+    }
+
+    @keyframes floatOrb2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(20px, -25px) scale(1.1); }
+    }
+
+    @keyframes headerShimmer {
+      0% { left: -100%; }
+      40%, 100% { left: 200%; }
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes balanceGlow {
+      0%, 100% { text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+      50% { text-shadow: 0 2px 16px rgba(52,211,153,0.3), 0 2px 8px rgba(0,0,0,0.15); }
+    }
+
+    .balance-amount {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: -1px;
+      line-height: 1.1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .balance-amount:active {
+      transform: scale(1.04);
+    }
+
+    .balance-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .balance-item {
+      text-align: center;
+      flex: 1;
+      padding: 12px 8px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,107,63,0.06);
+    }
+
+    [data-theme="dark"] .balance-item {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .balance-item-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    .balance-item-value {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .balance-item-value.income {
+      color: #059669;
+    }
+
+    .balance-item-value.expense {
+      color: #dc2626;
+    }
+
+    /* Modern Stats */
+    .modern-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .modern-stat {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInLeft 0.4s ease-out both;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modern-stat::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .modern-stat:nth-child(1) { animation-delay: 0.3s; }
+    .modern-stat:nth-child(1)::after { background: #10b981; }
+    .modern-stat:nth-child(2) { animation-delay: 0.4s; animation-name: slideInRight; }
+    .modern-stat:nth-child(2)::after { background: #f59e0b; }
+
+    .modern-stat:active {
+      transform: scale(0.97);
+      box-shadow: 0 6px 20px rgba(0, 107, 63, 0.12);
+    }
+
+    .modern-stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .modern-stat-icon i {
+      width: 22px;
+      height: 22px;
+    }
+
+    .modern-stat:active .modern-stat-icon {
+      animation: bounce 0.5s ease;
+    }
+
+    .modern-stat-icon.savings {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+    }
+
+    .modern-stat-icon.streak {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+    }
+
+    .modern-stat-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .modern-stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .modern-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      margin-top: 2px;
+    }
+
+    /* Quick Actions Modern */
+    .quick-actions-modern {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .quick-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideUp 0.4s ease-out both;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .quick-btn:nth-child(1) { animation-delay: 0.4s; }
+    .quick-btn:nth-child(2) { animation-delay: 0.5s; }
+    .quick-btn:nth-child(3) { animation-delay: 0.6s; }
+    .quick-btn:nth-child(4) { animation-delay: 0.7s; }
+
+    .quick-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .quick-btn:active::before {
+      left: 100%;
+    }
+
+    .quick-btn:active {
+      transform: scale(0.93);
+      box-shadow: 0 8px 24px rgba(0, 107, 63, 0.12);
+    }
+
+    .quick-btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .quick-btn-icon i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .quick-btn:active .quick-btn-icon {
+      animation: bounce 0.5s ease;
+    }
+
+    .quick-btn-icon.expense {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3);
+    }
+
+    .quick-btn-icon.income {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+    }
+
+    .quick-btn-icon.goal {
+      background: linear-gradient(135deg, #00a05e, #006B3F);
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(0, 160, 94, 0.3);
+    }
+
+    .quick-btn-icon.budget {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      box-shadow: 0 6px 18px rgba(59, 130, 246, 0.3);
+    }
+
+    .quick-btn-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.1px;
+    }
+
+    /* Modern Transaction List */
+    .transaction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .transaction-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .transaction-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, var(--primary-color), #10b981);
+      flex-shrink: 0;
+    }
+
+    .transaction-link {
+      font-size: 13px;
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(0,107,63,0.06);
+    }
+
+    .transaction-link:active {
+      transform: scale(1.05);
+      background: rgba(0,107,63,0.12);
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 12px;
+      margin-bottom: 8px;
+      border-radius: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid transparent;
+      animation: slideInLeft 0.3s ease-out both;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .transaction-item:nth-child(1) { animation-delay: 0.1s; }
+    .transaction-item:nth-child(2) { animation-delay: 0.15s; }
+    .transaction-item:nth-child(3) { animation-delay: 0.2s; }
+    .transaction-item:nth-child(4) { animation-delay: 0.25s; }
+    .transaction-item:nth-child(5) { animation-delay: 0.3s; }
+
+    .transaction-item:active {
+      background: var(--card-bg);
+      border-color: var(--border-color);
+      transform: scale(0.98);
+    }
+
+    .transaction-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .transaction-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .transaction-item:active .transaction-icon {
+      transform: scale(1.08);
+    }
+
+    .transaction-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .transaction-category {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.1px;
+    }
+
+    .transaction-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .transaction-amount {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--danger);
+      letter-spacing: -0.3px;
+    }
+
+    /* Budget Progress Modern */
+    .budget-progress-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .budget-progress-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,107,63,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .budget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .budget-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .budget-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #f59e0b, #fbbf24);
+      flex-shrink: 0;
+    }
+
+    .budget-percentage {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-light);
+      background: rgba(0,107,63,0.08);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .budget-bar {
+      height: 12px;
+      background: linear-gradient(145deg, var(--border-color), rgba(255,255,255,0.03));
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .budget-fill {
+      height: 100%;
+      border-radius: 12px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .budget-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+
+    .budget-fill.safe {
+      background: linear-gradient(90deg, #10b981, #34d399);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+    }
+
+    .budget-fill.warning {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+      animation: budget-pulse 2s ease infinite;
+    }
+
+    .budget-fill.danger {
+      background: linear-gradient(90deg, #ef4444, #f87171);
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+      animation: budget-pulse 1.2s ease infinite;
+    }
+
+    @keyframes budget-pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 2px 10px rgba(255, 193, 7, 0.5); }
+      50% { opacity: 0.85; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.7); }
+    }
+
+    .budget-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* Gamification Modern */
+    .gamification-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .gamification-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid var(--border-color);
+      animation: slideUp 0.5s ease-out 0.5s both;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gamification-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .gamification-card:nth-child(2) {
+      animation-delay: 0.6s;
+    }
+
+    .gamification-card:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.08);
+    }
+
+    .gamification-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badges-grid {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge-item {
+      font-size: 23px;
+      opacity: 0.25;
+      filter: grayscale(100%);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .badge-item.earned {
+      opacity: 1;
+      filter: grayscale(0%);
+      animation: badgePop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes badgePop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .badge-item.earned:hover {
+      transform: scale(1.15);
+    }
+
+    .badge-item:not(.earned):hover {
+      opacity: 0.4;
+    }
+
+    .badge-item:active {
+      transform: scale(1.3) rotate(10deg);
+    }
+
+    .badge-item.earned {
+      opacity: 1;
+      animation: badgePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes badgePop {
+      0% { transform: scale(0) rotate(-180deg); }
+      50% { transform: scale(1.3) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .level-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .level-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), #00a05e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      animation: float 3s ease-in-out infinite;
+      box-shadow: 0 4px 15px rgba(0, 160, 94, 0.4);
+    }
+
+    .level-info {
+      flex: 1;
+    }
+
+    .level-text {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .xp-text {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .xp-bar {
+      height: 8px;
+      background: linear-gradient(145deg, var(--border-color), rgba(255,255,255,0.03));
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+      background-size: 200% 100%;
+      animation: xpGradient 2s ease infinite;
+      border-radius: 8px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 6px rgba(255, 215, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .xp-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes xpGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Currency Calculator Styles */
+    .currency-modal-content {
+      max-width: 400px;
+      margin: auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .currency-modal-header {
+      background: linear-gradient(135deg, #006B3F, #00A05E);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .currency-modal-header h2 {
+      font-size: 21px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .currency-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .currency-body {
+      padding: 20px;
+    }
+
+    .currency-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      background: var(--bg-color);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .currency-tab {
+      flex: 1;
+      padding: 10px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .currency-tab.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .currency-input-group {
+      background: var(--bg-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 2px solid var(--border-color);
+      transition: border-color 0.3s ease;
+    }
+
+    .currency-input-group:focus-within {
+      border-color: var(--primary-color);
+    }
+
+    .currency-input-group label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .currency-input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .currency-select {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      min-width: 110px;
+    }
+
+    .currency-amount-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      font-size: 31px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: right;
+      outline: none;
+      width: 100%;
+    }
+
+    .currency-amount-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .quick-amounts {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quick-amount-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-amount-btn:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .currency-swap-btn {
+      display: flex;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .currency-swap-btn button {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      transition: all 0.3s ease;
+    }
+
+    .currency-swap-btn button:hover {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      transform: rotate(180deg);
+    }
+
+    .currency-result {
+      background: linear-gradient(135deg, rgba(0, 107, 63, 0.1), rgba(0, 160, 94, 0.1));
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .currency-result-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .currency-result-value {
+      font-size: 35px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .currency-result-rate {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .all-rates-list {
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .rate-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .rate-item:hover {
+      background: rgba(245, 124, 0, 0.05);
+    }
+
+    .rate-item:last-child {
+      border-bottom: none;
+    }
+
+    .rate-currency {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rate-currency-flag {
+      font-size: 28px;
+    }
+
+    .rate-currency-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rate-currency-code {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .rate-currency-name {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .rate-values {
+      text-align: right;
+    }
+
+    .rate-buy {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .rate-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .favorite-conversions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .favorite-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-color);
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .favorite-item:hover {
+      background: rgba(245, 124, 0, 0.1);
+    }
+
+    .favorite-pair {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .favorite-flags {
+      font-size: 18px;
+    }
+
+    .favorite-codes {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .favorite-rate {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .favorite-delete {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .favorite-item:hover .favorite-delete {
+      opacity: 1;
+    }
+
+    .favorite-delete:hover {
+      color: #dc3545;
+    }
+
+    .add-favorite-btn {
+      padding: 10px 16px;
+      background: rgba(0, 107, 63, 0.1);
+      border: none;
+      border-radius: 8px;
+      color: var(--primary-color);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 16px auto 0;
+    }
+
+    .add-favorite-btn:hover {
+      background: rgba(0, 107, 63, 0.2);
+    }
+
+    .last-updated {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Menu profile sync styles */
+    .menu-avatar { font-family: 'Inter', sans-serif; }
+
+    /* Animation Styles */
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Transaction delete button styles */
+    .transaction-delete-btn {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .transaction-item:hover .transaction-delete-btn {
+      opacity: 1;
+    }
+
+    .transaction-delete-btn:hover {
+      color: #dc3545 !important;
+    }
+
+    /* ===== Spending Insights Section ===== */
+    .insights-section {
+      margin-bottom: 14px;
+    }
+    .insights-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+      margin-bottom: 10px;
+    }
+    .insights-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .insights-header-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(0,107,63,0.1) 0%, rgba(16,185,129,0.08) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+    }
+    .insights-header-icon i { width: 16px; height: 16px; }
+    .insights-header-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    .insights-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary-color);
+      background: rgba(0,107,63,0.08);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.2px;
+    }
+    .insights-refresh-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    .insights-refresh-btn i { width: 14px; height: 14px; }
+    .insights-refresh-btn:active { transform: scale(0.9); }
+    .insights-refresh-btn.spinning i { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Insights Scroll Container */
+    .insights-scroll {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 0 6px 0;
+      scrollbar-width: none;
+    }
+    .insights-scroll::-webkit-scrollbar { display: none; }
+
+    /* Individual Insight Card */
+    .insight-card {
+      min-width: 100%;
+      max-width: 100%;
+      width: 100%;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card:active { transform: scale(0.96); }
+
+    /* Top accent bar */
+    .insight-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+    }
+    .insight-card.positive::before { background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7); }
+    .insight-card.warning::before { background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde68a); }
+    .insight-card.alert::before { background: linear-gradient(90deg, #ef4444, #f87171, #fca5a5); }
+    .insight-card.info::before { background: linear-gradient(90deg, var(--primary-color), var(--primary-light), #6ee7b7); }
+
+    /* Subtle bg tint per type */
+    .insight-card.positive { background: linear-gradient(135deg, var(--card-bg) 60%, rgba(16,185,129,0.04) 100%); }
+    .insight-card.warning { background: linear-gradient(135deg, var(--card-bg) 60%, rgba(245,158,11,0.04) 100%); }
+    .insight-card.alert { background: linear-gradient(135deg, var(--card-bg) 60%, rgba(239,68,68,0.04) 100%); }
+    .insight-card.info { background: linear-gradient(135deg, var(--card-bg) 60%, rgba(0,107,63,0.03) 100%); }
+
+    /* Decorative blob in card */
+    .insight-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .insight-card.positive::after { background: #10b981; }
+    .insight-card.warning::after { background: #f59e0b; }
+    .insight-card.alert::after { background: #ef4444; }
+    .insight-card.info::after { background: var(--primary-color); }
+
+    .insight-card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .insight-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .insight-card.positive .insight-icon-wrap { background: rgba(16,185,129,0.12); }
+    .insight-card.warning .insight-icon-wrap { background: rgba(245,158,11,0.12); }
+    .insight-card.alert .insight-icon-wrap { background: rgba(239,68,68,0.12); }
+    .insight-card.info .insight-icon-wrap { background: rgba(0,107,63,0.1); }
+
+    /* Icon animations by mood */
+    .insight-card[data-mood="celebrate"] .insight-icon-wrap {
+      animation: bounceIcon 2s ease-in-out infinite;
+    }
+    .insight-card[data-mood="nudge"] .insight-icon-wrap {
+      animation: nudgeIcon 3s ease-in-out infinite;
+    }
+    .insight-card[data-mood="alert"] .insight-icon-wrap {
+      animation: pulseIcon 1.5s ease-in-out infinite;
+    }
+    @keyframes bounceIcon {
+      0%, 100% { transform: translateY(0); }
+      20% { transform: translateY(-6px); }
+      40% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+      60% { transform: translateY(0); }
+    }
+    @keyframes nudgeIcon {
+      0%, 100% { transform: rotate(0deg); }
+      10% { transform: rotate(-5deg); }
+      20% { transform: rotate(5deg); }
+      30% { transform: rotate(0deg); }
+    }
+    @keyframes pulseIcon {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Sparkle effect for celebrate cards */
+    .insight-card[data-mood="celebrate"]::after {
+      animation: sparkleBlob 3s ease-in-out infinite;
+      opacity: 0.06;
+    }
+    @keyframes sparkleBlob {
+      0%, 100% { transform: scale(1); opacity: 0.04; }
+      50% { transform: scale(1.3); opacity: 0.08; }
+    }
+
+    .insight-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-primary);
+      letter-spacing: -0.1px;
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+    }
+    .insight-msg {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      letter-spacing: 0.05px;
+      position: relative;
+      z-index: 1;
+    }
+    .insight-tip {
+      font-size: 11px;
+      color: var(--primary-light);
+      padding: 7px 11px;
+      background: rgba(0,107,63,0.06);
+      border-radius: 12px;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+      font-weight: 500;
+    }
+    .insight-tip::before { content: '💡'; font-size: 12px; flex-shrink: 0; margin-top: 0px; }
+
+    .insight-source {
+      font-size: 10px;
+      color: #8899a6;
+      padding: 5px 10px;
+      background: rgba(0,0,0,0.03);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      margin-top: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Insight card entrance animation */
+    .insight-card { opacity: 0; transform: translateY(16px) scale(0.97); }
+    .insight-card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    /* Loading shimmer */
+    .insight-shimmer {
+      min-width: 100%;
+      height: 140px;
+      flex-shrink: 0;
+      border-radius: 18px;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-shimmer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+      animation: shimmer 1.5s infinite;
+    }
+    .insight-shimmer::before {
+      content: '🤔';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      animation: thinkingEmoji 2s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes thinkingEmoji {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+      25% { transform: translate(-50%, -50%) rotate(-10deg); }
+      75% { transform: translate(-50%, -50%) rotate(10deg); }
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* Empty state */
+    .insights-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+      text-align: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(0,107,63,0.03) 100%);
+      border-radius: 18px;
+      border: 1px dashed var(--border-color);
+    }
+    .insights-empty-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(0,107,63,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 4px;
+      animation: floatEmoji 3s ease-in-out infinite;
+    }
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .insights-empty-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.1px;
+    }
+    .insights-empty-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 240px;
+    }
+
+    /* Scroll dots indicator */
+    .insights-dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      padding-top: 8px;
+    }
+    .insights-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 6px;
+      background: var(--border-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .insights-dot:hover { background: var(--primary-light); }
+    .insights-dot.active {
+      width: 18px;
+      background: var(--primary-color);
+    }
+
+    /* Insights slider controls */
+    .insights-slider-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 2px 0;
+    }
+
+    /* Feature Widgets */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .widget-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px 12px 16px;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .widget-card::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      right: -15px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .widget-card:nth-child(1)::after { background: #f59e0b; }
+    .widget-card:nth-child(2)::after { background: #6366f1; }
+    .widget-card:nth-child(3)::after { background: #eab308; }
+    .widget-card:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .widget-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+    .widget-card:active .widget-icon { transform: scale(1.08); }
+    .widget-icon i { width: 20px; height: 20px; }
+    .bills-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+    .challenges-icon { background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+    .badges-icon { background: linear-gradient(135deg, #eab308, #facc15); color: #fff; box-shadow: 0 4px 12px rgba(234,179,8,0.3); }
+    .widget-counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .widget-counter.bills-active { background: rgba(245,158,11,0.13); color: #f59e0b; }
+    .widget-counter.challenges-active { background: rgba(99,102,241,0.13); color: #6366f1; }
+    .widget-counter.badges-active { background: rgba(234,179,8,0.13); color: #ca8a04; }
+    .widget-label { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: -0.1px; }
+
+    /* Bills alert banner on dashboard */
+    .bills-alert-banner {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(251,191,36,0.12));
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s;
+    }
+    .bills-alert-banner:active { transform: scale(0.98); }
+    .bills-alert-banner.overdue {
+      background: linear-gradient(135deg, rgba(220,53,69,0.12), rgba(239,83,80,0.12));
+      border-color: rgba(220,53,69,0.3);
+    }
+    .bills-alert-banner-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(245,158,11,0.2); color: #f59e0b;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 18px;
+    }
+    .bills-alert-banner.overdue .bills-alert-banner-icon {
+      background: rgba(220,53,69,0.15); color: #dc3545;
+    }
+    .bills-alert-banner-text { flex: 1; }
+    .bills-alert-banner-title {
+      font-size: 13px; font-weight: 700;
+      color: #b45309;
+      line-height: 1.2; margin-bottom: 2px;
+    }
+    .bills-alert-banner.overdue .bills-alert-banner-title { color: #dc3545; }
+    .bills-alert-banner-desc {
+      font-size: 11px; color: var(--text-muted);
+    }
+    .bills-alert-banner-arrow {
+      color: var(--text-muted); font-size: 16px;
+    }
+
+    /* Subscriptions alert banner on dashboard */
+    .subs-alert-banner {
+      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(167,139,250,0.12)) !important;
+      border-color: rgba(139,92,246,0.3) !important;
+    }
+    .subs-alert-banner .bills-alert-banner-icon {
+      background: rgba(139,92,246,0.2); color: #8b5cf6;
+    }
+    .subs-alert-banner .bills-alert-banner-title {
+      color: #7c3aed;
+    }
+    .subs-alert-banner.overdue {
+      background: linear-gradient(135deg, rgba(220,53,69,0.12), rgba(239,83,80,0.12)) !important;
+      border-color: rgba(220,53,69,0.3) !important;
+    }
+    .subs-alert-banner.overdue .bills-alert-banner-icon {
+      background: rgba(220,53,69,0.15); color: #dc3545;
+    }
+    .subs-alert-banner.overdue .bills-alert-banner-title { color: #dc3545; }
+
+    /* Subscription widget counter active style */
+    .widget-counter.subs-active { background: rgba(139,92,246,0.13); color: #8b5cf6; }
+
+    /* Dashboard card override — modern wrapper */
+    .container > .card {
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    /* Slide-in-left for transaction items */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- MTN-Style Unified Header + Profile -->
+  <header class="mtn-header">
+    <!-- Shimmer sweep -->
+    <div class="mtn-header-shimmer"></div>
+    <!-- Floating particles -->
+    <div class="header-particles">
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+    </div>
+    <!-- Top Bar: Logo + Action Icons -->
+    <div class="mtn-topbar">
+      <a class="mtn-logo" href="dashboard.html">
+        <img src="../Logo.png" alt="KudiSave" class="mtn-logo-img">
+      </a>
+      <div class="mtn-topbar-actions">
+        <button class="hamburger" onclick="toggleMobileMenu()" title="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Section: Avatar + Greeting -->
+    <div class="mtn-profile-section">
+      <div class="mtn-avatar" id="userAvatar">
+        <span id="avatarInitials">U</span>
+      </div>
+      <div class="mtn-greeting-text">
+        <div class="mtn-greeting-time" id="greetingTime">Good Morning</div>
+        <div class="mtn-greeting-name" id="userName">Welcome!</div>
+        <div class="mtn-greeting-quote" id="motivationalMessage"></div>
+      </div>
+    </div>
+
+    <!-- Balance inside header -->
+    <div class="header-balance">
+      <div class="header-balance-label">Available Balance</div>
+      <div class="header-balance-amount" id="balanceAmount">GHS 0.00</div>
+      <div class="header-balance-row">
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Income</div>
+          <div class="header-balance-item-value income" id="totalIncome">+GHS 0</div>
+        </div>
+        <div class="header-balance-item">
+          <div class="header-balance-item-label">Expenses</div>
+          <div class="header-balance-item-value expense" id="totalExpenses">-GHS 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mtn-header-curve"></div>
+  </header>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+  <!-- Premium Mobile Side Menu -->
+  <div class="mobile-menu">
+    <!-- Profile Header -->
+    <div class="mobile-menu-header">
+      <div class="menu-header-top">
+        <span style="color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.5px;">Menu</span>
+        <button class="menu-close-btn" onclick="toggleMobileMenu()" title="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Nav Links -->
+    <div class="menu-nav-section">
+      <div class="menu-section-label">Navigate</div>
+      <a href="dashboard.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-dashboard"><i data-lucide="layout-dashboard" class="icon-menu"></i></div>
+        Dashboard
+      </a>
+      <a href="expenses.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-expenses"><i data-lucide="receipt" class="icon-menu"></i></div>
+        Expenses
+      </a>
+      <a href="goals.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-goals"><i data-lucide="target" class="icon-menu"></i></div>
+        Goals
+      </a>
+      <a href="bills.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-bills"><i data-lucide="calendar-clock" class="icon-menu"></i></div>
+        Bills & Payments
+        <span class="menu-link-badge" id="menuBillsBadge" style="display:none;">0</span>
+      </a>
+      <a href="subscriptions.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-subscriptions"><i data-lucide="repeat" class="icon-menu"></i></div>
+        Subscriptions
+      </a>
+      <a href="reports.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-reports"><i data-lucide="bar-chart-3" class="icon-menu"></i></div>
+        Reports
+      </a>
+
+      <div class="menu-section-label">Rewards</div>
+      <a href="achievements.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-achievements"><i data-lucide="trophy" class="icon-menu"></i></div>
+        Achievements
+        <span class="menu-link-badge gold" id="menuAchievementBadge" style="display:none;">0</span>
+      </a>
+      <a href="challenges.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-challenges"><i data-lucide="swords" class="icon-menu"></i></div>
+        Challenges
+      </a>
+
+      <div class="menu-section-label">Tools</div>
+      <a href="#" class="mobile-menu-link" onclick="openCurrencyCalculator(); toggleMobileMenu();">
+        <div class="menu-icon-wrap menu-icon-currency"><i data-lucide="calculator" class="icon-menu"></i></div>
+        Currency Converter
+      </a>
+      <a href="settings.html" class="mobile-menu-link">
+        <div class="menu-icon-wrap menu-icon-settings"><i data-lucide="settings" class="icon-menu"></i></div>
+        Settings
+      </a>
+
+      <!-- Theme Toggle -->
+      <div class="menu-theme-row">
+        <span class="menu-theme-label">
+          <i data-lucide="moon" style="width:14px;height:14px;"></i> Dark Mode
+        </span>
+        <button class="menu-theme-toggle" onclick="toggleTheme()" title="Toggle Theme"></button>
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <a href="#" class="mobile-menu-link logout" onclick="logout()">
+        <div class="menu-icon-wrap"><i data-lucide="log-out" class="icon-menu"></i></div>
+        Logout
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="menu-footer">
+      <span class="menu-footer-brand"><span class="brand-dot"></span> KudiSave</span>
+      <span class="menu-footer-version">v1.0</span>
+    </div>
+  </div>
+
+
+
+  <!-- Header Spacer -->
+  <div class="mtn-header-spacer"></div>
+
+  <div class="container" style="padding-bottom: 20px;">
+    <!-- Modern Stats -->
+    <div class="modern-stats">
+      <div class="modern-stat">
+        <div class="modern-stat-icon savings"><i data-lucide="piggy-bank"></i></div>
+        <div class="modern-stat-info">
+          <div class="modern-stat-value" id="savingsRate">0%</div>
+          <div class="modern-stat-label">Savings Rate</div>
+        </div>
+      </div>
+      <div class="modern-stat">
+        <div class="modern-stat-icon streak"><i data-lucide="flame"></i></div>
+        <div class="modern-stat-info">
+          <div class="modern-stat-value" id="currentStreak">0 days</div>
+          <div class="modern-stat-label">Current Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-modern">
+      <button class="quick-btn" onclick="openExpenseModal()">
+        <div class="quick-btn-icon expense"><i data-lucide="minus-circle"></i></div>
+        <span class="quick-btn-label">Expense</span>
+      </button>
+      <button class="quick-btn" onclick="openIncomeModal()">
+        <div class="quick-btn-icon income"><i data-lucide="plus-circle"></i></div>
+        <span class="quick-btn-label">Income</span>
+      </button>
+      <button class="quick-btn" onclick="window.location.href='goals.html'">
+        <div class="quick-btn-icon goal"><i data-lucide="target"></i></div>
+        <span class="quick-btn-label">Goals</span>
+      </button>
+      <button class="quick-btn" onclick="openBudgetModal()">
+        <div class="quick-btn-icon budget"><i data-lucide="wallet"></i></div>
+        <span class="quick-btn-label">Budget</span>
+      </button>
+    </div>
+
+    <!-- Bills Alert Banner -->
+    <a href="bills.html" class="bills-alert-banner" id="billsAlertBanner">
+      <div class="bills-alert-banner-icon">🔔</div>
+      <div class="bills-alert-banner-text">
+        <div class="bills-alert-banner-title" id="billsAlertTitle">Bills Due Soon</div>
+        <div class="bills-alert-banner-desc" id="billsAlertDesc">Tap to view and manage your bills</div>
+      </div>
+      <span class="bills-alert-banner-arrow">›</span>
+    </a>
+
+    <!-- Subscriptions Due Alert Banner -->
+    <a href="subscriptions.html" class="bills-alert-banner subs-alert-banner" id="subsAlertBanner" style="display:none;">
+      <div class="bills-alert-banner-icon subs-alert-banner-icon">🔔</div>
+      <div class="bills-alert-banner-text">
+        <div class="bills-alert-banner-title" id="subsAlertTitle">Subscriptions Due Soon</div>
+        <div class="bills-alert-banner-desc" id="subsAlertDesc">Tap to manage your subscriptions</div>
+      </div>
+      <span class="bills-alert-banner-arrow">›</span>
+    </a>
+
+    <!-- Feature Widgets -->
+    <div class="widgets-grid">
+      <!-- Bills Widget -->
+      <a href="bills.html" class="widget-card">
+        <div class="widget-icon bills-icon"><i data-lucide="calendar-check"></i></div>
+        <div class="widget-counter" id="billsDueCount">–</div>
+        <div class="widget-label">Bills Due</div>
+      </a>
+      <!-- Subscriptions Widget -->
+      <a href="subscriptions.html" class="widget-card">
+        <div class="widget-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6"><i data-lucide="repeat"></i></div>
+        <div class="widget-counter" id="activeSubscriptions">&ndash;</div>
+        <div class="widget-label">Subscriptions</div>
+      </a>
+      <!-- Challenges Widget -->
+      <a href="challenges.html" class="widget-card">
+        <div class="widget-icon challenges-icon"><i data-lucide="swords"></i></div>
+        <div class="widget-counter" id="activeChallenges">–</div>
+        <div class="widget-label">Challenges</div>
+      </a>
+    </div>
+
+    <!-- Spending Insights Section -->
+    <div class="insights-section" id="insightsSection">
+      <div class="insights-header">
+        <div class="insights-header-left">
+          <div class="insights-header-icon">
+            <i data-lucide="sparkles"></i>
+          </div>
+          <span class="insights-header-title">Smart Insights</span>
+          <span class="insights-badge" id="insightCount"></span>
+        </div>
+        <button class="insights-refresh-btn" id="insightsRefreshBtn" title="Refresh insights">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+      </div>
+      <div id="insightsGreeting" style="font-size: 11px; color: var(--text-muted); margin: -4px 2px 8px 2px; font-weight: 500;"></div>
+      <div class="insights-scroll" id="spendingInsights">
+        <!-- Loading shimmer placeholders -->
+        <div class="insight-shimmer"></div>
+        <div class="insight-shimmer"></div>
+      </div>
+      <div class="insights-slider-footer" id="insightsFooter" style="display: none;">
+        <div class="insights-dots" id="insightsDots"></div>
+      </div>
+    </div>
+
+    <!-- Budget Progress -->
+    <div class="budget-progress-card" id="budgetCard">
+      <div class="budget-header">
+        <span class="budget-title"><i data-lucide="wallet" class="icon-inline"></i> Monthly Budget</span>
+        <span class="budget-percentage" id="budgetPercentage">0%</span>
+      </div>
+      <div class="budget-bar">
+        <div class="budget-fill safe" id="budgetFill" style="width: 0%;"></div>
+      </div>
+      <div class="budget-details">
+        <span id="budgetSpent">GHS 0 spent</span>
+        <span id="budgetRemaining">GHS 0 left</span>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="card">
+      <div class="transaction-header">
+        <span class="transaction-title"><i data-lucide="list" class="icon-inline"></i> Recent Transactions</span>
+        <a href="expenses.html" class="transaction-link">See all →</a>
+      </div>
+      <div id="recentExpensesList">
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- Gamification -->
+    <div class="gamification-section">
+      <a href="achievements.html" class="gamification-card" style="text-decoration: none; color: inherit;">
+        <div class="gamification-title"><i data-lucide="trophy" class="icon-inline"></i> Badges</div>
+        <div class="badges-grid" id="badgesContainer">
+          <span class="badge-item"><i data-lucide="coins"></i></span>
+          <span class="badge-item"><i data-lucide="target"></i></span>
+          <span class="badge-item"><i data-lucide="bar-chart-2"></i></span>
+          <span class="badge-item"><i data-lucide="star"></i></span>
+        </div>
+      </a>
+      <a href="achievements.html" class="gamification-card" style="text-decoration: none; color: inherit;">
+        <div class="gamification-title"><i data-lucide="star" class="icon-inline"></i> Level Progress</div>
+        <div class="level-display">
+          <div class="level-badge" id="levelBadge">1</div>
+          <div class="level-info">
+            <div class="level-text" id="userLevel">Level 1</div>
+            <div class="xp-text" id="xpText">0 / 100 XP</div>
+          </div>
+        </div>
+        <div class="xp-bar">
+          <div class="xp-fill" id="xpProgress" style="width: 0%;"></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Expense Modal -->
+  <div id="expenseModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Expense</h2>
+        <button class="close-btn" onclick="closeModal('expenseModal')">&times;</button>
+      </div>
+      <form id="expenseForm" onsubmit="handleAddExpense(event)">
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-prefix">₵</span>
+            <input type="number" class="form-input" id="expenseAmount" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="expenseCategory" required></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select class="form-select" id="expensePaymentMethod" required></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="expenseDate" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Note (Optional)</label>
+          <textarea class="form-textarea" id="expenseNote" rows="3" placeholder="Add a note..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Expense</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Income Modal -->
+  <div id="incomeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Income</h2>
+        <button class="close-btn" onclick="closeModal('incomeModal')">&times;</button>
+      </div>
+      <form id="incomeForm" onsubmit="handleAddIncome(event)">
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-prefix">₵</span>
+            <input type="number" class="form-input" id="incomeAmount" placeholder="0.00" step="0.01" min="0.01" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Source</label>
+          <select class="form-select" id="incomeSource" required></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="incomeDate" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Note (Optional)</label>
+          <textarea class="form-textarea" id="incomeNote" rows="3" placeholder="Add a note..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success" style="width: 100%;">Add Income</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Budget Modal -->
+  <div id="budgetModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Set Budget</h2>
+        <button class="close-btn" onclick="closeModal('budgetModal')">&times;</button>
+      </div>
+      <form id="budgetForm" onsubmit="handleSetBudget(event)">
+        <div class="form-group">
+          <label class="form-label">Period Type</label>
+          <select class="form-select" id="budgetPeriod" required>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Budget Amount</label>
+          <div class="currency-input-wrapper">
+            <span class="currency-prefix">₵</span>
+            <input type="number" class="form-input" id="budgetAmount" placeholder="0.00" step="0.01" min="1" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Start Date</label>
+          <input type="date" class="form-input" id="budgetStartDate" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Set Budget</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Currency Calculator Modal -->
+  <div id="currencyModal" class="modal">
+    <div class="currency-modal-content">
+      <div class="currency-modal-header">
+        <h2><i data-lucide="repeat" style="width:20px;height:20px"></i> Currency Converter</h2>
+        <button class="currency-close-btn" onclick="closeModal('currencyModal')">&times;</button>
+      </div>
+      <div class="currency-body">
+        <!-- Tabs -->
+        <div class="currency-tabs">
+          <button class="currency-tab active" onclick="switchCurrencyTab('convert')" id="convertTab">
+            <i data-lucide="calculator" style="width:14px;height:14px"></i>
+            Convert
+          </button>
+          <button class="currency-tab" onclick="switchCurrencyTab('rates')" id="ratesTab">
+            <i data-lucide="list" style="width:14px;height:14px"></i>
+            All Rates
+          </button>
+          <button class="currency-tab" onclick="switchCurrencyTab('favorites')" id="favoritesTab">
+            <i data-lucide="star" style="width:14px;height:14px"></i>
+            Favorites
+          </button>
+        </div>
+
+        <!-- Convert Tab Content -->
+        <div id="convertContent">
+          <!-- From Currency -->
+          <div class="currency-input-group">
+            <label>From</label>
+            <div class="currency-input-row">
+              <select class="currency-select" id="fromCurrency" onchange="convertCurrency()">
+                <option value="GHS" selected>🇬🇭 GHS</option>
+                <option value="USD">🇺🇸 USD</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="NGN">🇳🇬 NGN</option>
+                <option value="ZAR">🇿🇦 ZAR</option>
+                <option value="KES">🇰🇪 KES</option>
+                <option value="XOF">🇨🇮 XOF</option>
+                <option value="CNY">🇨🇳 CNY</option>
+                <option value="JPY">🇯🇵 JPY</option>
+                <option value="AED">🇦🇪 AED</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="INR">🇮🇳 INR</option>
+              </select>
+              <input type="number" class="currency-amount-input" id="fromAmount" 
+                placeholder="0.00" step="0.01" oninput="debouncedConvert()">
+            </div>
+            <!-- Quick Amount Buttons -->
+            <div class="quick-amounts">
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(50)">₵50</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(100)">₵100</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(500)">₵500</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(1000)">₵1K</button>
+              <button type="button" class="quick-amount-btn" onclick="setQuickAmount(5000)">₵5K</button>
+            </div>
+          </div>
+
+          <!-- Swap Button -->
+          <div class="currency-swap-btn">
+            <button type="button" onclick="swapCurrencies()">
+              <i data-lucide="arrow-up-down" style="width:20px;height:20px"></i>
+            </button>
+          </div>
+
+          <!-- To Currency -->
+          <div class="currency-input-group">
+            <label>To</label>
+            <div class="currency-input-row">
+              <select class="currency-select" id="toCurrency" onchange="convertCurrency()">
+                <option value="GHS">🇬🇭 GHS</option>
+                <option value="USD" selected>🇺🇸 USD</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="NGN">🇳🇬 NGN</option>
+                <option value="ZAR">🇿🇦 ZAR</option>
+                <option value="KES">🇰🇪 KES</option>
+                <option value="XOF">🇨🇮 XOF</option>
+                <option value="CNY">🇨🇳 CNY</option>
+                <option value="JPY">🇯🇵 JPY</option>
+                <option value="AED">🇦🇪 AED</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="INR">🇮🇳 INR</option>
+              </select>
+              <input type="number" class="currency-amount-input" id="toAmount" 
+                placeholder="0.00" readonly>
+            </div>
+          </div>
+
+          <!-- Result Display -->
+          <div class="currency-result" id="currencyResult" style="display:none">
+            <div class="currency-result-label">Converted Amount</div>
+            <div class="currency-result-value" id="resultValue">0.00</div>
+            <div class="currency-result-rate" id="resultRate">1 GHS = 0.0769 USD</div>
+          </div>
+
+          <!-- Save to Favorites Button -->
+          <button type="button" class="add-favorite-btn" onclick="saveCurrentConversion()">
+            <i data-lucide="star" style="width:14px;height:14px"></i>
+            Save to Favorites
+          </button>
+        </div>
+
+        <!-- All Rates Tab Content -->
+        <div id="ratesContent" style="display:none">
+          <div class="all-rates-list" id="allRatesList"></div>
+        </div>
+
+        <!-- Favorites Tab Content -->
+        <div id="favoritesContent" style="display:none">
+          <div class="favorite-conversions" id="favoritesList"></div>
+          <div id="noFavorites" style="text-align:center; padding:30px; color:var(--text-muted); display:none;">
+            <i data-lucide="star" style="width:40px;height:40px;opacity:0.3;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto"></i>
+            <p style="font-size:13px;margin-bottom:4px;">No favorites yet</p>
+            <p style="font-size:11px;">Convert currencies and tap "Save to Favorites"</p>
+          </div>
+        </div>
+
+        <div class="last-updated">
+          <i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i>
+          Loading live rates...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Debounced currency converter (prevents freezing on fast typing)
+    let _convertTimer = null;
+    function debouncedConvert() {
+      clearTimeout(_convertTimer);
+      _convertTimer = setTimeout(convertCurrency, 150);
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.querySelector('.mobile-menu');
+      const overlay = document.querySelector('.mobile-menu-overlay');
+      const hamburger = document.querySelector('.hamburger');
+      if (hamburger) hamburger.classList.toggle('active');
+      menu.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+      // Re-render icons inside menu
+      if (menu.classList.contains('active')) {
+        lucide.createIcons({ node: menu });
+        // Highlight active page
+        const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+        menu.querySelectorAll('.mobile-menu-link').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && href.includes(currentPage)) {
+            link.classList.add('active-page');
+          } else {
+            link.classList.remove('active-page');
+          }
+        });
+        // Populate gamified menu data
+        populateMenuStats();
+      }
+    }
+
+    // Gamified menu data
+    function populateMenuStats() {
+      try {
+        // Use API-cached values if available, otherwise fall back to client-side calc
+        var apiLevel = localStorage.getItem('kudisave_api_level');
+        var apiXP = localStorage.getItem('kudisave_api_xp');
+        var apiXPNext = localStorage.getItem('kudisave_api_xp_next');
+        var apiXPPct = localStorage.getItem('kudisave_api_xp_pct');
+        
+        var lvl, xp, needed, pct;
+        if (apiLevel && apiXP) {
+          lvl = parseInt(apiLevel);
+          xp = parseInt(apiXP);
+          needed = parseInt(apiXPNext || '100');
+          pct = parseFloat(apiXPPct || '0');
+        } else {
+          var xpData = calculateUserXP();
+          lvl = xpData.level;
+          xp = xpData.currentXP;
+          needed = xpData.xpForNext;
+          pct = needed > 0 ? Math.min((xp / needed) * 100, 100) : 0;
+        }
+
+        var levelEl = document.getElementById('menuLevelBadge');
+        var xpLevelEl = document.getElementById('menuXpLevel');
+        var xpTextEl = document.getElementById('menuXpText');
+        var xpFillEl = document.getElementById('menuXpFill');
+
+        if (levelEl) levelEl.textContent = lvl;
+        if (xpLevelEl) xpLevelEl.textContent = lvl;
+        if (xpTextEl) xpTextEl.textContent = xp + ' / ' + needed + ' XP';
+        if (xpFillEl) xpFillEl.style.width = pct + '%';
+
+        // Also update the homepage level card so both bars match
+        var homeLevelBadge = document.getElementById('levelBadge');
+        var homeUserLevel = document.getElementById('userLevel');
+        var homeXpText = document.getElementById('xpText');
+        var homeXpProgress = document.getElementById('xpProgress');
+
+        if (homeLevelBadge) homeLevelBadge.textContent = lvl;
+        if (homeUserLevel) homeUserLevel.textContent = 'Level ' + lvl;
+        if (homeXpText) homeXpText.textContent = xp + ' / ' + needed + ' XP';
+        if (homeXpProgress) homeXpProgress.style.width = pct + '%';
+
+        // Streak count - use API value if available
+        var apiStreak = localStorage.getItem('kudisave_api_streak');
+        var streak = apiStreak ? parseInt(apiStreak) : calculateStreak();
+        var streakEl = document.getElementById('menuStreakCount');
+        if (streakEl) streakEl.textContent = streak;
+
+        // Badge count - use API value if available
+        var apiBadges = localStorage.getItem('kudisave_api_badges');
+        var badgeCount = apiBadges ? parseInt(apiBadges) : countEarnedBadges();
+        var badgeEl = document.getElementById('menuBadgeCount');
+        if (badgeEl) badgeEl.textContent = badgeCount;
+
+        // Goal count & pending bills
+        populateMenuCounts();
+      } catch(e) {
+        console.log('Menu stats error:', e);
+      }
+    }
+
+    function calculateUserXP() {
+      // XP sources: expenses logged, goals created, bills paid, challenges, logins
+      var totalXP = 0;
+
+      // Logged expenses = 5 XP each (from dashboard data if loaded)
+      var expenseEls = document.querySelectorAll('.transaction-item, .expense-item');
+      totalXP += expenseEls.length * 5;
+
+      // Goals = 20 XP each
+      var savedGoals = localStorage.getItem('kudisave_goals_count');
+      if (savedGoals) totalXP += parseInt(savedGoals) * 20;
+
+      // Bills paid = 15 XP each
+      var bills = JSON.parse(localStorage.getItem('kudisave_bills') || '[]');
+      var paidBills = bills.filter(function(b) { return b.status === 'paid'; });
+      totalXP += paidBills.length * 15;
+
+      // Daily login bonus = 10 XP per day
+      var loginDays = parseInt(localStorage.getItem('kudisave_login_days') || '0');
+      if (!loginDays) {
+        var firstSeen = localStorage.getItem('kudisave_first_seen');
+        if (!firstSeen) {
+          localStorage.setItem('kudisave_first_seen', new Date().toISOString());
+          loginDays = 1;
+        } else {
+          var daysDiff = Math.floor((Date.now() - new Date(firstSeen).getTime()) / 86400000);
+          loginDays = Math.max(1, daysDiff);
+        }
+        localStorage.setItem('kudisave_login_days', loginDays.toString());
+      }
+      totalXP += loginDays * 10;
+
+      // Minimum base XP
+      totalXP = Math.max(totalXP, 10);
+
+      // Level calculation: each level needs 100 * level XP
+      var level = 1;
+      var xpUsed = 0;
+      while (totalXP - xpUsed >= 100 * level) {
+        xpUsed += 100 * level;
+        level++;
+      }
+
+      return {
+        level: level,
+        currentXP: totalXP - xpUsed,
+        xpForNext: 100 * level,
+        totalXP: totalXP
+      };
+    }
+
+    function calculateStreak() {
+      var lastLogin = localStorage.getItem('kudisave_last_login');
+      var streak = parseInt(localStorage.getItem('kudisave_streak') || '0');
+      var today = new Date().toDateString();
+
+      if (lastLogin === today) return streak;
+
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (lastLogin === yesterday.toDateString()) {
+        streak++;
+      } else if (lastLogin !== today) {
+        streak = 1;
+      }
+
+      localStorage.setItem('kudisave_last_login', today);
+      localStorage.setItem('kudisave_streak', streak.toString());
+      return streak;
+    }
+
+    function countEarnedBadges() {
+      // Count badges from localStorage or DOM
+      var badges = document.querySelectorAll('.badge-card.earned, .badge-item.earned');
+      if (badges.length > 0) return badges.length;
+
+      var savedBadges = localStorage.getItem('kudisave_badges_earned');
+      return savedBadges ? parseInt(savedBadges) : 0;
+    }
+
+    async function populateMenuCounts() {
+      try {
+        // Goal count
+        var goalResp = await api.getGoals();
+        var goals = goalResp.data || [];
+        var goalEl = document.getElementById('menuGoalCount');
+        if (goalEl) goalEl.textContent = goals.length;
+        localStorage.setItem('kudisave_goals_count', goals.length.toString());
+
+        // Pending bills badge
+        var bills = JSON.parse(localStorage.getItem('kudisave_bills') || '[]');
+        var pending = bills.filter(function(b) { return b.status === 'pending' || b.status === 'overdue'; });
+        var billsBadge = document.getElementById('menuBillsBadge');
+        if (billsBadge) {
+          if (pending.length > 0) {
+            billsBadge.textContent = pending.length;
+            billsBadge.style.display = 'flex';
+          } else {
+            billsBadge.style.display = 'none';
+          }
+        }
+      } catch(e) {
+        // Silently fail
+      }
+    }
+
+    // Currency Calculator
+    // Fallback rates (used if API fails)
+    const fallbackRates = {
+      GHS: 1,
+      USD: 0.0625,
+      EUR: 0.0580,
+      GBP: 0.0495,
+      NGN: 96.15,
+      ZAR: 1.15,
+      KES: 8.08,
+      XOF: 38.06,
+      CNY: 0.4538,
+      JPY: 9.62,
+      AED: 0.2296,
+      CAD: 0.0894,
+      INR: 5.31
+    };
+
+    // Live rates (populated from API)
+    let exchangeRates = { ...fallbackRates };
+    let ratesLastUpdated = null;
+    let ratesLoading = false;
+
+    async function fetchLiveRates() {
+      if (ratesLoading) return;
+      ratesLoading = true;
+
+      // Check cached rates (valid for 1 hour)
+      const cached = localStorage.getItem('kudisave_exchange_rates');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          const age = Date.now() - parsed.timestamp;
+          if (age < 3600000) { // 1 hour
+            exchangeRates = parsed.rates;
+            ratesLastUpdated = new Date(parsed.timestamp);
+            ratesLoading = false;
+            updateLastUpdatedText();
+            return;
+          }
+        } catch (e) { /* ignore bad cache */ }
+      }
+
+      try {
+        // Use ExchangeRate-API (free, no key needed)
+        const response = await fetch('https://open.er-api.com/v6/latest/GHS');
+        if (!response.ok) throw new Error('API response not ok');
+        const data = await response.json();
+
+        if (data.result === 'success' && data.rates) {
+          const supportedCurrencies = Object.keys(fallbackRates);
+          const newRates = { GHS: 1 };
+          
+          supportedCurrencies.forEach(code => {
+            if (code !== 'GHS' && data.rates[code]) {
+              newRates[code] = data.rates[code];
+            }
+          });
+
+          exchangeRates = newRates;
+          ratesLastUpdated = new Date();
+
+          // Cache the rates
+          localStorage.setItem('kudisave_exchange_rates', JSON.stringify({
+            rates: exchangeRates,
+            timestamp: Date.now()
+          }));
+
+          updateLastUpdatedText();
+          console.log('✅ Live exchange rates loaded');
+        }
+      } catch (error) {
+        console.warn('⚠️ Failed to fetch live rates, using fallback:', error.message);
+        exchangeRates = { ...fallbackRates };
+        ratesLastUpdated = null;
+        updateLastUpdatedText();
+      } finally {
+        ratesLoading = false;
+      }
+    }
+
+    function updateLastUpdatedText() {
+      const el = document.querySelector('.last-updated');
+      if (!el) return;
+      if (ratesLastUpdated) {
+        const timeStr = ratesLastUpdated.toLocaleString('en-GB', { 
+          day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Live rates updated: ${timeStr} • <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Refresh</a>`;
+      } else {
+        el.innerHTML = `<i data-lucide="clock" style="width:10px;height:10px;vertical-align:middle"></i> Using offline rates • <a href="#" onclick="refreshRates(); return false;" style="color:var(--primary-color);text-decoration:underline;">Try refresh</a>`;
+      }
+      lucide.createIcons({ node: el });
+    }
+
+    async function refreshRates() {
+      const el = document.querySelector('.last-updated');
+      if (el) el.innerHTML = '<i data-lucide="loader" style="width:10px;height:10px;vertical-align:middle;animation:spin 1s linear infinite"></i> Fetching live rates...';
+      // Clear cache to force fresh fetch
+      localStorage.removeItem('kudisave_exchange_rates');
+      ratesLoading = false;
+      await fetchLiveRates();
+      // Re-convert if there's already a value
+      convertCurrency();
+    }
+
+    const currencyInfo = {
+      GHS: { flag: '🇬🇭', name: 'Ghanaian Cedi', symbol: '₵' },
+      USD: { flag: '🇺🇸', name: 'US Dollar', symbol: '$' },
+      EUR: { flag: '🇪🇺', name: 'Euro', symbol: '€' },
+      GBP: { flag: '🇬🇧', name: 'British Pound', symbol: '£' },
+      NGN: { flag: '🇳🇬', name: 'Nigerian Naira', symbol: '₦' },
+      ZAR: { flag: '🇿🇦', name: 'South African Rand', symbol: 'R' },
+      KES: { flag: '🇰🇪', name: 'Kenyan Shilling', symbol: 'KSh' },
+      XOF: { flag: '🇨🇮', name: 'CFA Franc', symbol: 'CFA' },
+      CNY: { flag: '🇨🇳', name: 'Chinese Yuan', symbol: '¥' },
+      JPY: { flag: '🇯🇵', name: 'Japanese Yen', symbol: '¥' },
+      AED: { flag: '🇦🇪', name: 'UAE Dirham', symbol: 'د.إ' },
+      CAD: { flag: '🇨🇦', name: 'Canadian Dollar', symbol: 'C$' },
+      INR: { flag: '🇮🇳', name: 'Indian Rupee', symbol: '₹' }
+    };
+
+    let favoriteConversions = JSON.parse(localStorage.getItem('currencyFavorites')) || [];
+
+    function openCurrencyCalculator() {
+      document.getElementById('currencyModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      switchCurrencyTab('convert');
+      // Fetch live rates when opening
+      fetchLiveRates().then(() => convertCurrency());
+    }
+
+    function switchCurrencyTab(tab) {
+      document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tab + 'Tab').classList.add('active');
+      document.getElementById('convertContent').style.display = tab === 'convert' ? 'block' : 'none';
+      document.getElementById('ratesContent').style.display = tab === 'rates' ? 'block' : 'none';
+      document.getElementById('favoritesContent').style.display = tab === 'favorites' ? 'block' : 'none';
+      if (tab === 'rates') populateAllRates();
+      if (tab === 'favorites') populateFavorites();
+    }
+
+    function setQuickAmount(amount) {
+      document.getElementById('fromCurrency').value = 'GHS';
+      document.getElementById('fromAmount').value = amount;
+      convertCurrency();
+    }
+
+    function convertCurrency() {
+      const fromCurrency = document.getElementById('fromCurrency').value;
+      const toCurrency = document.getElementById('toCurrency').value;
+      const fromAmount = parseFloat(document.getElementById('fromAmount').value) || 0;
+      const ghsAmount = fromAmount / exchangeRates[fromCurrency];
+      const toAmount = ghsAmount * exchangeRates[toCurrency];
+      document.getElementById('toAmount').value = toAmount.toFixed(2);
+      const resultDiv = document.getElementById('currencyResult');
+      if (fromAmount > 0) {
+        resultDiv.style.display = 'block';
+        const info = currencyInfo[toCurrency];
+        document.getElementById('resultValue').textContent = 
+          `${info.flag} ${info.symbol}${toAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const rate = exchangeRates[toCurrency] / exchangeRates[fromCurrency];
+        document.getElementById('resultRate').textContent = 
+          `1 ${fromCurrency} = ${rate < 1 ? rate.toFixed(4) : rate.toFixed(2)} ${toCurrency}`;
+      } else {
+        resultDiv.style.display = 'none';
+      }
+    }
+
+    function swapCurrencies() {
+      const fromSelect = document.getElementById('fromCurrency');
+      const toSelect = document.getElementById('toCurrency');
+      const fromAmount = document.getElementById('fromAmount');
+      const toAmount = document.getElementById('toAmount');
+      const temp = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = temp;
+      fromAmount.value = toAmount.value;
+      convertCurrency();
+    }
+
+    function populateAllRates() {
+      const container = document.getElementById('allRatesList');
+      const currencies = Object.keys(exchangeRates).filter(c => c !== 'GHS');
+      container.innerHTML = currencies.map(code => {
+        const info = currencyInfo[code];
+        const ghsPerUnit = (1 / exchangeRates[code]).toFixed(2);
+        return `
+          <div class="rate-item" onclick="quickConvertFromRate('${code}')">
+            <div class="rate-currency">
+              <span class="rate-currency-flag">${info.flag}</span>
+              <div class="rate-currency-info">
+                <span class="rate-currency-code">${code}</span>
+                <span class="rate-currency-name">${info.name}</span>
+              </div>
+            </div>
+            <div class="rate-values">
+              <div class="rate-buy">GHS ${ghsPerUnit}</div>
+              <div class="rate-label">per 1 ${code}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function quickConvertFromRate(code) {
+      document.getElementById('fromCurrency').value = code;
+      document.getElementById('toCurrency').value = 'GHS';
+      document.getElementById('fromAmount').value = 1;
+      switchCurrencyTab('convert');
+      convertCurrency();
+    }
+
+    function saveCurrentConversion() {
+      const from = document.getElementById('fromCurrency').value;
+      const to = document.getElementById('toCurrency').value;
+      if (from === to) { utils.showAlert('Cannot save same currency pair', 'warning'); return; }
+      if (favoriteConversions.some(f => f.from === from && f.to === to)) {
+        utils.showAlert('Already in favorites', 'info'); return;
+      }
+      favoriteConversions.push({ from, to });
+      localStorage.setItem('currencyFavorites', JSON.stringify(favoriteConversions));
+      utils.showAlert('Added to favorites!', 'success');
+    }
+
+    function populateFavorites() {
+      const container = document.getElementById('favoritesList');
+      const noFavorites = document.getElementById('noFavorites');
+      if (favoriteConversions.length === 0) {
+        container.style.display = 'none';
+        noFavorites.style.display = 'block';
+        return;
+      }
+      container.style.display = 'flex';
+      noFavorites.style.display = 'none';
+      container.innerHTML = favoriteConversions.map((fav, index) => {
+        const fromInfo = currencyInfo[fav.from];
+        const toInfo = currencyInfo[fav.to];
+        const rate = exchangeRates[fav.to] / exchangeRates[fav.from];
+        return `
+          <div class="favorite-item" onclick="loadFavorite('${fav.from}', '${fav.to}')">
+            <div class="favorite-pair">
+              <span class="favorite-flags">${fromInfo.flag} → ${toInfo.flag}</span>
+              <div>
+                <div class="favorite-codes">${fav.from} → ${fav.to}</div>
+                <div class="favorite-rate">1 ${fav.from} = ${rate < 1 ? rate.toFixed(4) : rate.toFixed(2)} ${fav.to}</div>
+              </div>
+            </div>
+            <button class="favorite-delete" onclick="event.stopPropagation(); deleteFavorite(${index})">
+              <i data-lucide="x" style="width:16px;height:16px"></i>
+            </button>
+          </div>`;
+      }).join('');
+      const favsContainer = document.getElementById('favoritesList');
+      if (favsContainer) lucide.createIcons({ node: favsContainer });
+    }
+
+    function loadFavorite(from, to) {
+      document.getElementById('fromCurrency').value = from;
+      document.getElementById('toCurrency').value = to;
+      document.getElementById('fromAmount').value = 100;
+      switchCurrencyTab('convert');
+      convertCurrency();
+    }
+
+    function deleteFavorite(index) {
+      favoriteConversions.splice(index, 1);
+      localStorage.setItem('currencyFavorites', JSON.stringify(favoriteConversions));
+      populateFavorites();
+    }
+
+    // Check URL param to auto-open currency calculator
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('openCurrency') === 'true') {
+        setTimeout(() => openCurrencyCalculator(), 500);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+  </script>
+</body>
+</html>

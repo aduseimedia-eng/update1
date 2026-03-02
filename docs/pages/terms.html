@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Terms of Service - KudiSave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .legal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 60%, #003822 100%);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .legal-header .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .legal-header .back-btn:active { background: rgba(255,255,255,0.25); }
+    .legal-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .legal-content {
+      padding: 20px 16px 40px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .legal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 107, 63, 0.08);
+      color: var(--primary-color);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .legal-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .legal-section h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legal-section h2 svg { color: var(--primary-color); }
+    .legal-section p,
+    .legal-section li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0 0 8px;
+    }
+    .legal-section ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .legal-section li { margin-bottom: 4px; }
+    .legal-footer {
+      text-align: center;
+      padding: 20px 16px 40px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .legal-footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="legal-header">
+    <button class="back-btn" onclick="history.back()">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <h1>Terms of Service</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="legal-content">
+    <div class="legal-badge">
+      <i data-lucide="calendar" style="width:12px;height:12px;"></i>
+      Last updated: February 19, 2026
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="scroll-text" style="width:18px;height:18px;"></i> Agreement</h2>
+      <p>By accessing or using KudiSave ("the App"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the App.</p>
+      <p>KudiSave is owned and operated by <strong>Adusei Media</strong>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="user-check" style="width:18px;height:18px;"></i> Use of the App</h2>
+      <p>KudiSave is a personal finance tracking tool designed to help you manage expenses, income, budgets, and savings goals. You agree to:</p>
+      <ul>
+        <li>Provide accurate information when creating your account</li>
+        <li>Keep your login credentials secure and confidential</li>
+        <li>Use the App only for lawful personal finance management</li>
+        <li>Not attempt to reverse-engineer, modify, or exploit the App</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="wallet" style="width:18px;height:18px;"></i> Financial Disclaimer</h2>
+      <p>KudiSave is <strong>not</strong> a financial advisor, bank, or licensed financial institution. The App provides tools for tracking and organizing your finances only.</p>
+      <p>Any insights, tips, or suggestions provided by the App are for informational and entertainment purposes and should not be considered professional financial advice. Always consult a qualified financial advisor for important decisions.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="database" style="width:18px;height:18px;"></i> Your Data</h2>
+      <p>You retain ownership of all data you enter into KudiSave. We store your data securely to provide the service. You may request deletion of your account and data at any time from the Settings page.</p>
+      <p>For full details on how we handle your data, see our <a href="privacy.html">Privacy Policy</a>.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="shield-alert" style="width:18px;height:18px;"></i> Limitation of Liability</h2>
+      <p>KudiSave and Adusei Media are provided "as is" without warranties of any kind. We are not liable for any financial losses, data loss, or damages arising from use of the App.</p>
+      <p>We reserve the right to modify, suspend, or discontinue the App at any time without prior notice.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="ban" style="width:18px;height:18px;"></i> Account Termination</h2>
+      <p>We may suspend or terminate your account if you violate these terms, misuse the App, or engage in fraudulent activity. You may also delete your own account at any time.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> Changes to Terms</h2>
+      <p>We may update these Terms from time to time. Continued use of the App after changes constitutes acceptance of the updated terms. We encourage you to review this page periodically.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2><i data-lucide="mail" style="width:18px;height:18px;"></i> Contact</h2>
+      <p>If you have questions about these Terms, contact us at:</p>
+      <p><strong>Adusei Media</strong><br>Email: support@kudisave.com</p>
+    </div>
+  </div>
+
+  <div class="legal-footer">
+    &copy; 2026 Adusei Media. All rights reserved.<br>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

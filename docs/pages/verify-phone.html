@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>KudiSave - Verify Phone Number</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      padding: 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .verify-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      padding-top: calc(20px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      background: var(--bg-primary);
+    }
+
+    .verify-card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 32px 24px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .verify-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .verify-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      background: rgba(0, 107, 63, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+    }
+
+    .verify-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .verify-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .verify-phone {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .otp-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+
+    .otp-input {
+      width: 48px;
+      height: 56px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-primary);
+      background: var(--input-bg);
+      transition: all 0.2s;
+    }
+
+    .otp-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 107, 63, 0.1);
+    }
+
+    .otp-input.error {
+      border-color: var(--danger);
+      background: rgba(220, 53, 69, 0.05);
+    }
+
+    .verify-button {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .verify-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .verify-button:active {
+      transform: translateY(0);
+    }
+
+    .verify-button:disabled {
+      background: var(--text-disabled);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .resend-container {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .resend-button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      font-weight: 600;
+      padding: 4px 8px;
+      text-decoration: underline;
+    }
+
+    .resend-button:disabled {
+      color: var(--text-disabled);
+      cursor: not-allowed;
+    }
+
+    .timer {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 4px;
+    }
+
+    .error-message {
+      padding: 12px;
+      background: rgba(220, 53, 69, 0.1);
+      border-left: 4px solid var(--danger);
+      border-radius: 4px;
+      color: var(--danger);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      padding: 12px;
+      background: rgba(0, 160, 94, 0.1);
+      border-left: 4px solid var(--success);
+      border-radius: 4px;
+      color: var(--success);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .edit-phone {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .edit-phone-button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: underline;
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <div class="verify-card">
+      <div class="verify-header">
+        <div class="verify-icon">
+          <i data-lucide="smartphone" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h1 class="verify-title">Verify Your Phone</h1>
+        <p class="verify-subtitle">We sent a 6-digit code to</p>
+        <p class="verify-phone" id="displayPhone">+233 XXX XXX XXX</p>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+
+      <form id="verifyForm" onsubmit="handleVerifyOTP(event)">
+        <div class="otp-input-group">
+          <input type="text" class="otp-input" id="otp1" maxlength="1" inputmode="numeric" placeholder="0">
+          <input type="text" class="otp-input" id="otp2" maxlength="1" inputmode="numeric" placeholder="0">
+          <input type="text" class="otp-input" id="otp3" maxlength="1" inputmode="numeric" placeholder="0">
+          <input type="text" class="otp-input" id="otp4" maxlength="1" inputmode="numeric" placeholder="0">
+          <input type="text" class="otp-input" id="otp5" maxlength="1" inputmode="numeric" placeholder="0">
+          <input type="text" class="otp-input" id="otp6" maxlength="1" inputmode="numeric" placeholder="0">
+        </div>
+
+        <button type="submit" class="verify-button" id="verifyButton">
+          <span id="verifyButtonText">Verify OTP</span>
+        </button>
+      </form>
+
+      <div class="resend-container">
+        Didn't receive the code?
+        <button type="button" class="resend-button" id="resendButton" onclick="handleResendOTP()">
+          Resend
+        </button>
+        <span class="timer" id="resendTimer"></span>
+      </div>
+
+      <div class="edit-phone">
+        <button type="button" class="edit-phone-button" onclick="goBackToRegister()">
+          Use a different phone number
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // API Configuration - handle file:// protocol
+    const API_BASE_URL = window.KUDISAVE_API_URL || (
+      (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
+        ? 'http://localhost:5000/api/v1'
+        : `http://${window.location.hostname}:5000/api/v1`
+    );
+
+    let resendTimer = 0;
+    let phoneNumber = '';
+    let isVerifying = false;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Get phone number from session storage
+      phoneNumber = sessionStorage.getItem('pendingPhoneVerification');
+      
+      if (!phoneNumber) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Display formatted phone number
+      displayFormattedPhone(phoneNumber);
+
+      // Auto-send OTP
+      sendOTP();
+
+      // Setup OTP input auto-advance
+      setupOTPInputs();
+
+      // Start resend timer
+      startResendTimer();
+    });
+
+    // Display formatted phone number
+    function displayFormattedPhone(phone) {
+      const last4 = phone.slice(-4);
+      const formatted = `+233 *** *** ${last4}`;
+      document.getElementById('displayPhone').textContent = formatted;
+    }
+
+    // Setup OTP input auto-advance
+    function setupOTPInputs() {
+      const inputs = document.querySelectorAll('.otp-input');
+      
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          const value = e.target.value;
+          
+          // Only allow digits
+          if (!/^\d*$/.test(value)) {
+            e.target.value = '';
+            return;
+          }
+          
+          // Auto-focus next input
+          if (value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+          
+          // Remove error state
+          input.classList.remove('error');
+          clearErrorMessage();
+        });
+
+        input.addEventListener('keydown', (e) => {
+          // Handle backspace
+          if (e.key === 'Backspace' && input.value === '' && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pastedData = e.clipboardData.getData('text');
+          const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+          
+          digits.split('').forEach((digit, i) => {
+            if (inputs[i]) {
+              inputs[i].value = digit;
+              if (i === digits.length - 1 || i === inputs.length - 1) {
+                inputs[i].focus();
+              }
+            }
+          });
+        });
+      });
+    }
+
+    // Send OTP
+    async function sendOTP() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/phone/send-otp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ phone: phoneNumber })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // In dev mode, show OTP if provided
+          if (data.otp) {
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ OTP sent! DEV MODE: ${data.otp}`);
+          } else {
+            showSuccessMessage('✓ OTP sent to your phone!');
+          }
+        } else {
+          // Always check for OTP in development mode, even on error
+          if (data.otp) {
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ OTP generated! DEV MODE: ${data.otp}`);
+          } else {
+            showErrorMessage(data.message || 'Failed to send OTP');
+          }
+        }
+      } catch (error) {
+        console.error('Send OTP error:', error);
+        showErrorMessage('Failed to send OTP. Please check your internet connection.');
+      }
+    }
+
+    // Handle OTP verification
+    async function handleVerifyOTP(event) {
+      event.preventDefault();
+
+      if (isVerifying) return;
+
+      const inputs = document.querySelectorAll('.otp-input');
+      const otp = Array.from(inputs).map(input => input.value).join('');
+
+      // Validate OTP
+      if (otp.length !== 6) {
+        showErrorMessage('Please enter all 6 digits');
+        inputs.forEach(input => input.classList.add('error'));
+        return;
+      }
+
+      isVerifying = true;
+      const button = document.getElementById('verifyButton');
+      const buttonText = document.getElementById('verifyButtonText');
+      
+      button.disabled = true;
+      buttonText.innerHTML = '<span class="spinner"></span>Verifying...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/phone/verify-otp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ phone: phoneNumber, otp })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showSuccessMessage('✓ Phone number verified successfully!');
+          
+          // Clear session storage
+          sessionStorage.removeItem('pendingPhoneVerification');
+          
+          // Redirect to login page to login
+          setTimeout(() => {
+            window.location.href = 'index.html?verified=true';
+          }, 1500);
+        } else {
+          showErrorMessage(data.message || 'Invalid OTP. Please try again.');
+          inputs.forEach(input => input.classList.add('error'));
+          inputs[0].focus();
+        }
+      } catch (error) {
+        console.error('Verify OTP error:', error);
+        showErrorMessage('Failed to verify OTP. Please try again.');
+      } finally {
+        isVerifying = false;
+        button.disabled = false;
+        buttonText.textContent = 'Verify OTP';
+      }
+    }
+
+    // Handle resend OTP
+    async function handleResendOTP() {
+      const resendButton = document.getElementById('resendButton');
+      
+      if (resendButton.disabled) {
+        return;
+      }
+
+      resendButton.disabled = true;
+      resendButton.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/phone/resend-otp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ phone: phoneNumber })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showSuccessMessage('New OTP sent to your phone!');
+          clearOTPInputs();
+          startResendTimer();
+        } else {
+          // Always check for OTP in development mode, even on error
+          if (data.otp) {
+            console.log('📱 Development OTP:', data.otp);
+            showSuccessMessage(`✓ New OTP: ${data.otp}`);
+            clearOTPInputs();
+            startResendTimer();
+          } else {
+            showErrorMessage(data.message || 'Failed to resend OTP');
+            resendButton.disabled = false;
+            resendButton.textContent = 'Resend';
+          }
+        }
+      } catch (error) {
+        console.error('Resend OTP error:', error);
+        showErrorMessage('Failed to resend OTP. Please try again.');
+        resendButton.disabled = false;
+        resendButton.textContent = 'Resend';
+      }
+    }
+
+    // Start resend timer (60 seconds)
+    function startResendTimer() {
+      resendTimer = 60;
+      const resendButton = document.getElementById('resendButton');
+      const timerSpan = document.getElementById('resendTimer');
+
+      resendButton.disabled = true;
+
+      const interval = setInterval(() => {
+        resendTimer--;
+        timerSpan.textContent = `(${resendTimer}s)`;
+
+        if (resendTimer <= 0) {
+          clearInterval(interval);
+          resendButton.disabled = false;
+          timerSpan.textContent = '';
+        }
+      }, 1000);
+    }
+
+    // Clear OTP inputs
+    function clearOTPInputs() {
+      const inputs = document.querySelectorAll('.otp-input');
+      inputs.forEach(input => {
+        input.value = '';
+        input.classList.remove('error');
+      });
+      inputs[0].focus();
+    }
+
+    // Show error message
+    function showErrorMessage(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      
+      // Hide after 5 seconds
+      setTimeout(() => {
+        errorDiv.classList.remove('show');
+      }, 5000);
+    }
+
+    // Clear error message
+    function clearErrorMessage() {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.classList.remove('show');
+    }
+
+    // Show success message
+    function showSuccessMessage(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.classList.add('show');
+    }
+
+    // Go back to register
+    function goBackToRegister() {
+      sessionStorage.removeItem('pendingPhoneVerification');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

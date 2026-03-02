@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Settings - KudiSave</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .profile-header {
+      text-align: center;
+      padding: 22px 16px;
+      background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 60%, #003822 100%);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 107, 63, 0.15);
+    }
+
+    .profile-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(255,255,255,0.3);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--primary-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-avatar-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .avatar-edit-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 12px;
+      padding: 3px 0;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .profile-avatar:hover .avatar-edit-overlay {
+      opacity: 1;
+    }
+
+    #avatarInput {
+      display: none;
+    }
+
+    .avatar-edit-section {
+      text-align: center;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .avatar-edit-preview {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 31px;
+      margin: 0 auto 8px;
+      border: 2px solid var(--primary-color);
+      overflow: hidden;
+      color: var(--primary-color);
+    }
+
+    .avatar-edit-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 13px;
+      min-height: 28px;
+    }
+
+    .profile-name {
+      font-size: 17px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .profile-joined {
+      font-size: 13px;
+      color: var(--text-secondary, #6b7280);
+      margin-top: 2px;
+      margin-bottom: 10px;
+    }
+
+    .settings-section {
+      margin-bottom: 12px;
+    }
+
+    .settings-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      background: var(--bg-card);
+      border-radius: 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border-color);
+    }
+
+    .settings-item:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .settings-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settings-icon {
+      font-size: 19px;
+    }
+
+    .settings-item-info h4 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 1px;
+    }
+
+    .settings-item-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .settings-arrow {
+      font-size: 17px;
+      color: var(--text-muted);
+    }
+
+    .profile-info-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .profile-info-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .profile-info-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .danger-zone {
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      background: rgba(239, 68, 68, 0.06);
+    }
+
+    .danger-zone h4 {
+      color: var(--danger);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .danger-zone p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    /* Toggle Switch Styles */
+    .toggle-switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(145deg, var(--border-color), rgba(255,255,255,0.05));
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border-radius: 28px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 1px 2px rgba(255,255,255,0.05);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .toggle-slider:hover:before {
+      transform: scale(1.05);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(145deg, var(--primary-color), var(--accent-color));
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 15px rgba(0, 107, 56, 0.4);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25), 0 0 8px rgba(255,255,255,0.5);
+    }
+
+    .toggle-switch input:focus + .toggle-slider {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 107, 56, 0.2);
+    }
+
+    .toggle-switch input:active + .toggle-slider:before {
+      width: 26px;
+    }
+
+    .toggle-switch input:checked:active + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .notification-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      background: var(--bg-card);
+      border-radius: 14px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-item-info h4 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .notification-item-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .notification-icon {
+      margin-right: 12px;
+      font-size: 21px;
+    }
+
+    .notification-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .gmail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(234, 67, 53, 0.1), rgba(66, 133, 244, 0.1));
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #EA4335;
+      margin-bottom: 12px;
+    }
+
+    .gmail-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .gmail-connection-section {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .gmail-connect-prompt {
+      text-align: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.05), rgba(234, 67, 53, 0.05));
+      border-radius: 12px;
+      border: 1px dashed rgba(66, 133, 244, 0.3);
+    }
+
+    .gmail-connect-prompt .gmail-logo {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
+    }
+
+    .gmail-connect-prompt h4 {
+      font-size: 17px;
+      color: var(--text-primary);
+      margin: 0 0 6px 0;
+    }
+
+    .gmail-connect-prompt p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* ===== MTN-Style Header ===== */
+    body { padding-top: 0 !important; }
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; 
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; }
+    .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
+    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; }
+    .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
+    .mtn-back-btn i { width: 18px; height: 18px; }
+    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+    .mtn-topbar-spacer { width: 38px; }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 16px 14px 16px; position: relative; z-index: 1; text-align: center; }
+    .mtn-profile-avatar { width: 72px; height: 72px; border-radius: 20px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.25); flex-shrink: 0; color: white; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .mtn-profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+    .mtn-profile-avatar .avatar-placeholder { display: flex; align-items: center; justify-content: center; }
+    .mtn-profile-avatar .avatar-placeholder i { width: 28px; height: 28px; }
+    .mtn-profile-name { font-size: 20px; font-weight: 700; color: white; line-height: 1.2; margin-top: 4px; letter-spacing: -0.3px; }
+    .mtn-profile-email { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; }
+
+    .mtn-header::before, .mtn-header::after { pointer-events: none; }
+    .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
+    [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
+    .mtn-header-spacer { height: 315px; }
+    .container { padding-top: 18px; padding-bottom: 80px; }
+  </style>
+</head>
+<body>
+  <!-- MTN-Style Header -->
+  <header class="mtn-header">
+    <div class="mtn-topbar">
+      <a href="dashboard.html" class="mtn-back-btn">
+        <i data-lucide="arrow-left"></i>
+      </a>
+      <span class="mtn-page-title">Settings</span>
+      <div class="mtn-topbar-spacer"></div>
+    </div>
+    <div class="mtn-info-section">
+      <div class="mtn-profile-avatar" id="headerAvatar" onclick="document.getElementById('avatarInput').click()">
+        <span class="avatar-placeholder"><i data-lucide="user"></i></span>
+      </div>
+      <div class="mtn-profile-name" id="headerProfileName">Loading...</div>
+      <div class="mtn-profile-email" id="headerProfileEmail">...</div>
+    </div>
+    <div class="mtn-header-curve"></div>
+  </header>
+  <div class="mtn-header-spacer"></div>
+
+
+  <div class="container">
+    <!-- Hidden file input for avatar -->
+    <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)" style="display:none">
+    <div class="profile-joined" id="profileJoined">Member since ...</div>
+
+    <!-- Profile Information -->
+    <div class="settings-section">
+      <div class="settings-section-title">Profile Information</div>
+      <div class="card">
+        <div class="profile-info-grid">
+          <div class="profile-info-item">
+            <span class="profile-info-label">Full Name</span>
+            <span class="profile-info-value" id="infoName">-</span>
+          </div>
+          <div class="profile-info-item">
+            <span class="profile-info-label">Email</span>
+            <span class="profile-info-value" id="infoEmail">-</span>
+          </div>
+          <div class="profile-info-item">
+            <span class="profile-info-label">Phone</span>
+            <span class="profile-info-value" id="infoPhone">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="settings-section">
+      <div class="settings-section-title">Account Settings</div>
+      
+      <div class="settings-item" onclick="openModal('passwordModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="lock" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Change Password</h4>
+            <p>Update your account password</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('editProfileModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="pencil" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Edit Profile</h4>
+            <p>Update your personal information</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="settings-section">
+      <div class="settings-section-title">Preferences</div>
+      
+      <div class="settings-item" onclick="toggleTheme()">
+        <div class="settings-item-left">
+          <span class="settings-icon" id="themeIcon"><i data-lucide="moon" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Theme</h4>
+            <p id="themeText">Switch between light and dark mode</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('currencyModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="coins" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Currency</h4>
+            <p id="currencyText">GHS (Ghana Cedi)</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="toggleLowDataMode()">
+        <div class="settings-item-left">
+          <span class="settings-icon" id="dataSaverIcon"><i data-lucide="wifi-off" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Low Data Mode</h4>
+            <p id="dataSaverText">Cache data & reduce network usage</p>
+          </div>
+        </div>
+        <label class="toggle-switch" onclick="event.stopPropagation()">
+          <input type="checkbox" id="lowDataToggle" onchange="toggleLowDataMode()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Email Notifications -->
+    <div class="settings-section">
+      <div class="settings-section-title">Email Notifications</div>
+      
+      <div class="settings-item" onclick="openModal('notificationsModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="mail" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Gmail Notifications</h4>
+            <p id="notifStatusText">Manage email alerts</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- Data & Backup -->
+    <div class="settings-section">
+      <div class="settings-section-title">Data & Backup</div>
+      
+      <div class="settings-item" onclick="createBackup()">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="hard-drive" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Create Backup</h4>
+            <p id="backupStatus">Backup your financial data</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('restoreModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="download" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Restore Data</h4>
+            <p>Restore from a previous backup</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('exportModal')">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="upload" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Export Reports</h4>
+            <p>Download as PDF or CSV</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- App Info -->
+    <div class="settings-section">
+      <div class="settings-section-title">About</div>
+      
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="smartphone" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>App Version</h4>
+            <p>KudiSave v1.0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-item" onclick="window.location.href='terms.html'" style="cursor:pointer;">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="file-text" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Terms of Service</h4>
+            <p>Read our terms and conditions</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="window.location.href='privacy.html'" style="cursor:pointer;">
+        <div class="settings-item-left">
+          <span class="settings-icon"><i data-lucide="shield" class="icon"></i></span>
+          <div class="settings-item-info">
+            <h4>Privacy Policy</h4>
+            <p>Learn how we protect your data</p>
+          </div>
+        </div>
+        <span class="settings-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="settings-section">
+      <div class="settings-section-title">Danger Zone</div>
+      <div class="danger-zone">
+        <h4><i data-lucide="alert-triangle" class="icon-inline" style="color:#dc3545"></i> Delete Account</h4>
+        <p>Once you delete your account, there is no going back. Please be certain.</p>
+        <button class="btn btn-danger" onclick="confirmDeleteAccount()">Delete My Account</button>
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <button class="btn btn-outline" style="width: 100%; margin-top: 20px; margin-bottom: 40px;" onclick="logout()">
+      <i data-lucide="log-out" class="icon-inline"></i> Logout
+    </button>
+  </div>
+
+  <!-- Email Notifications Modal -->
+  <div id="notificationsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Email Notifications</h2>
+        <button class="close-btn" onclick="closeModal('notificationsModal')">&times;</button>
+      </div>
+      
+      <!-- Gmail Connection Section -->
+      <div id="gmailConnectionSection" class="gmail-connection-section">
+        <div id="gmailNotConnected" style="display: block;">
+          <div class="gmail-connect-prompt">
+            <svg class="gmail-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <h4>Connect Your Gmail</h4>
+            <p>Connect your Gmail account to send notifications from your own email address.</p>
+            <button class="btn btn-primary" onclick="connectGmail()" style="margin-top: 12px;">
+              <i data-lucide="link" class="icon-inline"></i> Connect Gmail
+            </button>
+          </div>
+        </div>
+        
+        <div id="gmailConnected" style="display: none;">
+          <div class="gmail-badge">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span id="connectedGmailText">Connected via Gmail</span>
+          </div>
+          <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">
+            Emails will be sent from <strong id="gmailEmailDisplay">your Gmail</strong>
+          </p>
+          <button class="btn btn-outline btn-sm" onclick="disconnectGmail()" style="margin-bottom: 12px;">
+            <i data-lucide="unlink" class="icon-inline"></i> Disconnect
+          </button>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Choose which email notifications you'd like to receive:</p>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">📊</span>
+          <div class="notification-item-info">
+            <h4>Weekly Summary</h4>
+            <p>Get a report of your spending each week</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifWeekly" onchange="saveNotificationSettings()" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">🔔</span>
+          <div class="notification-item-info">
+            <h4>Bill Reminders</h4>
+            <p>Get notified before bills are due</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifBills" onchange="saveNotificationSettings()" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">🎯</span>
+          <div class="notification-item-info">
+            <h4>Goal Progress</h4>
+            <p>Updates when you reach milestones</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifGoals" onchange="saveNotificationSettings()" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">🏆</span>
+          <div class="notification-item-info">
+            <h4>Challenges & Badges</h4>
+            <p>Alerts when you complete challenges</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifChallenges" onchange="saveNotificationSettings()" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">⚠️</span>
+          <div class="notification-item-info">
+            <h4>Budget Alerts</h4>
+            <p>Warnings when nearing budget limits</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifBudget" onchange="saveNotificationSettings()" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-left">
+          <span class="notification-icon">💡</span>
+          <div class="notification-item-info">
+            <h4>Tips & Insights</h4>
+            <p>Money-saving tips personalized for you</p>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="notifTips" onchange="saveNotificationSettings()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+        <button class="btn btn-primary" style="width: 100%;" onclick="testEmailNotification()">
+          <i data-lucide="send" class="icon-inline"></i> Send Test Email
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Change Password</h2>
+        <button class="close-btn" onclick="closeModal('passwordModal')">&times;</button>
+      </div>
+      <form id="passwordForm" onsubmit="handleChangePassword(event)">
+        <div class="form-group">
+          <label class="form-label">Current Password</label>
+          <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-input" id="newPassword" placeholder="Enter new password" required minlength="8">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm New Password</label>
+          <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Update Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Edit Profile</h2>
+        <button class="close-btn" onclick="closeModal('editProfileModal')">&times;</button>
+      </div>
+      
+      <!-- Avatar Edit Section -->
+      <div class="avatar-edit-section">
+        <input type="file" id="editAvatarInput" accept="image/*" onchange="handleEditAvatarUpload(event)">
+        <div class="avatar-edit-preview" id="editAvatarPreview">
+          <span>👤</span>
+        </div>
+        <div class="avatar-buttons">
+          <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('editAvatarInput').click()">📷 Change Photo</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="removeProfilePicture()">🗑️ Remove</button>
+        </div>
+      </div>
+
+      <form id="editProfileForm" onsubmit="handleEditProfile(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="editName" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="editEmail" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" id="editPhone" placeholder="233XXXXXXXXX">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Currency Modal -->
+  <div id="currencyModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Select Currency</h2>
+        <button class="close-btn" onclick="closeModal('currencyModal')">&times;</button>
+      </div>
+      <div id="currencyList" style="max-height: 300px; overflow-y: auto;">
+        <div class="settings-item" onclick="setCurrency('GHS', 'Ghana Cedi')">
+          <div class="settings-item-left">
+            <span class="settings-icon">🇬🇭</span>
+            <div class="settings-item-info">
+              <h4>GHS</h4>
+              <p>Ghana Cedi</p>
+            </div>
+          </div>
+          <span class="settings-arrow" id="check-GHS">✓</span>
+        </div>
+        <div class="settings-item" onclick="setCurrency('USD', 'US Dollar')">
+          <div class="settings-item-left">
+            <span class="settings-icon">🇺🇸</span>
+            <div class="settings-item-info">
+              <h4>USD</h4>
+              <p>US Dollar</p>
+            </div>
+          </div>
+          <span class="settings-arrow" id="check-USD" style="display:none">✓</span>
+        </div>
+        <div class="settings-item" onclick="setCurrency('EUR', 'Euro')">
+          <div class="settings-item-left">
+            <span class="settings-icon">🇪🇺</span>
+            <div class="settings-item-info">
+              <h4>EUR</h4>
+              <p>Euro</p>
+            </div>
+          </div>
+          <span class="settings-arrow" id="check-EUR" style="display:none">✓</span>
+        </div>
+        <div class="settings-item" onclick="setCurrency('GBP', 'British Pound')">
+          <div class="settings-item-left">
+            <span class="settings-icon">🇬🇧</span>
+            <div class="settings-item-info">
+              <h4>GBP</h4>
+              <p>British Pound</p>
+            </div>
+          </div>
+          <span class="settings-arrow" id="check-GBP" style="display:none">✓</span>
+        </div>
+        <div class="settings-item" onclick="setCurrency('NGN', 'Nigerian Naira')">
+          <div class="settings-item-left">
+            <span class="settings-icon">🇳🇬</span>
+            <div class="settings-item-info">
+              <h4>NGN</h4>
+              <p>Nigerian Naira</p>
+            </div>
+          </div>
+          <span class="settings-arrow" id="check-NGN" style="display:none">✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore Modal -->
+  <div id="restoreModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Restore Data</h2>
+        <button class="close-btn" onclick="closeModal('restoreModal')">&times;</button>
+      </div>
+      <div id="backupsList" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
+        <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Loading backups...</p>
+      </div>
+      <div style="text-align: center; margin-top: 10px;">
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">Or import from file:</p>
+        <input type="file" id="importFile" accept=".json" style="display: none" onchange="importBackup(event)">
+        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📁 Import JSON File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div id="exportModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Export Reports</h2>
+        <button class="close-btn" onclick="closeModal('exportModal')">&times;</button>
+      </div>
+      <form onsubmit="exportData(event)">
+        <div class="form-group">
+          <label class="form-label">Report Type</label>
+          <select class="form-input" id="exportType">
+            <option value="expenses">Expenses</option>
+            <option value="income">Income</option>
+            <option value="summary">Monthly Summary</option>
+            <option value="budgets">Budget Performance</option>
+            <option value="goals">Savings Goals</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date Range</label>
+          <div style="display: flex; gap: 10px;">
+            <input type="date" class="form-input" id="exportStartDate">
+            <input type="date" class="form-input" id="exportEndDate">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Format</label>
+          <select class="form-input" id="exportFormat">
+            <option value="csv">CSV (Excel compatible)</option>
+            <option value="json">JSON</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">📥 Download Export</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    utils.requireAuth();
+
+    let userData = null;
+
+    async function loadProfile() {
+      try {
+        const response = await api.getProfile();
+        userData = response.data;
+        
+        // Update profile header
+        document.getElementById('headerProfileName').textContent = userData.name || 'User';
+        document.getElementById('headerProfileEmail').textContent = userData.email || '';
+        
+        // Load profile picture from database or show initials
+        if (userData.profile_picture) {
+          updateAvatarDisplay(userData.profile_picture);
+        } else if (!loadProfilePictureFromStorage()) {
+          updateAvatarDisplay(null, getInitials(userData.name));
+        }
+        
+        const joinedDate = userData.created_at ? new Date(userData.created_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) : 'Unknown';
+        document.getElementById('profileJoined').textContent = `Member since ${joinedDate}`;
+
+        // Update info grid
+        document.getElementById('infoName').textContent = userData.name || '-';
+        document.getElementById('infoEmail').textContent = userData.email || '-';
+        document.getElementById('infoPhone').textContent = formatPhone(userData.phone) || '-';
+
+        // Pre-fill edit form
+        document.getElementById('editName').value = userData.name || '';
+        document.getElementById('editEmail').value = userData.email || '';
+        document.getElementById('editPhone').value = userData.phone || '';
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        utils.showAlert('Failed to load profile', 'error');
+      }
+    }
+
+    function getInitials(name) {
+      if (!name) return '👤';
+      const parts = name.split(' ');
+      if (parts.length >= 2) {
+        return parts[0][0].toUpperCase() + parts[1][0].toUpperCase();
+      }
+      return name[0].toUpperCase();
+    }
+
+    function updateAvatarDisplay(imageUrl, initials) {
+      const headerAvatar = document.getElementById('headerAvatar');
+      if (imageUrl) {
+        headerAvatar.innerHTML = `<img src="${imageUrl}" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      } else {
+        headerAvatar.innerHTML = `<span class="avatar-placeholder">${initials || '<i data-lucide="user"></i>'}</span>`;
+        lucide.createIcons({ node: headerAvatar });
+      }
+    }
+
+    async function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        utils.showAlert('Please select an image file', 'error');
+        return;
+      }
+
+      // Validate file size (max 2MB for database storage)
+      if (file.size > 2 * 1024 * 1024) {
+        utils.showAlert('Image size must be less than 2MB', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const imageDataUrl = e.target.result;
+        
+        try {
+          utils.showLoading();
+          
+          // Save to database via API
+          const response = await api.updateProfile({ profile_picture: imageDataUrl });
+          
+          if (response.success) {
+            // Update display
+            updateAvatarDisplay(imageDataUrl);
+            
+            // Also save to localStorage as backup for offline/cross-tab
+            localStorage.setItem('profilePicture', imageDataUrl);
+            
+            // Trigger storage event for cross-tab sync
+            window.dispatchEvent(new StorageEvent('storage', {
+              key: 'profilePicture',
+              newValue: imageDataUrl,
+              oldValue: localStorage.getItem('profilePicture'),
+              storageArea: localStorage
+            }));
+            
+            utils.hideLoading();
+            utils.showAlert('Profile picture saved to database! 📸', 'success');
+          } else {
+            throw new Error(response.message || 'Failed to save profile picture');
+          }
+        } catch (error) {
+          utils.hideLoading();
+          console.error('Avatar upload error:', error);
+          // Fallback to localStorage only
+          localStorage.setItem('profilePicture', imageDataUrl);
+          updateAvatarDisplay(imageDataUrl);
+          utils.showAlert('Profile picture saved locally (offline mode)', 'warning');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadProfilePictureFromStorage() {
+      // Fallback to localStorage for offline mode
+      const savedPicture = localStorage.getItem('profilePicture');
+      if (savedPicture) {
+        updateAvatarDisplay(savedPicture);
+        return true;
+      }
+      return false;
+    }
+
+    async function handleEditAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        utils.showAlert('Please select an image file', 'error');
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        utils.showAlert('Image size must be less than 2MB', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const imageDataUrl = e.target.result;
+        
+        try {
+          utils.showLoading();
+          
+          // Save to database via API
+          const response = await api.updateProfile({ profile_picture: imageDataUrl });
+          
+          if (response.success) {
+            localStorage.setItem('profilePicture', imageDataUrl);
+            updateAvatarDisplay(imageDataUrl);
+            updateEditModalAvatar(imageDataUrl);
+            
+            // Trigger storage event for cross-tab sync
+            window.dispatchEvent(new StorageEvent('storage', {
+              key: 'profilePicture',
+              newValue: imageDataUrl,
+              oldValue: localStorage.getItem('profilePicture'),
+              storageArea: localStorage
+            }));
+            
+            utils.hideLoading();
+            utils.showAlert('Profile picture saved to database! 📸', 'success');
+          } else {
+            throw new Error(response.message || 'Failed to save');
+          }
+        } catch (error) {
+          utils.hideLoading();
+          console.error('Avatar upload error:', error);
+          localStorage.setItem('profilePicture', imageDataUrl);
+          updateAvatarDisplay(imageDataUrl);
+          updateEditModalAvatar(imageDataUrl);
+          utils.showAlert('Saved locally (offline mode)', 'warning');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function removeProfilePicture() {
+      if (confirm('Are you sure you want to remove your profile picture?')) {
+        try {
+          utils.showLoading();
+          
+          // Remove from database
+          const response = await api.updateProfile({ profile_picture: null });
+          
+          localStorage.removeItem('profilePicture');
+          const initials = userData ? getInitials(userData.name) : '👤';
+          updateAvatarDisplay(null, initials);
+          updateEditModalAvatar(null, initials);
+          
+          // Trigger storage event for cross-tab sync
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: 'profilePicture',
+            newValue: null,
+            oldValue: localStorage.getItem('profilePicture'),
+            storageArea: localStorage
+          }));
+          
+          utils.hideLoading();
+          utils.showAlert('Profile picture removed from database', 'success');
+        } catch (error) {
+          utils.hideLoading();
+          console.error('Remove avatar error:', error);
+          localStorage.removeItem('profilePicture');
+          const initials = userData ? getInitials(userData.name) : '👤';
+          updateAvatarDisplay(null, initials);
+          updateEditModalAvatar(null, initials);
+          utils.showAlert('Profile picture removed locally', 'warning');
+        }
+      }
+    }
+
+    function updateEditModalAvatar(imageUrl, initials) {
+      const preview = document.getElementById('editAvatarPreview');
+      if (!preview) return;
+      
+      if (imageUrl) {
+        preview.innerHTML = `<img src="${imageUrl}" alt="Profile">`;
+      } else {
+        preview.innerHTML = `<span>${initials || '👤'}</span>`;
+      }
+    }
+
+    function formatPhone(phone) {
+      if (!phone) return null;
+      // Format as 233 24 123 4567
+      const cleaned = phone.replace(/\D/g, '');
+      if (cleaned.length === 12) {
+        return `+${cleaned.slice(0,3)} ${cleaned.slice(3,5)} ${cleaned.slice(5,8)} ${cleaned.slice(8)}`;
+      }
+      return phone;
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+      
+      // Update edit modal avatar preview when opening
+      if (modalId === 'editProfileModal') {
+        const savedPicture = localStorage.getItem('profilePicture');
+        const initials = userData ? getInitials(userData.name) : '👤';
+        updateEditModalAvatar(savedPicture, initials);
+      }
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    async function handleChangePassword(event) {
+      event.preventDefault();
+      
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        utils.showAlert('New passwords do not match', 'error');
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        utils.showAlert('Password must be at least 8 characters', 'error');
+        return;
+      }
+
+      try {
+        await api.changePassword({ currentPassword, newPassword });
+        utils.showAlert('Password updated successfully! 🎉', 'success');
+        closeModal('passwordModal');
+        document.getElementById('passwordForm').reset();
+      } catch (error) {
+        utils.showAlert(error.message || 'Failed to change password', 'error');
+      }
+    }
+
+    async function handleEditProfile(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('editName').value;
+      const email = document.getElementById('editEmail').value;
+      const phone = document.getElementById('editPhone').value;
+
+      try {
+        await api.updateProfile({ name, email, phone });
+        utils.showAlert('Profile updated successfully! 🎉', 'success');
+        closeModal('editProfileModal');
+        await loadProfile(); // Reload profile data
+      } catch (error) {
+        utils.showAlert(error.message || 'Failed to update profile', 'error');
+      }
+    }
+
+    function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        if (confirm('This will permanently delete all your data including expenses, goals, and budgets. Type "DELETE" to confirm.')) {
+          // Call API to delete account
+          utils.showAlert('Account deleted. Goodbye!', 'success');
+          setTimeout(() => logout(), 2000);
+        }
+      }
+    }
+
+    function logout() {
+      api.logout();
+    }
+
+    // Update theme display
+    function updateThemeDisplay() {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      document.getElementById('themeIcon').innerHTML = theme === 'dark' ? '<i data-lucide="moon" class="icon"></i>' : '<i data-lucide="sun" class="icon"></i>';
+      document.getElementById('themeText').textContent = theme === 'dark' ? 'Currently: Dark Mode' : 'Currently: Light Mode';
+      const themeIcon = document.getElementById('themeIcon');
+      if (themeIcon) lucide.createIcons({ node: themeIcon });
+    }
+
+    // Override toggleTheme to also update display
+    const originalToggleTheme = window.toggleTheme;
+    window.toggleTheme = function() {
+      if (originalToggleTheme) originalToggleTheme();
+      updateThemeDisplay();
+    };
+
+    // Low Data Mode Functions
+    function initLowDataMode() {
+      const isEnabled = localStorage.getItem('kudisave_low_data_mode') === 'true';
+      const toggle = document.getElementById('lowDataToggle');
+      if (toggle) toggle.checked = isEnabled;
+      updateLowDataDisplay(isEnabled);
+      
+      // Apply low data mode styles if enabled
+      if (isEnabled) {
+        document.documentElement.classList.add('low-data-mode');
+      }
+    }
+
+    function toggleLowDataMode() {
+      const toggle = document.getElementById('lowDataToggle');
+      const isEnabled = toggle ? toggle.checked : localStorage.getItem('kudisave_low_data_mode') !== 'true';
+      
+      localStorage.setItem('kudisave_low_data_mode', isEnabled);
+      if (toggle) toggle.checked = isEnabled;
+      updateLowDataDisplay(isEnabled);
+      
+      // Apply/remove low data mode class
+      if (isEnabled) {
+        document.documentElement.classList.add('low-data-mode');
+        utils.showAlert('Low Data Mode enabled - Data will be cached locally', 'success');
+      } else {
+        document.documentElement.classList.remove('low-data-mode');
+        utils.showAlert('Low Data Mode disabled', 'info');
+      }
+      
+      lucide.createIcons({ node: document.getElementById('dataSaverIcon') });
+    }
+
+    function updateLowDataDisplay(isEnabled) {
+      const icon = document.getElementById('dataSaverIcon');
+      const text = document.getElementById('dataSaverText');
+      if (icon) {
+        icon.innerHTML = isEnabled 
+          ? '<i data-lucide="wifi-off" class="icon" style="color: var(--primary-color)"></i>' 
+          : '<i data-lucide="wifi" class="icon"></i>';
+      }
+      if (text) {
+        text.textContent = isEnabled 
+          ? 'Enabled - Using cached data' 
+          : 'Cache data & reduce network usage';
+      }
+      const dsIcon = document.getElementById('dataSaverIcon');
+      if (dsIcon) lucide.createIcons({ node: dsIcon });
+    }
+
+    // Currency Functions
+    let currentCurrency = localStorage.getItem('currency') || 'GHS';
+
+    async function loadCurrencySettings() {
+      try {
+        const response = await api.get('/currency/settings');
+        if (response.success && response.data.default_currency) {
+          currentCurrency = response.data.default_currency;
+          localStorage.setItem('currency', currentCurrency);
+          updateCurrencyDisplay();
+        }
+      } catch (error) {
+        console.log('Using local currency setting');
+      }
+      updateCurrencyDisplay();
+    }
+
+    function updateCurrencyDisplay() {
+      const currencies = {
+        'GHS': 'Ghana Cedi',
+        'USD': 'US Dollar',
+        'EUR': 'Euro',
+        'GBP': 'British Pound',
+        'NGN': 'Nigerian Naira'
+      };
+      document.getElementById('currencyText').textContent = `${currentCurrency} (${currencies[currentCurrency] || currentCurrency})`;
+      
+      // Update checkmarks in modal
+      ['GHS', 'USD', 'EUR', 'GBP', 'NGN'].forEach(code => {
+        const check = document.getElementById(`check-${code}`);
+        if (check) check.style.display = code === currentCurrency ? 'block' : 'none';
+      });
+    }
+
+    async function setCurrency(code, name) {
+      currentCurrency = code;
+      localStorage.setItem('currency', code);
+      // Update in-memory preferences so all pages reflect change immediately
+      if (typeof setUserPreference === 'function') setUserPreference('currency', code);
+      updateCurrencyDisplay();
+      closeModal('currencyModal');
+      utils.showAlert(`Currency changed to ${name}`, 'success');
+      // Persist to server in background
+      try { await api.put('/currency/settings', { default_currency: code }); } catch (e) {}
+    }
+
+    // Backup Functions
+    async function createBackup() {
+      document.getElementById('backupStatus').textContent = 'Creating backup...';
+      try {
+        const response = await api.post('/backup/create', {
+          backup_name: `Backup ${new Date().toLocaleDateString()}`
+        });
+        if (response.success) {
+          document.getElementById('backupStatus').textContent = 'Last backup: Just now';
+          utils.showAlert('Backup created successfully! 🎉', 'success');
+        }
+      } catch (error) {
+        document.getElementById('backupStatus').textContent = 'Backup failed';
+        utils.showAlert('Failed to create backup', 'error');
+      }
+    }
+
+    async function loadBackups() {
+      try {
+        const response = await api.get('/backup');
+        const container = document.getElementById('backupsList');
+        
+        if (response.success && response.data.length > 0) {
+          container.innerHTML = response.data.map(backup => `
+            <div class="settings-item" onclick="restoreBackup(${backup.id})">
+              <div class="settings-item-left">
+                <span class="settings-icon">📁</span>
+                <div class="settings-item-info">
+                  <h4>${backup.backup_name}</h4>
+                  <p>${new Date(backup.created_at).toLocaleDateString()} • ${formatFileSize(backup.file_size)}</p>
+                </div>
+              </div>
+              <span class="settings-arrow">›</span>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No backups found</p>';
+        }
+      } catch (error) {
+        document.getElementById('backupsList').innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Failed to load backups</p>';
+      }
+    }
+
+    function formatFileSize(bytes) {
+      if (!bytes) return '0 B';
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(1024));
+      return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
+    }
+
+    async function restoreBackup(id) {
+      if (!confirm('Restore from this backup? This will merge with your current data.')) return;
+      
+      try {
+        const response = await api.post(`/backup/${id}/restore`, { mode: 'merge' });
+        if (response.success) {
+          utils.showAlert(`Data restored! ${response.restored.expenses} expenses, ${response.restored.income} income records`, 'success');
+          closeModal('restoreModal');
+        }
+      } catch (error) {
+        utils.showAlert('Failed to restore backup', 'error');
+      }
+    }
+
+    async function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        const content = await file.text();
+        const backupData = JSON.parse(content);
+        
+        const response = await api.post('/backup/import', {
+          backup_data: backupData,
+          mode: 'merge'
+        });
+        
+        if (response.success) {
+          utils.showAlert('Import successful! Data has been restored.', 'success');
+          closeModal('restoreModal');
+        }
+      } catch (error) {
+        utils.showAlert('Invalid backup file', 'error');
+      }
+      event.target.value = '';
+    }
+
+    // Export Functions
+    async function exportData(event) {
+      event.preventDefault();
+      
+      const type = document.getElementById('exportType').value;
+      const format = document.getElementById('exportFormat').value;
+      const startDate = document.getElementById('exportStartDate').value;
+      const endDate = document.getElementById('exportEndDate').value;
+
+      try {
+        const params = new URLSearchParams({ type, format });
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+
+        const response = await api.get(`/export/data?${params}`);
+        
+        if (response.success) {
+          let content, filename, mimeType;
+          
+          if (format === 'csv') {
+            // Convert to CSV
+            const { columns, rows } = response.data;
+            const csvHeader = columns.join(',');
+            const csvRows = rows.map(row => 
+              Object.values(row).map(v => `"${v}"`).join(',')
+            );
+            content = [csvHeader, ...csvRows].join('\n');
+            filename = `${type}_export.csv`;
+            mimeType = 'text/csv';
+          } else {
+            content = JSON.stringify(response.data, null, 2);
+            filename = `${type}_export.json`;
+            mimeType = 'application/json';
+          }
+          
+          // Download file
+          const blob = new Blob([content], { type: mimeType });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+          
+          utils.showAlert('Export downloaded successfully!', 'success');
+          closeModal('exportModal');
+        }
+      } catch (error) {
+        utils.showAlert('Failed to export data', 'error');
+      }
+    }
+
+    // Set default export dates
+    function setDefaultExportDates() {
+      const today = new Date();
+      const monthAgo = new Date();
+      monthAgo.setMonth(monthAgo.getMonth() - 1);
+      
+      document.getElementById('exportEndDate').value = today.toISOString().split('T')[0];
+      document.getElementById('exportStartDate').value = monthAgo.toISOString().split('T')[0];
+    }
+
+    // Extend openModal to load data
+    const originalOpenModal = openModal;
+    window.openModal = function(modalId) {
+      originalOpenModal(modalId);
+      if (modalId === 'restoreModal') loadBackups();
+      if (modalId === 'exportModal') setDefaultExportDates();
+    };
+
+    // Email Notification Settings
+    let notificationSettings = JSON.parse(localStorage.getItem('kudisave_notifications')) || {
+      weekly: true,
+      bills: true,
+      goals: true,
+      challenges: true,
+      budget: true,
+      tips: false
+    };
+
+    function loadNotificationSettings() {
+      document.getElementById('notifWeekly').checked = notificationSettings.weekly;
+      document.getElementById('notifBills').checked = notificationSettings.bills;
+      document.getElementById('notifGoals').checked = notificationSettings.goals;
+      document.getElementById('notifChallenges').checked = notificationSettings.challenges;
+      document.getElementById('notifBudget').checked = notificationSettings.budget;
+      document.getElementById('notifTips').checked = notificationSettings.tips;
+      updateNotificationStatusText();
+    }
+
+    // Debounced notification save (prevents rapid API calls on fast toggling)
+    let _notifSaveTimer = null;
+    function saveNotificationSettings() {
+      notificationSettings = {
+        weekly: document.getElementById('notifWeekly').checked,
+        bills: document.getElementById('notifBills').checked,
+        goals: document.getElementById('notifGoals').checked,
+        challenges: document.getElementById('notifChallenges').checked,
+        budget: document.getElementById('notifBudget').checked,
+        tips: document.getElementById('notifTips').checked
+      };
+      localStorage.setItem('kudisave_notifications', JSON.stringify(notificationSettings));
+      updateNotificationStatusText();
+      
+      // Debounce the backend save
+      clearTimeout(_notifSaveTimer);
+      _notifSaveTimer = setTimeout(() => {
+        try {
+          api.put('/notifications/settings', notificationSettings).catch(() => {});
+        } catch (e) {}
+      }, 500);
+    }
+
+    function updateNotificationStatusText() {
+      const enabledCount = Object.values(notificationSettings).filter(v => v).length;
+      const statusText = document.getElementById('notifStatusText');
+      if (enabledCount === 0) {
+        statusText.textContent = 'All notifications off';
+      } else if (enabledCount === 6) {
+        statusText.textContent = 'All notifications enabled';
+      } else {
+        statusText.textContent = `${enabledCount} notification types enabled`;
+      }
+    }
+
+    async function testEmailNotification() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const email = user.email || '';
+      
+      if (!email) {
+        utils.showAlert('No email address found. Please update your profile.', 'warning');
+        return;
+      }
+      
+      // Check if Gmail is connected first
+      const gmailStatus = await checkGmailStatus();
+      
+      if (gmailStatus.connected) {
+        utils.showAlert(`Sending test email via your Gmail...`, 'info');
+        try {
+          const response = await api.post('/gmail/test');
+          if (response.success) {
+            utils.showAlert('Test email sent from your Gmail! Check your inbox 📧', 'success');
+          } else {
+            throw new Error(response.message);
+          }
+        } catch (error) {
+          utils.showAlert(error.message || 'Failed to send test email', 'error');
+        }
+      } else {
+        utils.showAlert(`Sending test email to ${email}...`, 'info');
+        
+        try {
+          const response = await api.post('/notifications/test-email', {
+            email: email,
+            type: 'test'
+          });
+          
+          if (response.success) {
+            utils.showAlert('Test email sent! Check your inbox 📧', 'success');
+          } else {
+            throw new Error(response.message || 'Failed to send test email');
+          }
+        } catch (error) {
+          utils.showAlert(error.message || 'Failed to send test email', 'error');
+        }
+      }
+    }
+
+    // ============================================
+    // GMAIL OAUTH FUNCTIONS
+    // ============================================
+    
+    let gmailConnected = false;
+    let gmailEmail = null;
+
+    async function checkGmailStatus() {
+      try {
+        const response = await api.get('/gmail/status');
+        if (response.success) {
+          gmailConnected = response.connected;
+          gmailEmail = response.email;
+          updateGmailUI();
+          return response;
+        }
+      } catch (error) {
+        console.log('Gmail status check failed:', error);
+      }
+      return { connected: false };
+    }
+
+    function updateGmailUI() {
+      const notConnectedEl = document.getElementById('gmailNotConnected');
+      const connectedEl = document.getElementById('gmailConnected');
+      const emailDisplayEl = document.getElementById('gmailEmailDisplay');
+      const statusTextEl = document.getElementById('notifStatusText');
+      
+      if (gmailConnected && gmailEmail) {
+        notConnectedEl.style.display = 'none';
+        connectedEl.style.display = 'block';
+        emailDisplayEl.textContent = gmailEmail;
+        statusTextEl.textContent = `Connected: ${gmailEmail}`;
+      } else {
+        notConnectedEl.style.display = 'block';
+        connectedEl.style.display = 'none';
+        statusTextEl.textContent = 'Connect Gmail for notifications';
+      }
+      // Scope icons to gmail section only
+      const gmailContainer = notConnectedEl ? notConnectedEl.parentElement : null;
+      if (gmailContainer) lucide.createIcons({ node: gmailContainer });
+    }
+
+    async function connectGmail() {
+      try {
+        utils.showAlert('Redirecting to Google...', 'info');
+        const response = await api.get('/gmail/connect');
+        
+        if (response.success && response.authUrl) {
+          // Redirect to Google OAuth
+          window.location.href = response.authUrl;
+        } else {
+          throw new Error('Failed to get authorization URL');
+        }
+      } catch (error) {
+        console.error('Connect Gmail error:', error);
+        utils.showAlert('Failed to connect Gmail. Please try again.', 'error');
+      }
+    }
+
+    async function disconnectGmail() {
+      if (!confirm('Are you sure you want to disconnect your Gmail? You will stop receiving email notifications from your Gmail account.')) {
+        return;
+      }
+      
+      try {
+        utils.showAlert('Disconnecting Gmail...', 'info');
+        const response = await api.post('/gmail/disconnect');
+        
+        if (response.success) {
+          gmailConnected = false;
+          gmailEmail = null;
+          updateGmailUI();
+          utils.showAlert('Gmail disconnected successfully', 'success');
+        } else {
+          throw new Error(response.message);
+        }
+      } catch (error) {
+        console.error('Disconnect Gmail error:', error);
+        utils.showAlert('Failed to disconnect Gmail', 'error');
+      }
+    }
+
+    function handleGmailCallback() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gmailStatus = urlParams.get('gmail');
+      const reason = urlParams.get('reason');
+      
+      if (gmailStatus === 'success') {
+        utils.showAlert('Gmail connected successfully! 🎉', 'success');
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        // Update status
+        setTimeout(() => checkGmailStatus(), 500);
+        // Open notifications modal to show connected state
+        setTimeout(() => openModal('notificationsModal'), 1000);
+      } else if (gmailStatus === 'error') {
+        let errorMsg = 'Failed to connect Gmail';
+        if (reason === 'access_denied') {
+          errorMsg = 'Gmail connection was cancelled';
+        } else if (reason === 'exchange_failed') {
+          errorMsg = 'Failed to authenticate with Google. Please try again.';
+        }
+        utils.showAlert(errorMsg, 'error');
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      updateThemeDisplay();
+      loadNotificationSettings();
+      initLowDataMode();
+      
+      // Load API data in parallel
+      Promise.all([
+        loadProfile(),
+        loadCurrencySettings(),
+        checkGmailStatus()
+      ]).catch(e => console.warn('Settings init error:', e));
+      
+      // Gmail OAuth handling
+      handleGmailCallback();
+    });
+  </script>
+</body>
+</html>

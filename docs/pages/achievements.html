@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Achievements - KudiSave</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ===== Modern Header for Achievements ===== */
+    .mtn-header {
+      background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+      overflow: hidden;
+    }
+
+    .mtn-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .mtn-header::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -15%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .mtn-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mtn-back-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .mtn-back-btn:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.18);
+    }
+
+    .mtn-back-btn i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mtn-page-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.3px;
+    }
+
+    .mtn-topbar-spacer {
+      width: 38px;
+    }
+
+    /* Level/XP section inside header */
+    .mtn-level-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 16px 24px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mtn-level-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .mtn-level-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mtn-level-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.2;
+    }
+
+    .mtn-xp-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .mtn-xp-bar {
+      margin-top: 8px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      height: 6px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .mtn-xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00e676, #69f0ae);
+      border-radius: 8px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0, 230, 118, 0.3);
+    }
+
+    .mtn-xp-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    /* Stats row inside header */
+    .mtn-stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 0 16px 20px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mtn-stat {
+      text-align: center;
+    }
+
+    .mtn-stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .mtn-stat-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .mtn-header-curve {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: var(--bg-primary, #f5f6fa);
+      border-radius: 16px 16px 0 0;
+      opacity: 0.35;
+    }
+    [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
+
+    .mtn-header-spacer {
+      height: 315px;
+    }
+
+    body {
+      padding-top: 0 !important;
+    }
+
+    /* Main Content Area */
+    main.main-content {
+      margin: 0 auto;
+      max-width: 100%;
+      padding: 16px;
+      padding-bottom: 120px;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .category-tab {
+      padding: 10px 16px;
+      border: none;
+      background: var(--card-bg);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid transparent;
+    }
+
+    .category-tab:hover {
+      background: rgba(0, 107, 63, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .category-tab.active {
+      background: linear-gradient(135deg, var(--primary-color), #00a05e);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.3);
+    }
+
+    .achievement-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 100px;
+    }
+
+    .achievement-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievement-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: var(--progress, 0%);
+      background: linear-gradient(90deg, var(--primary-color), #00a05e);
+      transition: width 0.8s ease;
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .achievement-card.locked {
+      opacity: 0.7;
+    }
+
+    .achievement-card.earned {
+      border-color: var(--primary-color);
+      background: linear-gradient(135deg, rgba(0, 107, 63, 0.08), rgba(0, 107, 63, 0.03));
+      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.15);
+    }
+
+    .achievement-card.earned::before {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #FFD700, #FFA500);
+    }
+
+    .achievement-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .achievement-card.earned .achievement-icon {
+      background: linear-gradient(135deg, var(--primary-color), #00a05e);
+      animation: iconShine 2s infinite;
+      box-shadow: 0 4px 12px rgba(0, 107, 63, 0.4);
+    }
+
+    @keyframes iconShine {
+      0%, 100% { box-shadow: 0 4px 12px rgba(0, 107, 63, 0.4); }
+      50% { box-shadow: 0 4px 20px rgba(0, 107, 63, 0.6), 0 0 30px rgba(0, 107, 63, 0.3); }
+    }
+
+    .achievement-card.locked .achievement-icon {
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+
+    .achievement-info {
+      flex: 1;
+    }
+
+    .achievement-name {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .achievement-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
+    .achievement-xp {
+      display: inline-block;
+      background: rgba(0, 107, 63, 0.15);
+      color: var(--primary-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .achievement-card.earned .achievement-xp {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .earned-badge {
+      display: none;
+    }
+
+    .progress-ring {
+      display: none;
+    }
+
+    .secret-badge {
+      display: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- MTN-Style Header -->
+  <header class="mtn-header">
+    <div class="mtn-topbar">
+      <a href="dashboard.html" class="mtn-back-btn">
+        <i data-lucide="arrow-left"></i>
+      </a>
+      <span class="mtn-page-title">Achievements</span>
+      <div class="mtn-topbar-spacer"></div>
+    </div>
+
+    <!-- Level & XP Section -->
+    <div class="mtn-level-section">
+      <div class="mtn-level-icon" id="levelBadge">🏆</div>
+      <div class="mtn-level-info">
+        <div class="mtn-level-name" id="levelTitle">Money Master</div>
+        <div class="mtn-xp-text">
+          <span id="currentXP">0</span> / <span id="nextLevelXP">1000</span> XP
+        </div>
+        <div class="mtn-xp-bar">
+          <div class="mtn-xp-fill" id="xpProgressFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="mtn-stats-row">
+      <div class="mtn-stat">
+        <div class="mtn-stat-value" id="earnedCount">0</div>
+        <div class="mtn-stat-label">Earned</div>
+      </div>
+      <div class="mtn-stat">
+        <div class="mtn-stat-value" id="totalCount">0</div>
+        <div class="mtn-stat-label">Total</div>
+      </div>
+      <div class="mtn-stat">
+        <div class="mtn-stat-value" id="completionRate">0%</div>
+        <div class="mtn-stat-label">Complete</div>
+      </div>
+    </div>
+
+    <div class="mtn-header-curve"></div>
+  </header>
+
+  <!-- Header Spacer -->
+  <div class="mtn-header-spacer"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Category Tabs -->
+    <div class="category-tabs">
+      <button class="category-tab active" onclick="filterCategory('all')">All</button>
+      <button class="category-tab" onclick="filterCategory('milestone')">Milestones</button>
+      <button class="category-tab" onclick="filterCategory('savings')">Savings</button>
+      <button class="category-tab" onclick="filterCategory('spending')">Spending</button>
+      <button class="category-tab" onclick="filterCategory('streak')">Streaks</button>
+      <button class="category-tab" onclick="filterCategory('challenge')">Challenges</button>
+    </div>
+
+    <!-- Achievements Grid -->
+    <div class="achievement-grid" id="achievementsGrid">
+      <!-- Achievements loaded here -->
+    </div>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    utils.requireAuth();
+
+    function logout() { api.logout(); }
+    
+    let allAchievements = [];
+    let currentCategory = 'all';
+
+    // Achievement icons mapping
+    const achievementIcons = {
+      'first_expense': '📝',
+      'expense_master': '💵',
+      'budget_keeper': '📊',
+      'savings_starter': '🌱',
+      'savings_champion': '💰',
+      'goal_setter': '🎯',
+      'goal_crusher': '🏆',
+      'streak_starter': '🔥',
+      'streak_master': '⚡',
+      'challenge_winner': '🥇',
+      'early_bird': '🌅',
+      'night_owl': '🦉',
+      'consistent': '📅',
+      'frugal': '🪙',
+      'investor': '📈',
+      'default': '⭐'
+    };
+
+    // Level definitions
+    const levels = [
+      { name: 'Beginner', icon: '🌱', minXP: 0 },
+      { name: 'Saver', icon: '💰', minXP: 100 },
+      { name: 'Budgeter', icon: '📊', minXP: 500 },
+      { name: 'Investor', icon: '📈', minXP: 1000 },
+      { name: 'Expert', icon: '🎓', minXP: 2500 },
+      { name: 'Master', icon: '👑', minXP: 5000 },
+      { name: 'Legend', icon: '🏆', minXP: 10000 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', loadAchievements);
+
+    async function loadAchievements() {
+      try {
+        const [achievementsRes, statsRes] = await Promise.all([
+          api.get('/achievements'),
+          api.get('/achievements/stats')
+        ]);
+
+        if (achievementsRes.success) {
+          allAchievements = achievementsRes.data;
+          // normalise field: API returns is_earned, ensure .earned is also set
+          allAchievements.forEach(a => { a.earned = a.earned || a.is_earned; });
+          renderAchievements();
+        }
+
+        if (statsRes.success) {
+          updateStats(statsRes.data);
+          updateLevel(statsRes.data.total_xp_from_achievements || statsRes.data.total_xp || 0);
+        }
+      } catch (error) {
+        console.error('Error loading achievements:', error);
+      }
+    }
+
+    function updateStats(stats) {
+      const earned = stats.earned_count || stats.earned_achievements || 0;
+      const total = stats.total_achievements || 0;
+      
+      document.getElementById('earnedCount').textContent = earned;
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('completionRate').textContent = 
+        total > 0 ? Math.round((earned / total) * 100) + '%' : '0%';
+    }
+
+    function updateLevel(totalXP) {
+      let currentLevel = levels[0];
+      let nextLevel = levels[1];
+
+      for (let i = levels.length - 1; i >= 0; i--) {
+        if (totalXP >= levels[i].minXP) {
+          currentLevel = levels[i];
+          nextLevel = levels[i + 1] || levels[i];
+          break;
+        }
+      }
+
+      document.getElementById('levelBadge').textContent = currentLevel.icon;
+      document.getElementById('levelTitle').textContent = currentLevel.name;
+      document.getElementById('currentXP').textContent = totalXP;
+      document.getElementById('nextLevelXP').textContent = nextLevel.minXP;
+
+      const progress = nextLevel.minXP > currentLevel.minXP
+        ? ((totalXP - currentLevel.minXP) / (nextLevel.minXP - currentLevel.minXP)) * 100
+        : 100;
+      document.getElementById('xpProgressFill').style.width = `${Math.min(100, progress)}%`;
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      
+      // Update tab buttons
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.textContent.toLowerCase().includes(category) || 
+            (category === 'all' && tab.textContent === 'All')) {
+          tab.classList.add('active');
+        }
+      });
+      
+      renderAchievements();
+    }
+
+    function renderAchievements() {
+      const container = document.getElementById('achievementsGrid');
+      
+      let filtered = allAchievements;
+      if (currentCategory !== 'all') {
+        filtered = allAchievements.filter(a => a.category === currentCategory);
+      }
+
+      // Sort: earned first, then by XP reward
+      filtered.sort((a, b) => {
+        if (a.earned && !b.earned) return -1;
+        if (!a.earned && b.earned) return 1;
+        return b.xp_reward - a.xp_reward;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>No achievements in this category yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(achievement => `
+        <div class="achievement-card ${achievement.earned ? 'earned' : 'locked'}">
+          <div class="achievement-icon">${getIcon(achievement)}</div>
+          <div class="achievement-info">
+            <div class="achievement-name">${achievement.is_secret && !achievement.earned ? '???' : escapeHtml(achievement.name)}</div>
+            <div class="achievement-desc">${achievement.is_secret && !achievement.earned ? 'Secret achievement' : escapeHtml(achievement.description)}</div>
+          </div>
+          <span class="achievement-xp">+${achievement.xp_reward} XP</span>
+        </div>
+      `).join('');
+    }
+
+    function getIcon(achievement) {
+      if (achievement.is_secret && !achievement.earned) return '❓';
+      if (achievement.icon) return achievement.icon;
+      return achievementIcons[achievement.achievement_key] || achievementIcons.default;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    // Check for new achievements periodically (only once on page load)
+    let _achievementCheckDone = false;
+    async function checkNewAchievements() {
+      if (_achievementCheckDone) return;
+      _achievementCheckDone = true;
+      try {
+        const response = await api.post('/achievements/check');
+        if (response.success && response.data.newly_earned && response.data.newly_earned.length > 0) {
+          // Show only the first unlock overlay to avoid stacking
+          showAchievementUnlock(response.data.newly_earned[0]);
+          loadAchievements(); // Reload to update UI
+        }
+      } catch (error) {
+        console.error('Error checking achievements:', error);
+      }
+    }
+
+    function showAchievementUnlock(achievement) {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        animation: fadeIn 0.3s;
+      `;
+      overlay.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 20px;
+          padding: 2rem;
+          text-align: center;
+          max-width: 300px;
+          animation: bounceIn 0.5s;
+        ">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+          <h2 style="color: var(--primary-green); margin-bottom: 0.5rem;">Achievement Unlocked!</h2>
+          <div style="font-size: 3rem; margin: 1rem 0;">${achievement.icon || '⭐'}</div>
+          <h3 style="margin-bottom: 0.5rem;">${achievement.name}</h3>
+          <p style=\"color: var(--text-secondary); font-size: 0.9rem;\">${achievement.description}</p>
+          <div style="
+            background: var(--primary-green);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 1rem;
+          ">+${achievement.xp_reward} XP</div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      
+      overlay.addEventListener('click', () => overlay.remove());
+      setTimeout(() => overlay.remove(), 5000);
+    }
+
+    // Check achievements on load
+    setTimeout(checkNewAchievements, 1000);
+  </script>
+</body>
+</html>

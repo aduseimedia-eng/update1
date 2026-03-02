@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>KudiSave</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Cal Sans -->
+  <style>@font-face { font-family: 'Cal Sans'; src: url('https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/fonts/CalSans-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }</style>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #006B3F;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .splash-container {
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .splash-logo {
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .splash-logo-img {
+      width: 160px;
+      height: auto;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+
+    .splash-title {
+      font-family: 'Cal Sans', sans-serif;
+      font-size: 40px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .splash-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 40px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .splash-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .spinner-ring {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <div class="splash-logo"><img src="../logowhite.png" alt="KudiSave" class="splash-logo-img"></div>
+    <h1 class="splash-title">KudiSave</h1>
+    <p class="splash-subtitle">Your Personal Finance Companion</p>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 8px;">v1.0</p>
+    <div class="splash-loader">
+      <div class="spinner-ring"></div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Check if user has completed onboarding and is logged in
+    const hasCompletedOnboarding = localStorage.getItem('onboardingComplete');
+    const isLoggedIn = localStorage.getItem('token');
+    
+    // Mark splash screen as shown
+    sessionStorage.setItem('splashShown', 'true');
+
+    function getRedirectUrl() {
+      if (isLoggedIn) {
+        return 'dashboard.html';
+      } else {
+        return '../index.html';
+      }
+    }
+
+    // Wait 2.5 seconds then redirect based on user state
+    setTimeout(() => {
+      window.location.href = getRedirectUrl();
+    }, 2500);
+    
+    // Allow skip with tap/click
+    document.addEventListener('click', skipSplash);
+    document.addEventListener('touchstart', skipSplash);
+    
+    let skipped = false;
+    function skipSplash() {
+      if (!skipped) {
+        skipped = true;
+        window.location.href = getRedirectUrl();
+      }
+    }
+  </script>
+</body>
+</html>

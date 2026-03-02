@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#006B3F">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>Reports - KudiSave</title>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .period-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .period-tab {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .period-tab.active {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0, 107, 63, 0.3);
+    }
+
+    .period-tab:active {
+      transform: scale(0.98);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .overview-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .overview-card:nth-child(1) { animation-delay: 0.1s; }
+    .overview-card:nth-child(2) { animation-delay: 0.15s; }
+    .overview-card:nth-child(3) { animation-delay: 0.2s; }
+    .overview-card:nth-child(4) { animation-delay: 0.25s; }
+
+    .overview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+
+    .overview-card.income::before { background: #00a05e; }
+    .overview-card.expense::before { background: #dc3545; }
+    .overview-card.savings::before { background: #004d2c; }
+    .overview-card.rate::before { background: #FCD116; }
+
+    .overview-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .overview-card.income .overview-icon { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .overview-card.expense .overview-icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+    .overview-card.savings .overview-icon { background: rgba(0, 77, 44, 0.15); color: #004d2c; }
+    .overview-card.rate .overview-icon { background: rgba(252, 209, 22, 0.15); color: #B8960E; }
+
+    .overview-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    .overview-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .overview-change {
+      font-size: 11px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+
+    .overview-change.positive { color: #00a05e; }
+    .overview-change.negative { color: #dc3545; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .health-score-container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .health-score-ring {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 16px;
+      position: relative;
+      filter: drop-shadow(0 4px 15px rgba(0, 160, 94, 0.3));
+    }
+
+    .health-score-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .health-score-ring circle {
+      fill: none;
+      stroke-width: 12;
+    }
+
+    .health-score-ring .bg {
+      stroke: var(--border-color);
+      opacity: 0.5;
+    }
+
+    .health-score-ring .progress {
+      stroke: url(#healthGradient);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 0 8px rgba(0, 160, 94, 0.5));
+    }
+
+    .health-score-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .health-score-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .health-score-rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(0, 160, 94, 0.2), rgba(0, 200, 83, 0.15));
+      color: #00c853;
+      border-radius: 25px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 160, 94, 0.2);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .category-list {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .category-item:last-child {
+      border-bottom: none;
+    }
+
+    .category-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: var(--primary-light);
+    }
+
+    .category-info {
+      flex: 1;
+    }
+
+    .category-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .category-bar {
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .category-bar-fill {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 2px;
+      transition: width 0.8s ease-out;
+    }
+
+    .category-amount {
+      text-align: right;
+    }
+
+    .category-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .category-percent {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .daily-chart {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 110px;
+      padding: 12px 0;
+      gap: 8px;
+    }
+
+    .chart-bar-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-bar {
+      width: 100%;
+      max-width: 28px;
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-color) 100%);
+      border-radius: 8px 8px 4px 4px;
+      min-height: 6px;
+      transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 107, 56, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .chart-bar:hover {
+      box-shadow: 0 4px 15px rgba(0, 107, 56, 0.5);
+      transform: scaleY(1.02);
+    }
+
+    .chart-bar.current {
+      background: linear-gradient(180deg, var(--accent-color) 0%, #FFD700 50%, var(--primary-color) 100%);
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+    }
+
+    .chart-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .top-expenses {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .top-expense-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .top-expense-item:last-child {
+      border-bottom: none;
+    }
+
+    .expense-rank {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .expense-rank.gold { background: rgba(252, 209, 22, 0.2); color: #B8960E; }
+    .expense-rank.silver { background: #f5f5f5; color: #666; }
+    .expense-rank.bronze { background: rgba(0, 160, 94, 0.15); color: #006B3F; }
+
+    .expense-details {
+      flex: 1;
+    }
+
+    .expense-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .expense-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    .expense-amount {
+      font-size: 14px;
+      font-weight: 700;
+      color: #dc3545;
+    }
+
+    .comparison-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 80px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .comparison-values {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .comparison-current {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .comparison-previous {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .comparison-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .comparison-badge.up { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+    .comparison-badge.down { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .comparison-badge.same { background: rgba(108, 117, 125, 0.15); color: #6c757d; }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Compare Mode Styles */
+    .mode-toggle {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: var(--card-bg);
+      padding: 3px;
+      border-radius: 10px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .compare-section {
+      display: none;
+    }
+
+    .compare-section.active {
+      display: block;
+    }
+
+    .overview-section {
+      display: block;
+    }
+
+    .overview-section.hidden {
+      display: none;
+    }
+
+    .compare-selectors {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .period-selector {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .period-selector label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .period-selector select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .compare-vs {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .compare-column {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .compare-column:nth-child(1) { animation-delay: 0.1s; }
+    .compare-column:nth-child(2) { animation-delay: 0.15s; }
+
+    .compare-column-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .compare-column-header .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .compare-column:first-child .dot { background: var(--primary-color); }
+    .compare-column:last-child .dot { background: #00A05E; }
+
+    .compare-stat {
+      margin-bottom: 12px;
+    }
+
+    .compare-stat:last-child {
+      margin-bottom: 0;
+    }
+
+    .compare-stat-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .compare-stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .compare-stat-value.income { color: #00a05e; }
+    .compare-stat-value.expense { color: #dc3545; }
+    .compare-stat-value.savings { color: #004d2c; }
+
+    .compare-chart-container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+      animation: slideUp 0.4s ease-out both;
+    }
+
+    .compare-chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.period1 { background: var(--primary-color); }
+    .legend-dot.period2 { background: #00A05E; }
+
+    .compare-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 120px;
+      padding: 10px 0;
+      gap: 12px;
+    }
+
+    .compare-bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .compare-bar-pair {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 100px;
+    }
+
+    .compare-bar {
+      width: 20px;
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.5s ease-out;
+    }
+
+    .compare-bar.period1 { background: var(--primary-color); }
+    .compare-bar.period2 { background: #00A05E; }
+
+    .compare-bar-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .compare-summary {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 80px;
+      animation: slideUp 0.4s ease-out both;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .compare-summary-inner {
+      min-width: 420px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: minmax(90px, 1.2fr) minmax(85px, 1fr) minmax(85px, 1fr) minmax(80px, 0.9fr);
+      gap: 6px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      align-items: center;
+    }
+
+    .summary-row:first-child {
+      padding-top: 0;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .summary-row.header {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+      padding-bottom: 8px;
+    }
+
+    .summary-row.header > div {
+      white-space: nowrap;
+      overflow: visible;
+    }
+
+    .summary-metric {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .summary-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .summary-diff {
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      padding: 4px 6px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .summary-diff.better { background: rgba(0, 160, 94, 0.15); color: #00a05e; }
+    .summary-diff.worse { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+    .summary-diff.neutral { background: rgba(108, 117, 125, 0.15); color: #6c757d; }
+
+    /* ===== Modern Header for Reports ===== */
+    body { padding-top: 0 !important; }
+    .mtn-header { background: linear-gradient(160deg, var(--primary-color) 0%, #004d2c 40%, #003822 80%, #002a19 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); overflow: hidden; }
+    .mtn-header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; animation: floatOrb1 8s ease-in-out infinite; }
+    .mtn-header::after { content: ''; position: absolute; bottom: -40%; left: -15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; animation: floatOrb2 10s ease-in-out infinite; }
+    .mtn-topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px 0 16px; position: relative; z-index: 1; }
+    .mtn-back-btn { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; }
+    .mtn-back-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.18); }
+    .mtn-back-btn i { width: 18px; height: 18px; }
+    .mtn-page-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+    .mtn-topbar-spacer { width: 38px; }
+    .mtn-info-section { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 16px 12px 16px; position: relative; z-index: 1; text-align: center; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+    .mtn-info-icon { width: 46px; height: 46px; border-radius: 15px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.12); color: white; animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both; }
+    .mtn-info-icon i { width: 22px; height: 22px; }
+    .mtn-info-text { flex: 1; min-width: 0; }
+    .mtn-info-title { font-size: 18px; font-weight: 700; color: white; line-height: 1.2; letter-spacing: -0.3px; margin-top: 2px; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+    .mtn-info-subtitle { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; font-weight: 500; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+
+    .mtn-header::before, .mtn-header::after { pointer-events: none; }
+    .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
+    [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
+    .mtn-header-spacer { height: 315px; }
+
+    /* Header shimmer sweep */
+    .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
+
+    /* Floating particles */
+    .header-particles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+    .header-particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.15); animation: particleFloat linear infinite; }
+    .header-particle:nth-child(1) { left: 10%; bottom: -5px; animation-duration: 12s; animation-delay: 0s; width: 2px; height: 2px; }
+    .header-particle:nth-child(2) { left: 30%; bottom: -5px; animation-duration: 14s; animation-delay: 2s; width: 4px; height: 4px; background: rgba(52,211,153,0.12); }
+    .header-particle:nth-child(3) { left: 55%; bottom: -5px; animation-duration: 10s; animation-delay: 4s; }
+    .header-particle:nth-child(4) { left: 75%; bottom: -5px; animation-duration: 16s; animation-delay: 1s; width: 2px; height: 2px; background: rgba(110,231,183,0.1); }
+    .header-particle:nth-child(5) { left: 90%; bottom: -5px; animation-duration: 11s; animation-delay: 3s; }
+
+    /* Header animation keyframes */
+    @keyframes floatOrb1 { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(15px, 20px) scale(1.05); } 66% { transform: translate(-10px, -15px) scale(0.95); } }
+    @keyframes floatOrb2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -25px) scale(1.1); } }
+    @keyframes headerShimmer { 0% { left: -100%; } 40%, 100% { left: 200%; } }
+    @keyframes particleFloat { 0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 0.5; } 100% { transform: translateY(-350px) translateX(20px) scale(0); opacity: 0; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+    .container { padding-top: 30px; padding-bottom: 100px; }
+
+    /* Spending Insights Cards */
+    .ri-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border-left: 3px solid transparent;
+    }
+    .ri-card.positive {
+      background: rgba(0, 200, 83, 0.08);
+      border-left-color: #00C853;
+    }
+    .ri-card.warning {
+      background: rgba(255, 171, 0, 0.08);
+      border-left-color: #FFAB00;
+    }
+    .ri-card.alert {
+      background: rgba(255, 61, 0, 0.08);
+      border-left-color: #FF3D00;
+    }
+    .ri-card.info {
+      background: var(--bg-secondary);
+      border-left-color: var(--primary);
+    }
+    .ri-icon { flex-shrink: 0; margin-top: 1px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+    .ri-body { flex: 1; min-width: 0; }
+    .ri-title { font-weight: 700; font-size: 12px; color: var(--text-primary); margin-bottom: 2px; }
+    .ri-msg { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+    .ri-tip {
+      font-size: 10px;
+      color: var(--primary-light, #00C853);
+      margin-top: 4px;
+      padding: 4px 8px;
+      background: rgba(0, 160, 94, 0.06);
+      border-radius: 6px;
+    }
+    .ri-tip::before { content: 'Tip: '; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- MTN-Style Header -->
+  <header class="mtn-header">
+    <!-- Shimmer sweep -->
+    <div class="mtn-header-shimmer"></div>
+    <!-- Floating particles -->
+    <div class="header-particles">
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+      <span class="header-particle"></span>
+    </div>
+    <div class="mtn-topbar">
+      <a href="dashboard.html" class="mtn-back-btn">
+        <i data-lucide="arrow-left"></i>
+      </a>
+      <span class="mtn-page-title">Reports & Analytics</span>
+      <div class="mtn-topbar-spacer"></div>
+    </div>
+
+    <div class="mtn-info-section">
+      <div class="mtn-info-icon">
+        <i data-lucide="bar-chart-3"></i>
+      </div>
+      <div class="mtn-info-text">
+        <div class="mtn-info-title">Reports & Analytics</div>
+        <div class="mtn-info-subtitle">Track your spending habits & financial health</div>
+      </div>
+    </div>
+
+    <div class="mtn-header-curve"></div>
+  </header>
+
+  <!-- Header Spacer -->
+  <div class="mtn-header-spacer"></div>
+
+
+  <div class="container">
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode('overview')" id="overviewMode">
+        <i data-lucide="layout-grid" style="width:14px;height:14px"></i>
+        Overview
+      </button>
+      <button class="mode-btn" onclick="setMode('compare')" id="compareMode">
+        <i data-lucide="git-compare" style="width:14px;height:14px"></i>
+        Compare
+      </button>
+    </div>
+
+    <!-- Period Tabs -->
+    <div class="period-tabs">
+      <button class="period-tab active" onclick="setPeriod('weekly')" id="weeklyTab">
+        <i data-lucide="calendar-days" style="width:16px;height:16px"></i>
+        Weekly
+      </button>
+      <button class="period-tab" onclick="setPeriod('monthly')" id="monthlyTab">
+        <i data-lucide="calendar" style="width:16px;height:16px"></i>
+        Monthly
+      </button>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="overview-section" id="overviewSection">
+    <!-- Period Label -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="bar-chart-2" style="width:18px;height:18px"></i>
+        <span id="periodLabel">This Week</span>
+      </div>
+      <span id="dateRange" style="font-size:11px;color:var(--text-secondary)"></span>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="overview-grid">
+      <div class="overview-card income">
+        <div class="overview-icon">
+          <i data-lucide="trending-up" style="width:18px;height:18px"></i>
+        </div>
+        <div class="overview-label">Income</div>
+        <div class="overview-value" id="totalIncome">GHS 0.00</div>
+        <div class="overview-change positive" id="incomeChange">
+          <i data-lucide="arrow-up" style="width:12px;height:12px"></i>
+          <span>+0% vs last period</span>
+        </div>
+      </div>
+
+      <div class="overview-card expense">
+        <div class="overview-icon">
+          <i data-lucide="trending-down" style="width:18px;height:18px"></i>
+        </div>
+        <div class="overview-label">Expenses</div>
+        <div class="overview-value" id="totalExpenses">GHS 0.00</div>
+        <div class="overview-change negative" id="expenseChange">
+          <i data-lucide="arrow-up" style="width:12px;height:12px"></i>
+          <span>+0% vs last period</span>
+        </div>
+      </div>
+
+      <div class="overview-card savings">
+        <div class="overview-icon">
+          <i data-lucide="piggy-bank" style="width:18px;height:18px"></i>
+        </div>
+        <div class="overview-label">Net Savings</div>
+        <div class="overview-value" id="totalSavings">GHS 0.00</div>
+        <div class="overview-change positive" id="savingsChange">
+          <i data-lucide="arrow-up" style="width:12px;height:12px"></i>
+          <span>+0% vs last period</span>
+        </div>
+      </div>
+
+      <div class="overview-card rate">
+        <div class="overview-icon">
+          <i data-lucide="percent" style="width:18px;height:18px"></i>
+        </div>
+        <div class="overview-label">Savings Rate</div>
+        <div class="overview-value" id="savingsRate">0%</div>
+        <div class="overview-change positive" id="rateChange">
+          <i data-lucide="arrow-up" style="width:12px;height:12px"></i>
+          <span>+0% vs last period</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Health Score -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="heart-pulse" style="width:18px;height:18px"></i>
+        Financial Health
+      </div>
+    </div>
+    <div class="health-score-container">
+      <div class="health-score-ring">
+        <svg width="130" height="130">
+          <defs>
+            <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#00A05E;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#00C853;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle class="bg" cx="65" cy="65" r="52"></circle>
+          <circle class="progress" cx="65" cy="65" r="52" id="healthRing" 
+            stroke-dasharray="327" stroke-dashoffset="327"></circle>
+        </svg>
+        <div class="health-score-value" id="healthScore">0</div>
+      </div>
+      <div class="health-score-label">out of 100 points</div>
+      <div class="health-score-rating">
+        <i data-lucide="award" style="width:14px;height:14px"></i>
+        <span id="healthRating">Calculating...</span>
+      </div>
+    </div>
+
+    <!-- Smart Spending Insights -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="lightbulb" style="width:18px;height:18px"></i>
+        Smart Insights
+      </div>
+      <span id="reportInsightCount" style="font-size:10px;color:var(--text-muted);background:var(--bg-secondary);padding:2px 8px;border-radius:10px;"></span>
+    </div>
+    <div id="reportInsights" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <div style="text-align:center;padding:16px;color:var(--text-muted);font-size:12px;">
+        <div class="spinner" style="margin:0 auto 8px;width:20px;height:20px;border-width:2px;"></div>
+        Analyzing your data...
+      </div>
+    </div>
+
+    <!-- Daily/Weekly Spending Chart -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="activity" style="width:18px;height:18px"></i>
+        <span id="chartTitle">Daily Spending</span>
+      </div>
+    </div>
+    <div class="daily-chart">
+      <div class="chart-bars" id="spendingChart">
+        <!-- Bars will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Spending by Category -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="pie-chart" style="width:18px;height:18px"></i>
+        Spending by Category
+      </div>
+    </div>
+    <div class="category-list" id="categoryBreakdown">
+      <!-- Categories will be inserted here -->
+    </div>
+
+    <!-- Bills & Subscriptions Payments -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="receipt" style="width:18px;height:18px"></i>
+        Bills & Subscriptions
+      </div>
+      <span id="billSubCount" style="font-size:10px;color:var(--text-muted);background:var(--bg-secondary);padding:2px 8px;border-radius:10px;"></span>
+    </div>
+    <div id="billSubPayments" style="margin-bottom:16px;">
+      <!-- Bill/sub payments will be inserted here -->
+    </div>
+
+    <!-- Top Expenses -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="list-ordered" style="width:18px;height:18px"></i>
+        Top Expenses
+      </div>
+    </div>
+    <div class="top-expenses" id="topExpenses">
+      <!-- Top expenses will be inserted here -->
+    </div>
+
+    <!-- Comparison with Previous Period -->
+    <div class="section-header">
+      <div class="section-title">
+        <i data-lucide="git-compare" style="width:18px;height:18px"></i>
+        <span id="comparisonTitle">vs Last Week</span>
+      </div>
+    </div>
+    <div class="comparison-card" id="comparison">
+      <!-- Comparison data will be inserted here -->
+    </div>
+    </div><!-- End overview-section -->
+
+    <!-- Compare Section -->
+    <div class="compare-section" id="compareSection">
+      <!-- Period Selectors -->
+      <div class="compare-selectors">
+        <div class="period-selector">
+          <label>Period 1</label>
+          <select id="period1Select" onchange="loadComparison()">
+            <!-- Options populated by JS -->
+          </select>
+        </div>
+        <div class="compare-vs">vs</div>
+        <div class="period-selector">
+          <label>Period 2</label>
+          <select id="period2Select" onchange="loadComparison()">
+            <!-- Options populated by JS -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Side-by-Side Stats -->
+      <div class="section-header">
+        <div class="section-title">
+          <i data-lucide="bar-chart-3" style="width:18px;height:18px"></i>
+          Side-by-Side Statistics
+        </div>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-column">
+          <div class="compare-column-header">
+            <span class="dot"></span>
+            <span id="period1Label">Period 1</span>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Income</div>
+            <div class="compare-stat-value income" id="period1Income">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Expenses</div>
+            <div class="compare-stat-value expense" id="period1Expenses">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Savings</div>
+            <div class="compare-stat-value savings" id="period1Savings">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Savings Rate</div>
+            <div class="compare-stat-value" id="period1Rate">0%</div>
+          </div>
+        </div>
+        <div class="compare-column">
+          <div class="compare-column-header">
+            <span class="dot"></span>
+            <span id="period2Label">Period 2</span>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Income</div>
+            <div class="compare-stat-value income" id="period2Income">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Expenses</div>
+            <div class="compare-stat-value expense" id="period2Expenses">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Savings</div>
+            <div class="compare-stat-value savings" id="period2Savings">GHS 0.00</div>
+          </div>
+          <div class="compare-stat">
+            <div class="compare-stat-label">Savings Rate</div>
+            <div class="compare-stat-value" id="period2Rate">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Chart -->
+      <div class="section-header">
+        <div class="section-title">
+          <i data-lucide="bar-chart-2" style="width:18px;height:18px"></i>
+          Visual Comparison
+        </div>
+      </div>
+      <div class="compare-chart-container">
+        <div class="compare-chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot period1"></span>
+            <span id="legend1">Period 1</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot period2"></span>
+            <span id="legend2">Period 2</span>
+          </div>
+        </div>
+        <div class="compare-bars" id="compareChart">
+          <!-- Comparison bars will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Detailed Comparison Summary -->
+      <div class="section-header">
+        <div class="section-title">
+          <i data-lucide="table" style="width:18px;height:18px"></i>
+          Detailed Comparison
+        </div>
+      </div>
+      <div class="compare-summary" id="compareSummary">
+        <div class="compare-summary-inner">
+          <div class="summary-row header">
+            <div>Metric</div>
+            <div style="text-align:center" id="summaryHeader1">Period 1</div>
+            <div style="text-align:center" id="summaryHeader2">Period 2</div>
+            <div style="text-align:center">Change</div>
+          </div>
+          <!-- Summary rows will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    utils.requireAuth();
+
+    let currentPeriod = 'weekly';
+    let currentMode = 'overview';
+    let allExpenses = [];
+    let allIncome = [];
+    
+    let reportData = {
+      current: { income: 0, expenses: 0, savings: 0 },
+      previous: { income: 0, expenses: 0, savings: 0 },
+      categories: [],
+      daily: [],
+      topExpenses: []
+    };
+
+    let compareData = {
+      period1: { income: 0, expenses: 0, savings: 0, transactions: 0 },
+      period2: { income: 0, expenses: 0, savings: 0, transactions: 0 }
+    };
+
+    // Category icons mapping (Lucide icon names)
+    const categoryIcons = {
+      'Food / Chop Bar': 'utensils',
+      'Transport (Trotro / Bolt)': 'bus',
+      'Data / Airtime': 'smartphone',
+      'Entertainment': 'clapperboard',
+      'Shopping': 'shopping-bag',
+      'Bills & Utilities': 'lightbulb',
+      'Health': 'heart-pulse',
+      'Education': 'book-open',
+      'Other': 'package'
+    };
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(mode + 'Mode').classList.add('active');
+
+      if (mode === 'overview') {
+        document.getElementById('overviewSection').classList.remove('hidden');
+        document.getElementById('compareSection').classList.remove('active');
+      } else {
+        document.getElementById('overviewSection').classList.add('hidden');
+        document.getElementById('compareSection').classList.add('active');
+        populatePeriodSelectors();
+        loadComparison();
+      }
+
+      lucide.createIcons({ node: document.getElementById('compareSection') });
+    }
+
+    function populatePeriodSelectors() {
+      const select1 = document.getElementById('period1Select');
+      const select2 = document.getElementById('period2Select');
+      const now = new Date();
+
+      let options = [];
+
+      if (currentPeriod === 'weekly') {
+        // Generate last 12 weeks
+        for (let i = 0; i < 12; i++) {
+          const weekStart = new Date(now);
+          const dayOfWeek = weekStart.getDay();
+          const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+          weekStart.setDate(weekStart.getDate() + mondayOffset - (i * 7));
+          weekStart.setHours(0, 0, 0, 0);
+          
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+
+          const label = i === 0 ? 'This Week' : 
+                        i === 1 ? 'Last Week' : 
+                        `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+          
+          options.push({
+            value: weekStart.toISOString(),
+            label: label,
+            start: weekStart,
+            end: weekEnd
+          });
+        }
+      } else {
+        // Generate last 12 months
+        for (let i = 0; i < 12; i++) {
+          const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
+
+          const label = i === 0 ? 'This Month' :
+                        i === 1 ? 'Last Month' :
+                        monthStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+          
+          options.push({
+            value: monthStart.toISOString(),
+            label: label,
+            start: monthStart,
+            end: monthEnd
+          });
+        }
+      }
+
+      // Populate both selects
+      select1.innerHTML = options.map((opt, i) => 
+        `<option value="${opt.value}" ${i === 0 ? 'selected' : ''}>${opt.label}</option>`
+      ).join('');
+
+      select2.innerHTML = options.map((opt, i) => 
+        `<option value="${opt.value}" ${i === 1 ? 'selected' : ''}>${opt.label}</option>`
+      ).join('');
+    }
+
+    function getPeriodDates(isoString) {
+      const date = new Date(isoString);
+      
+      if (currentPeriod === 'weekly') {
+        const start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+        return { start, end };
+      } else {
+        const start = new Date(date.getFullYear(), date.getMonth(), 1);
+        const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        end.setHours(23, 59, 59, 999);
+        return { start, end };
+      }
+    }
+
+    async function loadComparison() {
+      try {
+        // Ensure we have data
+        if (allExpenses.length === 0 || allIncome.length === 0) {
+          const expensesResponse = await api.getExpenses({ limit: 500 });
+          allExpenses = expensesResponse.data.expenses || expensesResponse.data || [];
+          
+          const incomeResponse = await api.getIncome();
+          allIncome = incomeResponse.data || [];
+        }
+
+        const period1Value = document.getElementById('period1Select').value;
+        const period2Value = document.getElementById('period2Select').value;
+
+        const period1Dates = getPeriodDates(period1Value);
+        const period2Dates = getPeriodDates(period2Value);
+
+        // Calculate period 1 data
+        const period1Expenses = allExpenses.filter(e => {
+          const date = new Date(e.expense_date || e.date);
+          return date >= period1Dates.start && date <= period1Dates.end;
+        });
+        const period1Income = allIncome.filter(i => {
+          const date = new Date(i.income_date || i.date);
+          return date >= period1Dates.start && date <= period1Dates.end;
+        });
+
+        compareData.period1.expenses = period1Expenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        compareData.period1.income = period1Income.reduce((sum, i) => sum + parseFloat(i.amount), 0);
+        compareData.period1.savings = compareData.period1.income - compareData.period1.expenses;
+        compareData.period1.transactions = period1Expenses.length;
+        compareData.period1.rate = compareData.period1.income > 0 ? 
+          (compareData.period1.savings / compareData.period1.income * 100) : 0;
+
+        // Calculate period 2 data
+        const period2Expenses = allExpenses.filter(e => {
+          const date = new Date(e.expense_date || e.date);
+          return date >= period2Dates.start && date <= period2Dates.end;
+        });
+        const period2Income = allIncome.filter(i => {
+          const date = new Date(i.income_date || i.date);
+          return date >= period2Dates.start && date <= period2Dates.end;
+        });
+
+        compareData.period2.expenses = period2Expenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        compareData.period2.income = period2Income.reduce((sum, i) => sum + parseFloat(i.amount), 0);
+        compareData.period2.savings = compareData.period2.income - compareData.period2.expenses;
+        compareData.period2.transactions = period2Expenses.length;
+        compareData.period2.rate = compareData.period2.income > 0 ? 
+          (compareData.period2.savings / compareData.period2.income * 100) : 0;
+
+        // Get labels
+        const period1Label = document.getElementById('period1Select').options[document.getElementById('period1Select').selectedIndex].text;
+        const period2Label = document.getElementById('period2Select').options[document.getElementById('period2Select').selectedIndex].text;
+
+        // Render comparison
+        renderComparisonColumns(period1Label, period2Label);
+        renderComparisonChart(period1Label, period2Label);
+        renderComparisonSummary(period1Label, period2Label);
+
+        const compareSection = document.getElementById('compareSection');
+        if (compareSection) lucide.createIcons({ node: compareSection });
+      } catch (error) {
+        console.error('Error loading comparison:', error);
+        utils.showAlert('Failed to load comparison', 'error');
+      }
+    }
+
+    function renderComparisonColumns(label1, label2) {
+      document.getElementById('period1Label').textContent = label1;
+      document.getElementById('period2Label').textContent = label2;
+
+      document.getElementById('period1Income').textContent = utils.formatCurrency(compareData.period1.income);
+      document.getElementById('period1Expenses').textContent = utils.formatCurrency(compareData.period1.expenses);
+      document.getElementById('period1Savings').textContent = utils.formatCurrency(compareData.period1.savings);
+      document.getElementById('period1Rate').textContent = compareData.period1.rate.toFixed(1) + '%';
+
+      document.getElementById('period2Income').textContent = utils.formatCurrency(compareData.period2.income);
+      document.getElementById('period2Expenses').textContent = utils.formatCurrency(compareData.period2.expenses);
+      document.getElementById('period2Savings').textContent = utils.formatCurrency(compareData.period2.savings);
+      document.getElementById('period2Rate').textContent = compareData.period2.rate.toFixed(1) + '%';
+    }
+
+    function renderComparisonChart(label1, label2) {
+      document.getElementById('legend1').textContent = label1;
+      document.getElementById('legend2').textContent = label2;
+
+      const metrics = [
+        { label: 'Income', key: 'income' },
+        { label: 'Expenses', key: 'expenses' },
+        { label: 'Savings', key: 'savings' }
+      ];
+
+      const maxValue = Math.max(
+        compareData.period1.income, compareData.period1.expenses, Math.abs(compareData.period1.savings),
+        compareData.period2.income, compareData.period2.expenses, Math.abs(compareData.period2.savings),
+        1
+      );
+
+      const container = document.getElementById('compareChart');
+      container.innerHTML = metrics.map(metric => {
+        const val1 = metric.key === 'savings' ? Math.abs(compareData.period1[metric.key]) : compareData.period1[metric.key];
+        const val2 = metric.key === 'savings' ? Math.abs(compareData.period2[metric.key]) : compareData.period2[metric.key];
+        const height1 = (val1 / maxValue * 80) + 8;
+        const height2 = (val2 / maxValue * 80) + 8;
+
+        return `
+          <div class="compare-bar-group">
+            <div class="compare-bar-pair">
+              <div class="compare-bar period1" style="height: ${height1}px" title="${label1}: ${utils.formatCurrency(compareData.period1[metric.key])}"></div>
+              <div class="compare-bar period2" style="height: ${height2}px" title="${label2}: ${utils.formatCurrency(compareData.period2[metric.key])}"></div>
+            </div>
+            <div class="compare-bar-label">${metric.label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderComparisonSummary(label1, label2) {
+      document.getElementById('summaryHeader1').textContent = label1;
+      document.getElementById('summaryHeader2').textContent = label2;
+
+      const metrics = [
+        { label: 'Total Income', key: 'income', betterIfHigher: true },
+        { label: 'Total Expenses', key: 'expenses', betterIfHigher: false },
+        { label: 'Net Savings', key: 'savings', betterIfHigher: true },
+        { label: 'Savings Rate', key: 'rate', betterIfHigher: true, isPercent: true },
+        { label: 'Transactions', key: 'transactions', betterIfHigher: false, isNumber: true }
+      ];
+
+      const container = document.getElementById('compareSummary');
+      const inner = container.querySelector('.compare-summary-inner');
+      const headerRow = inner.querySelector('.summary-row.header');
+      
+      inner.innerHTML = '';
+      inner.appendChild(headerRow);
+
+      metrics.forEach(metric => {
+        const val1 = compareData.period1[metric.key];
+        const val2 = compareData.period2[metric.key];
+        const diff = val1 - val2;
+        
+        let diffClass = 'neutral';
+        let diffText = '-';
+
+        if (diff !== 0) {
+          if (metric.betterIfHigher) {
+            diffClass = diff > 0 ? 'better' : 'worse';
+          } else {
+            diffClass = diff < 0 ? 'better' : 'worse';
+          }
+          
+          if (metric.isPercent) {
+            diffText = (diff > 0 ? '+' : '') + diff.toFixed(1) + '%';
+          } else if (metric.isNumber) {
+            diffText = (diff > 0 ? '+' : '') + diff;
+          } else {
+            diffText = (diff > 0 ? '+' : '') + utils.formatCurrency(Math.abs(diff));
+            if (diff < 0) diffText = '-' + utils.formatCurrency(Math.abs(diff));
+          }
+        }
+
+        const row = document.createElement('div');
+        row.className = 'summary-row';
+        row.innerHTML = `
+          <div class="summary-metric">${metric.label}</div>
+          <div class="summary-value">${metric.isPercent ? val1.toFixed(1) + '%' : (metric.isNumber ? val1 : utils.formatCurrency(val1))}</div>
+          <div class="summary-value">${metric.isPercent ? val2.toFixed(1) + '%' : (metric.isNumber ? val2 : utils.formatCurrency(val2))}</div>
+          <div class="summary-diff ${diffClass}">${diffText}</div>
+        `;
+        inner.appendChild(row);
+      });
+    }
+
+    function setPeriod(period) {
+      currentPeriod = period;
+      document.querySelectorAll('.period-tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(period + 'Tab').classList.add('active');
+      
+      document.getElementById('periodLabel').textContent = period === 'weekly' ? 'This Week' : 'This Month';
+      document.getElementById('chartTitle').textContent = period === 'weekly' ? 'Daily Spending' : 'Weekly Spending';
+      document.getElementById('comparisonTitle').textContent = period === 'weekly' ? 'vs Last Week' : 'vs Last Month';
+      
+      if (currentMode === 'overview') {
+        loadReports();
+      } else {
+        populatePeriodSelectors();
+        loadComparison();
+      }
+    }
+
+    function getDateRange(period) {
+      const now = new Date();
+      let start, end, prevStart, prevEnd;
+      
+      if (period === 'weekly') {
+        const dayOfWeek = now.getDay();
+        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        
+        start = new Date(now);
+        start.setDate(now.getDate() + mondayOffset);
+        start.setHours(0, 0, 0, 0);
+        
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+        
+        prevStart = new Date(start);
+        prevStart.setDate(start.getDate() - 7);
+        
+        prevEnd = new Date(end);
+        prevEnd.setDate(end.getDate() - 7);
+      } else {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        
+        prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        prevEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+      }
+      
+      return { start, end, prevStart, prevEnd };
+    }
+
+    function formatDateRange(start, end) {
+      const options = { month: 'short', day: 'numeric' };
+      return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
+    }
+
+    async function loadReports() {
+      try {
+        const { start, end, prevStart, prevEnd } = getDateRange(currentPeriod);
+        document.getElementById('dateRange').textContent = formatDateRange(start, end);
+
+        // Only fetch from API if cache is empty
+        if (allExpenses.length === 0) {
+          const expensesResponse = await api.getExpenses({ limit: 500 });
+          const expData = expensesResponse.data || {};
+          allExpenses = Array.isArray(expData.expenses) ? expData.expenses : (Array.isArray(expData) ? expData : []);
+        }
+
+        if (allIncome.length === 0) {
+          const incomeResponse = await api.getIncome();
+          allIncome = Array.isArray(incomeResponse.data) ? incomeResponse.data : [];
+        }
+
+        // Filter expenses for current and previous periods
+        const currentExpenses = allExpenses.filter(e => {
+          const date = new Date(e.expense_date || e.date);
+          return date >= start && date <= end;
+        });
+
+        const previousExpenses = allExpenses.filter(e => {
+          const date = new Date(e.expense_date || e.date);
+          return date >= prevStart && date <= prevEnd;
+        });
+
+        // Filter income for current and previous periods
+        const currentIncome = allIncome.filter(i => {
+          const date = new Date(i.income_date || i.date);
+          return date >= start && date <= end;
+        });
+
+        const previousIncome = allIncome.filter(i => {
+          const date = new Date(i.income_date || i.date);
+          return date >= prevStart && date <= prevEnd;
+        });
+
+        // Calculate totals
+        reportData.current.expenses = currentExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        reportData.current.income = currentIncome.reduce((sum, i) => sum + parseFloat(i.amount), 0);
+        reportData.current.savings = reportData.current.income - reportData.current.expenses;
+
+        reportData.previous.expenses = previousExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        reportData.previous.income = previousIncome.reduce((sum, i) => sum + parseFloat(i.amount), 0);
+        reportData.previous.savings = reportData.previous.income - reportData.previous.expenses;
+
+        // Calculate category breakdown
+        const categoryTotals = {};
+        currentExpenses.forEach(e => {
+          const cat = e.category || 'Other';
+          categoryTotals[cat] = (categoryTotals[cat] || 0) + parseFloat(e.amount);
+        });
+
+        reportData.categories = Object.entries(categoryTotals)
+          .map(([name, amount]) => ({ name, amount, percent: reportData.current.expenses > 0 ? (amount / reportData.current.expenses * 100) : 0 }))
+          .sort((a, b) => b.amount - a.amount);
+
+        // Calculate daily/weekly spending
+        if (currentPeriod === 'weekly') {
+          const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+          reportData.daily = days.map((day, index) => {
+            const dayDate = new Date(start);
+            dayDate.setDate(start.getDate() + index);
+            const dayExpenses = currentExpenses.filter(e => {
+              const date = new Date(e.expense_date || e.date);
+              return date.toDateString() === dayDate.toDateString();
+            });
+            return {
+              label: day,
+              amount: dayExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0),
+              isCurrent: dayDate.toDateString() === new Date().toDateString()
+            };
+          });
+        } else {
+          const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'];
+          reportData.daily = weeks.map((week, index) => {
+            const weekStart = new Date(start);
+            weekStart.setDate(start.getDate() + (index * 7));
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            const weekExpenses = currentExpenses.filter(e => {
+              const date = new Date(e.expense_date || e.date);
+              return date >= weekStart && date <= weekEnd;
+            });
+            return {
+              label: `W${index + 1}`,
+              amount: weekExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0),
+              isCurrent: new Date() >= weekStart && new Date() <= weekEnd
+            };
+          }).filter((_, i) => {
+            const weekStart = new Date(start);
+            weekStart.setDate(start.getDate() + (i * 7));
+            return weekStart <= end;
+          });
+        }
+
+        // Get top expenses
+        reportData.topExpenses = [...currentExpenses]
+          .sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount))
+          .slice(0, 5);
+
+        // Render all sections
+        renderOverview();
+        renderHealthScore();
+        loadSmartInsights();
+        renderSpendingChart();
+        renderCategories();
+        renderBillSubPayments(currentExpenses);
+        renderTopExpenses();
+        renderComparison();
+
+        const overviewSection = document.getElementById('overviewSection');
+        if (overviewSection) lucide.createIcons({ node: overviewSection });
+      } catch (error) {
+        console.error('Error loading reports:', error);
+        utils.showAlert('Failed to load reports', 'error');
+      }
+    }
+
+    async function loadSmartInsights() {
+      const container = document.getElementById('reportInsights');
+      const countEl = document.getElementById('reportInsightCount');
+      try {
+        const response = await api.get('/comparisons/insights?limit=30&all=true');
+        if (response.success && response.data.length > 0) {
+          if (countEl) countEl.textContent = response.data.length + ' insights';
+          container.innerHTML = response.data.map(insight => `
+            <div class="ri-card ${insight.type || 'info'}">
+              <span class="ri-icon"><i data-lucide="${insight.icon}" style="width:18px;height:18px;"></i></span>
+              <div class="ri-body">
+                <div class="ri-title">${insight.title}</div>
+                <div class="ri-msg">${insight.message}</div>
+                ${insight.tip ? `<div class="ri-tip">${insight.tip}</div>` : ''}
+              </div>
+            </div>
+          `).join('');
+          if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+        } else {
+          container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;">Log more expenses to unlock insights!</div>';
+          if (countEl) countEl.textContent = '';
+        }
+      } catch (e) {
+        container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:12px;">Insights unavailable</div>';
+      }
+    }
+
+    function renderBillSubPayments(currentExpenses) {
+      const container = document.getElementById('billSubPayments');
+      const countEl = document.getElementById('billSubCount');
+
+      // Filter expenses that are bill or subscription payments
+      const billSubExpenses = currentExpenses.filter(e => {
+        const note = (e.note || '').toLowerCase();
+        return note.includes('bill payment:') || note.includes('subscription:');
+      });
+
+      if (countEl) countEl.textContent = billSubExpenses.length > 0 ? billSubExpenses.length + ' payments' : '';
+
+      if (billSubExpenses.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;background:var(--card-bg);border-radius:16px;">
+            <i data-lucide="receipt" style="width:32px;height:32px;opacity:0.3;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;"></i>
+            No bill or subscription payments this period
+          </div>
+        `;
+        if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+        return;
+      }
+
+      const totalBillSub = billSubExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+
+      container.innerHTML = `
+        <div style="background:var(--card-bg);border-radius:16px;overflow:hidden;">
+          <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);">
+            <span style="font-size:13px;font-weight:600;color:var(--text-primary);">Total Paid</span>
+            <span style="font-size:16px;font-weight:800;color:#dc3545;">${utils.formatCurrency(totalBillSub)}</span>
+          </div>
+          ${billSubExpenses.map(e => {
+            const isBill = (e.note || '').toLowerCase().includes('bill payment:');
+            const name = (e.note || '').replace(/^(Bill payment:|Subscription:)\s*/i, '');
+            return `
+              <div style="padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-color);">
+                <div style="width:36px;height:36px;border-radius:10px;background:${isBill ? 'rgba(252,209,22,0.15)' : 'rgba(99,102,241,0.12)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i data-lucide="${isBill ? 'file-text' : 'repeat'}" style="width:16px;height:16px;color:${isBill ? '#B8960E' : '#6366f1'};"></i>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+                  <div style="font-size:11px;color:var(--text-secondary);">${isBill ? 'Bill' : 'Subscription'} &bull; ${utils.formatDate(e.expense_date || e.date)}</div>
+                </div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary);">${utils.formatCurrency(e.amount)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function renderOverview() {
+      const { current, previous } = reportData;
+      
+      // Income
+      document.getElementById('totalIncome').textContent = utils.formatCurrency(current.income);
+      const incomeChange = previous.income > 0 ? ((current.income - previous.income) / previous.income * 100) : 0;
+      updateChangeIndicator('incomeChange', incomeChange, true);
+
+      // Expenses
+      document.getElementById('totalExpenses').textContent = utils.formatCurrency(current.expenses);
+      const expenseChange = previous.expenses > 0 ? ((current.expenses - previous.expenses) / previous.expenses * 100) : 0;
+      updateChangeIndicator('expenseChange', expenseChange, false);
+
+      // Savings
+      document.getElementById('totalSavings').textContent = utils.formatCurrency(current.savings);
+      const savingsChange = previous.savings !== 0 ? ((current.savings - previous.savings) / Math.abs(previous.savings) * 100) : 0;
+      updateChangeIndicator('savingsChange', savingsChange, true);
+
+      // Savings Rate
+      const rate = current.income > 0 ? (current.savings / current.income * 100) : 0;
+      const prevRate = previous.income > 0 ? (previous.savings / previous.income * 100) : 0;
+      document.getElementById('savingsRate').textContent = rate.toFixed(1) + '%';
+      updateChangeIndicator('rateChange', rate - prevRate, true);
+    }
+
+    function updateChangeIndicator(elementId, change, positiveIsGood) {
+      const element = document.getElementById(elementId);
+      const isPositive = change > 0;
+      const isGood = positiveIsGood ? isPositive : !isPositive;
+      
+      element.className = 'overview-change ' + (isGood ? 'positive' : 'negative');
+      element.innerHTML = `
+        <i data-lucide="${isPositive ? 'arrow-up' : 'arrow-down'}" style="width:12px;height:12px"></i>
+        <span>${isPositive ? '+' : ''}${change.toFixed(1)}% vs last period</span>
+      `;
+    }
+
+    function renderHealthScore() {
+      // Calculate health score based on multiple factors
+      const { current } = reportData;
+      let score = 50; // Base score
+
+      // Savings rate factor (up to 30 points)
+      const savingsRate = current.income > 0 ? (current.savings / current.income) : 0;
+      if (savingsRate >= 0.3) score += 30;
+      else if (savingsRate >= 0.2) score += 25;
+      else if (savingsRate >= 0.1) score += 15;
+      else if (savingsRate >= 0) score += 5;
+      else score -= 10;
+
+      // Expense control factor (up to 20 points)
+      const expenseRatio = current.income > 0 ? (current.expenses / current.income) : 1;
+      if (expenseRatio <= 0.5) score += 20;
+      else if (expenseRatio <= 0.7) score += 15;
+      else if (expenseRatio <= 0.9) score += 5;
+      else score -= 5;
+
+      score = Math.max(0, Math.min(100, Math.round(score)));
+
+      // Animate score
+      const scoreElement = document.getElementById('healthScore');
+      const ringElement = document.getElementById('healthRing');
+      const circumference = 327;
+      
+      let currentScore = 0;
+      const scoreInterval = setInterval(() => {
+        if (currentScore >= score) {
+          clearInterval(scoreInterval);
+          return;
+        }
+        currentScore++;
+        scoreElement.textContent = currentScore;
+        ringElement.style.strokeDashoffset = circumference - (currentScore / 100 * circumference);
+      }, 20);
+
+      // Set rating
+      const ratingElement = document.getElementById('healthRating');
+      if (score >= 80) ratingElement.textContent = 'Excellent';
+      else if (score >= 60) ratingElement.textContent = 'Good';
+      else if (score >= 40) ratingElement.textContent = 'Fair';
+      else ratingElement.textContent = 'Needs Improvement';
+    }
+
+    function renderSpendingChart() {
+      const container = document.getElementById('spendingChart');
+      
+      if (!reportData.daily || reportData.daily.length === 0 || reportData.daily.every(d => d.amount === 0)) {
+        container.innerHTML = '<div class="empty-state" style="text-align:center;color:rgba(255,255,255,0.6);padding:24px;"><i data-lucide="bar-chart-2"></i><p>No spending data for this period</p></div>';
+        if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+        return;
+      }
+      
+      const maxAmount = Math.max(...reportData.daily.map(d => d.amount), 1);
+
+      container.innerHTML = reportData.daily.map(day => {
+        const height = (day.amount / maxAmount * 80) + 8;
+        return `
+          <div class="chart-bar-wrapper">
+            <div class="chart-bar ${day.isCurrent ? 'current' : ''}" style="height: ${height}px" title="${utils.formatCurrency(day.amount)}"></div>
+            <div class="chart-label">${day.label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categoryBreakdown');
+      
+      if (reportData.categories.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="pie-chart"></i>
+            <p>No expenses recorded</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = reportData.categories.map(cat => `
+        <div class="category-item">
+          <div class="category-icon"><i data-lucide="${categoryIcons[cat.name] || 'package'}" style="width:18px;height:18px;"></i></div>
+          <div class="category-info">
+            <div class="category-name">${cat.name}</div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: ${cat.percent}%"></div>
+            </div>
+          </div>
+          <div class="category-amount">
+            <div class="category-value">${utils.formatCurrency(cat.amount)}</div>
+            <div class="category-percent">${cat.percent.toFixed(1)}%</div>
+          </div>
+        </div>
+      `).join('');
+      if (typeof lucide !== 'undefined') lucide.createIcons({ node: container });
+    }
+
+    function renderTopExpenses() {
+      const container = document.getElementById('topExpenses');
+      
+      if (reportData.topExpenses.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="list"></i>
+            <p>No expenses recorded</p>
+          </div>
+        `;
+        return;
+      }
+
+      const rankClasses = ['gold', 'silver', 'bronze', '', ''];
+      container.innerHTML = reportData.topExpenses.map((expense, index) => `
+        <div class="top-expense-item">
+          <div class="expense-rank ${rankClasses[index]}">${index + 1}</div>
+          <div class="expense-details">
+            <div class="expense-title">${expense.description || expense.category}</div>
+            <div class="expense-date">${utils.formatDate(expense.expense_date || expense.date)} • ${expense.category}</div>
+          </div>
+          <div class="expense-amount">${utils.formatCurrency(expense.amount)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderComparison() {
+      const container = document.getElementById('comparison');
+      const { current, previous } = reportData;
+
+      const rows = [
+        { label: 'Total Income', current: current.income, previous: previous.income, type: 'income' },
+        { label: 'Total Expenses', current: current.expenses, previous: previous.expenses, type: 'expense' },
+        { label: 'Net Savings', current: current.savings, previous: previous.savings, type: 'savings' },
+        { label: 'Transactions', current: reportData.topExpenses.length, previous: '-', type: 'count' }
+      ];
+
+      container.innerHTML = rows.map(row => {
+        let changeClass = 'same';
+        let changeText = '-';
+        
+        if (row.type !== 'count' && typeof row.previous === 'number' && row.previous !== 0) {
+          const change = ((row.current - row.previous) / Math.abs(row.previous) * 100);
+          // For expenses: spending more is bad (up=red), spending less is good (down=green)
+          // For income/savings: earning more is good (up should show green somehow)
+          if (row.type === 'expense') {
+            changeClass = change > 0 ? 'up' : (change < 0 ? 'down' : 'same');
+          } else {
+            // For income/savings, we flip the meaning: positive change is good
+            changeClass = change > 0 ? 'down' : (change < 0 ? 'up' : 'same');
+          }
+          changeText = (change > 0 ? '+' : '') + change.toFixed(1) + '%';
+        }
+
+        return `
+          <div class="comparison-row">
+            <div class="comparison-label">${row.label}</div>
+            <div class="comparison-values">
+              <span class="comparison-previous">${row.type === 'count' ? row.previous : utils.formatCurrency(row.previous)}</span>
+              <span class="comparison-current">${row.type === 'count' ? row.current : utils.formatCurrency(row.current)}</span>
+              ${row.type !== 'count' ? `<span class="comparison-badge ${changeClass}">${changeText}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function logout() {
+      api.logout();
+    }
+
+    // Initialize currency display with correct symbol
+    function initCurrencyDisplay() {
+      const symbol = utils.getCurrencySymbol();
+      const ids = ['totalIncome', 'totalExpenses', 'totalSavings', 
+                   'period1Income', 'period1Expenses', 'period1Savings',
+                   'period2Income', 'period2Expenses', 'period2Savings'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `${symbol} 0.00`;
+      });
+    }
+
+    function logout() { api.logout(); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCurrencyDisplay();
+      lucide.createIcons();
+      loadReports();
+    });
+  </script>
+</body>
+</html>
