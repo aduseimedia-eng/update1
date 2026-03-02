@@ -243,12 +243,12 @@ textarea {
 /* Ensure header spacer and header content scale on small screens */
 .mtn-header-spacer {
   /* Use viewport-relative sizing but cap to a sensible px value */
-  height: min(35vh, 320px) !important;
+  height: min(30vh, 280px) !important;
 }
 
 @media (max-width: 480px) {
   .mtn-header-spacer {
-    height: min(48vh, 300px) !important;
+    height: min(40vh, 270px) !important;
   }
 
   .mtn-info-section {
@@ -284,7 +284,7 @@ textarea {
 }
 
 @media (min-width: 481px) and (max-width: 900px) {
-  .mtn-header-spacer { height: min(40vh, 320px) !important; }
+  .mtn-header-spacer { height: min(35vh, 280px) !important; }
   .mtn-info-section { padding: 10px 14px 8px 14px !important; }
   .header-balance-amount { font-size: 24px !important; }
   .compare-summary-inner { min-width: 380px !important; }
