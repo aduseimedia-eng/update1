@@ -1662,8 +1662,16 @@ async function loadDueItems() {
 
     // Render the list
     if (dueItems.length === 0) {
-      console.log('No due items to display, hiding section');
-      section.style.display = 'none';
+      console.log('No due items to display');
+      // Show a message instead of hiding completely
+      section.style.display = 'block';
+      list.innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 20px; color: var(--text-muted);">
+          <i data-lucide="check-circle" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+          <p style="margin: 0; font-size: 13px;">No bills or subscriptions due soon</p>
+        </div>
+      `;
+      lucide.createIcons({ node: list });
       return;
     }
 
