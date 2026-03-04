@@ -1566,7 +1566,14 @@ async function loadDueItems() {
   try {
     const section = document.getElementById('dueItemsSection');
     const list = document.getElementById('dueItemsList');
-    if (!section || !list) return;
+    
+    console.log('loadDueItems: Section element:', section);
+    console.log('loadDueItems: List element:', list);
+    
+    if (!section || !list) {
+      console.error('Due items section or list not found in DOM');
+      return;
+    }
 
     // Clear any localStorage bills to avoid conflicts
     localStorage.removeItem('kudisave_bills');
@@ -1575,16 +1582,21 @@ async function loadDueItems() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    console.log('Today:', today);
+
     // Fetch bills from API
     try {
+      console.log('Fetching bills from API...');
       const billsResponse = await api.getBills();
       console.log('Bills API Response:', billsResponse);
       
-      if (billsResponse.success && billsResponse.data) {
+      if (billsResponse && billsResponse.success && billsResponse.data && Array.isArray(billsResponse.data)) {
         const bills = billsResponse.data;
         console.log('Bills fetched:', bills.length, bills);
 
         bills.forEach(bill => {
+          console.log('Processing bill:', bill);
+          
           // Skip paid bills
           if (bill.is_paid) {
             console.log('Skipping paid bill:', bill.title);
@@ -1592,63 +1604,77 @@ async function loadDueItems() {
           }
 
           // Calculate days until due
-          let dueDate = new Date(bill.due_date);
-          dueDate.setHours(0, 0, 0, 0);
-          const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+          let billDueDate = new Date(bill.due_date);
+          billDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((billDueDate - today) / (1000 * 60 * 60 * 24));
 
-          console.log(`Bill: ${bill.title}, Days until due: ${daysUntilDue}`);
+          console.log(`Bill: ${bill.title}, Due: ${bill.due_date}, Days until due: ${daysUntilDue}`);
 
           // Show bills due in next 3 days or overdue
           if (daysUntilDue <= 3 || daysUntilDue < 0) {
-            dueItems.push({
+            const item = {
               type: 'bill',
               name: bill.title || 'Unnamed Bill',
-              amount: bill.amount || 0,
-              dueDate: dueDate,
+              amount: parseFloat(bill.amount) || 0,
+              dueDate: billDueDate,
               daysUntilDue: daysUntilDue,
               isOverdue: daysUntilDue < 0,
               icon: '🧾'
-            });
+            };
+            console.log('Adding bill to due items:', item);
+            dueItems.push(item);
           }
         });
+      } else {
+        console.warn('Bills response not valid:', billsResponse);
       }
     } catch (error) {
-      console.warn('Bills API Error:', error.message);
+      console.error('Bills API Error:', error);
     }
 
     // Fetch subscriptions from API
     try {
+      console.log('Fetching subscriptions from API...');
       const subsResponse = await api.getSubscriptions('active');
       console.log('Subscriptions API Response:', subsResponse);
       
-      if (subsResponse.success && subsResponse.data) {
+      if (subsResponse && subsResponse.success && subsResponse.data && Array.isArray(subsResponse.data)) {
         const subs = subsResponse.data;
         console.log('Subscriptions fetched:', subs.length, subs);
 
         subs.forEach(sub => {
-          if (!sub.next_due_date) return;
+          console.log('Processing subscription:', sub);
+          
+          if (!sub.next_due_date) {
+            console.log('Subscription has no due date:', sub.name);
+            return;
+          }
 
-          const dueDate = new Date(sub.next_due_date);
-          dueDate.setHours(0, 0, 0, 0);
-          const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+          const subDueDate = new Date(sub.next_due_date);
+          subDueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((subDueDate - today) / (1000 * 60 * 60 * 24));
 
-          console.log(`Subscription: ${sub.name}, Days until due: ${daysUntilDue}`);
+          console.log(`Subscription: ${sub.name}, Due: ${sub.next_due_date}, Days until due: ${daysUntilDue}`);
 
-          if (daysUntilDue <= 3 || daysUntilDue < 0) { // Show subscriptions due in next 3 days or overdue
-            dueItems.push({
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            const item = {
               type: 'subscription',
               name: sub.name || 'Unnamed Subscription',
-              amount: sub.amount || 0,
-              dueDate: dueDate,
+              amount: parseFloat(sub.amount) || 0,
+              dueDate: subDueDate,
               daysUntilDue: daysUntilDue,
               isOverdue: daysUntilDue < 0,
               icon: '🔄'
-            });
+            };
+            console.log('Adding subscription to due items:', item);
+            dueItems.push(item);
           }
         });
+      } else {
+        console.warn('Subscriptions response not valid:', subsResponse);
       }
     } catch (error) {
-      console.warn('Subscriptions API Error:', error.message);
+      console.error('Subscriptions API Error:', error);
     }
 
     console.log('Total due items found:', dueItems.length, dueItems);
@@ -1676,7 +1702,7 @@ async function loadDueItems() {
     }
 
     section.style.display = 'block';
-    list.innerHTML = dueItems.map(item => {
+    const html = dueItems.map(item => {
       let dueDateStr;
       
       // Format the actual due date
@@ -1691,7 +1717,7 @@ async function loadDueItems() {
       } else if (item.daysUntilDue === 1) {
         dueDateStr = `Due tomorrow • ${dueDateFormatted}`;
       } else {
-        dueDateStr = `Due on ${dueDateFormatted}`;
+        dueDateStr = `Due in ${item.daysUntilDue} days • ${dueDateFormatted}`;
       }
 
       const amount = item.amount || 0;
@@ -1705,10 +1731,16 @@ async function loadDueItems() {
             <div class="due-item-name">${item.name}</div>
             <div class="due-item-details">${dueDateStr}</div>
           </div>
-          <div class="due-item-amount">${symbol}${amount.toFixed(2)}</div>
+          <div class="due-item-amount">${symbol}${parseFloat(amount).toFixed(2)}</div>
         </div>
       `;
     }).join('');
+    
+    console.log('Rendering due items HTML');
+    list.innerHTML = html;
+    lucide.createIcons({ node: list });
+    console.log('Due items rendered successfully');
+    
   } catch (error) {
     console.error('Error loading due items:', error);
   }
@@ -1722,7 +1754,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
-  loadDueItems(); // Load due subscriptions and bills
+  
+  // Load due items with a slight delay to ensure DOM is fully ready
+  setTimeout(() => {
+    console.log('Loading due items...');
+    loadDueItems(); // Load due subscriptions and bills
+  }, 100);
   
   // Add fun entrance animations
   setTimeout(() => {
