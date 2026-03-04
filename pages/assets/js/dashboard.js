@@ -679,14 +679,15 @@ function logout() {
 // Load widget data for new features
 async function loadWidgets() {
   try {
-    // Load bills from localStorage
+    // Load bills from API
     try {
-      const allBills = JSON.parse(localStorage.getItem('kudisave_bills')) || [];
+      const billsResponse = await api.getBills();
+      const allBills = (billsResponse && billsResponse.success && billsResponse.data) ? billsResponse.data : [];
       const today = new Date(); today.setHours(0, 0, 0, 0);
       let overdue = 0, dueSoon = 0;
       allBills.forEach(b => {
-        if (b.status === 'paid') return;
-        const due = new Date(b.dueDate); due.setHours(0, 0, 0, 0);
+        if (b.is_paid) return; // Skip paid bills
+        const due = new Date(b.due_date); due.setHours(0, 0, 0, 0);
         const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
         if (diff < 0) overdue++;
         else if (diff <= 3) dueSoon++;
