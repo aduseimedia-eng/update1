@@ -732,31 +732,6 @@ async function loadWidgets() {
         else if (diff <= 3) subsDueSoon++;
       });
 
-      // Show subscriptions alert banner
-      const subsBanner = document.getElementById('subsAlertBanner');
-      if (subsBanner) {
-        if (subsOverdue > 0 || subsDueSoon > 0) {
-          const isRed = subsOverdue > 0;
-          let title, desc;
-          if (subsOverdue > 0 && subsDueSoon > 0) {
-            title = `${subsOverdue} overdue + ${subsDueSoon} renewal${subsDueSoon !== 1 ? 's' : ''} due soon`;
-            desc = 'Tap to manage your subscriptions';
-          } else if (subsOverdue > 0) {
-            title = `${subsOverdue} subscription${subsOverdue !== 1 ? 's' : ''} overdue!`;
-            desc = 'These subscriptions are past their renewal date';
-          } else {
-            title = `${subsDueSoon} subscription${subsDueSoon !== 1 ? 's' : ''} due in the next 3 days`;
-            desc = 'Tap to view and manage renewals';
-          }
-          document.getElementById('subsAlertTitle').textContent = title;
-          document.getElementById('subsAlertDesc').textContent = desc;
-          subsBanner.querySelector('.subs-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
-          subsBanner.classList.toggle('overdue', isRed);
-          subsBanner.style.display = 'flex';
-        } else {
-          subsBanner.style.display = 'none';
-        }
-      }
     } catch (e) { /* Subscriptions API not available */ }
 
     // Load spending insights
