@@ -659,31 +659,6 @@ async function loadWidgets() {
         billsCountEl.textContent = dueBills;
         billsCountEl.classList.toggle('bills-active', dueBills > 0);
       }
-      // Alert banner
-      const banner = document.getElementById('billsAlertBanner');
-      if (banner) {
-        if (overdue > 0 || dueSoon > 0) {
-          const isRed = overdue > 0;
-          let title, desc;
-          if (overdue > 0 && dueSoon > 0) {
-            title = `${overdue} overdue + ${dueSoon} due soon`;
-            desc = 'Tap to view and manage your bills';
-          } else if (overdue > 0) {
-            title = `${overdue} bill${overdue !== 1 ? 's' : ''} overdue!`;
-            desc = 'These bills are past their due date';
-          } else {
-            title = `${dueSoon} bill${dueSoon !== 1 ? 's' : ''} due in the next 3 days`;
-            desc = 'Tap to view and manage your bills';
-          }
-          document.getElementById('billsAlertTitle').textContent = title;
-          document.getElementById('billsAlertDesc').textContent = desc;
-          banner.querySelector('.bills-alert-banner-icon').textContent = isRed ? '🚨' : '🔔';
-          banner.classList.toggle('overdue', isRed);
-          banner.style.display = 'flex';
-        } else {
-          banner.style.display = 'none';
-        }
-      }
     } catch (e) { /* ignore */ }
 
     // Load active challenges from API
