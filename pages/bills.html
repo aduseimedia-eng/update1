@@ -865,9 +865,13 @@
     // Load bills from database API
     async function loadBillsFromAPI() {
       try {
+        // Clear any old localStorage bills to avoid conflicts
+        localStorage.removeItem('kudisave_bills');
+        
         const response = await api.getBills();
         if (response.success) {
           bills = response.data || [];
+          console.log('Bills loaded from API:', bills);
           renderBills();
           updateSummary();
           checkUpcomingBills();

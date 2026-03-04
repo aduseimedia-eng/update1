@@ -1568,6 +1568,9 @@ async function loadDueItems() {
     const list = document.getElementById('dueItemsList');
     if (!section || !list) return;
 
+    // Clear any localStorage bills to avoid conflicts
+    localStorage.removeItem('kudisave_bills');
+    
     let dueItems = []; // Array to hold both bills and subscriptions
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -1575,61 +1578,80 @@ async function loadDueItems() {
     // Fetch bills from API
     try {
       const billsResponse = await api.getBills();
-      const bills = billsResponse.data || [];
+      console.log('Bills API Response:', billsResponse);
+      
+      if (billsResponse.success && billsResponse.data) {
+        const bills = billsResponse.data;
+        console.log('Bills fetched:', bills.length, bills);
 
-      bills.forEach(bill => {
-        // Skip paid bills
-        if (bill.is_paid) return;
+        bills.forEach(bill => {
+          // Skip paid bills
+          if (bill.is_paid) {
+            console.log('Skipping paid bill:', bill.title);
+            return;
+          }
 
-        // Calculate days until due
-        let dueDate = new Date(bill.due_date);
-        dueDate.setHours(0, 0, 0, 0);
-        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+          // Calculate days until due
+          let dueDate = new Date(bill.due_date);
+          dueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 
-        // Show bills due in next 3 days or overdue
-        if (daysUntilDue <= 3 || daysUntilDue < 0) {
-          dueItems.push({
-            type: 'bill',
-            name: bill.title || 'Unnamed Bill',
-            amount: bill.amount || 0,
-            dueDate: dueDate,
-            daysUntilDue: daysUntilDue,
-            isOverdue: daysUntilDue < 0,
-            icon: '🧾'
-          });
-        }
-      });
+          console.log(`Bill: ${bill.title}, Days until due: ${daysUntilDue}`);
+
+          // Show bills due in next 3 days or overdue
+          if (daysUntilDue <= 3 || daysUntilDue < 0) {
+            dueItems.push({
+              type: 'bill',
+              name: bill.title || 'Unnamed Bill',
+              amount: bill.amount || 0,
+              dueDate: dueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🧾'
+            });
+          }
+        });
+      }
     } catch (error) {
-      console.log('Bills API not available, skipping bills:', error.message);
+      console.warn('Bills API Error:', error.message);
     }
 
     // Fetch subscriptions from API
     try {
       const subsResponse = await api.getSubscriptions('active');
-      const subs = subsResponse.data || [];
+      console.log('Subscriptions API Response:', subsResponse);
+      
+      if (subsResponse.success && subsResponse.data) {
+        const subs = subsResponse.data;
+        console.log('Subscriptions fetched:', subs.length, subs);
 
-      subs.forEach(sub => {
-        if (!sub.next_due_date) return;
+        subs.forEach(sub => {
+          if (!sub.next_due_date) return;
 
-        const dueDate = new Date(sub.next_due_date);
-        dueDate.setHours(0, 0, 0, 0);
-        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+          const dueDate = new Date(sub.next_due_date);
+          dueDate.setHours(0, 0, 0, 0);
+          const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 
-        if (daysUntilDue <= 3 || daysUntilDue < 0) { // Show subscriptions due in next 3 days or overdue
-          dueItems.push({
-            type: 'subscription',
-            name: sub.name || 'Unnamed Subscription',
-            amount: sub.amount || 0,
-            dueDate: dueDate,
-            daysUntilDue: daysUntilDue,
-            isOverdue: daysUntilDue < 0,
-            icon: '🔄'
-          });
-        }
-      });
+          console.log(`Subscription: ${sub.name}, Days until due: ${daysUntilDue}`);
+
+          if (daysUntilDue <= 3 || daysUntilDue < 0) { // Show subscriptions due in next 3 days or overdue
+            dueItems.push({
+              type: 'subscription',
+              name: sub.name || 'Unnamed Subscription',
+              amount: sub.amount || 0,
+              dueDate: dueDate,
+              daysUntilDue: daysUntilDue,
+              isOverdue: daysUntilDue < 0,
+              icon: '🔄'
+            });
+          }
+        });
+      }
     } catch (error) {
-      console.log('Subscriptions API not available, skipping subscriptions:', error.message);
+      console.warn('Subscriptions API Error:', error.message);
     }
+
+    console.log('Total due items found:', dueItems.length, dueItems);
 
     // Sort by days until due (overdue first, then closest due date)
     dueItems.sort((a, b) => {
@@ -1640,6 +1662,7 @@ async function loadDueItems() {
 
     // Render the list
     if (dueItems.length === 0) {
+      console.log('No due items to display, hiding section');
       section.style.display = 'none';
       return;
     }
@@ -1679,7 +1702,7 @@ async function loadDueItems() {
       `;
     }).join('');
   } catch (error) {
-    console.log('Error loading due items:', error);
+    console.error('Error loading due items:', error);
   }
 }
 

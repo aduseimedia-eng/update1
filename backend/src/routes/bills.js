@@ -16,14 +16,17 @@ router.get('/', authenticateToken, async (req, res) => {
 
     let queryText = `
       SELECT 
-        br.*,
+        id, user_id, title, amount, currency, category, due_date, frequency,
+        reminder_days_before, is_paid, last_paid_date, auto_create_expense, 
+        notes, is_active, created_at, updated_at,
         CASE 
+          WHEN is_paid THEN 'paid'
           WHEN due_date <= CURRENT_DATE THEN 'overdue'
           WHEN due_date <= CURRENT_DATE + reminder_days_before THEN 'due_soon'
-          ELSE 'upcoming'
+          ELSE 'pending'
         END as status,
         due_date - CURRENT_DATE as days_until_due
-      FROM bill_reminders br
+      FROM bill_reminders
       WHERE user_id = $1 AND is_active = TRUE
     `;
     const params = [userId];
