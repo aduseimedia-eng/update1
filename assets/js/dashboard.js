@@ -1561,6 +1561,120 @@ function initCurrencyDisplay() {
   document.querySelectorAll('.currency-prefix').forEach(el => { el.textContent = symbol; });
 }
 
+// Load and display due subscriptions & bills
+async function loadDueItems() {
+  try {
+    const section = document.getElementById('dueItemsSection');
+    const list = document.getElementById('dueItemsList');
+    if (!section || !list) return;
+
+    let dueItems = []; // Array to hold both bills and subscriptions
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Fetch bills from API
+    try {
+      const billsResponse = await api.getBills();
+      const bills = billsResponse.data || [];
+
+      bills.forEach(bill => {
+        // Calculate days until due
+        let dueDate = new Date(bill.due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        // Show bills due in next 3 days or overdue
+        if (bill.status === 'overdue' || bill.status === 'due_soon' || daysUntilDue <= 3) {
+          dueItems.push({
+            type: 'bill',
+            name: bill.title || 'Unnamed Bill',
+            amount: bill.amount || 0,
+            dueDate: dueDate,
+            daysUntilDue: daysUntilDue,
+            isOverdue: bill.status === 'overdue' || daysUntilDue < 0,
+            icon: '🧾'
+          });
+        }
+      });
+    } catch (error) {
+      console.log('Bills API not available, skipping bills:', error.message);
+    }
+
+    // Fetch subscriptions from API
+    try {
+      const subsResponse = await api.getSubscriptions('active');
+      const subs = subsResponse.data || [];
+
+      subs.forEach(sub => {
+        if (!sub.next_due_date) return;
+
+        const dueDate = new Date(sub.next_due_date);
+        dueDate.setHours(0, 0, 0, 0);
+        const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilDue <= 3 || daysUntilDue < 0) { // Show subscriptions due in next 3 days or overdue
+          dueItems.push({
+            type: 'subscription',
+            name: sub.name || 'Unnamed Subscription',
+            amount: sub.amount || 0,
+            dueDate: dueDate,
+            daysUntilDue: daysUntilDue,
+            isOverdue: daysUntilDue < 0,
+            icon: '🔄'
+          });
+        }
+      });
+    } catch (error) {
+      console.log('Subscriptions API not available, skipping subscriptions:', error.message);
+    }
+
+    // Sort by days until due (overdue first, then closest due date)
+    dueItems.sort((a, b) => {
+      if (a.isOverdue && !b.isOverdue) return -1;
+      if (!a.isOverdue && b.isOverdue) return 1;
+      return a.daysUntilDue - b.daysUntilDue;
+    });
+
+    // Render the list
+    if (dueItems.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    list.innerHTML = dueItems.map(item => {
+      let dueDateStr;
+      if (item.isOverdue) {
+        const daysOverdue = Math.abs(item.daysUntilDue);
+        dueDateStr = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue`;
+      } else if (item.daysUntilDue === 0) {
+        dueDateStr = 'Due today';
+      } else if (item.daysUntilDue === 1) {
+        dueDateStr = 'Due tomorrow';
+      } else {
+        dueDateStr = `Due in ${item.daysUntilDue} day${item.daysUntilDue !== 1 ? 's' : ''}`;
+      }
+
+      const amount = item.amount || 0;
+      const symbol = getCurrencySymbol ? getCurrencySymbol() : '₵';
+      const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
+
+      return `
+        <div class="due-item-card ${cardClass}">
+          <div class="due-item-icon">${item.icon}</div>
+          <div class="due-item-info">
+            <div class="due-item-name">${item.name}</div>
+            <div class="due-item-details">${dueDateStr}</div>
+          </div>
+          <div class="due-item-amount">${symbol}${amount.toFixed(2)}</div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.log('Error loading due items:', error);
+  }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   // Always scroll to top on page load/refresh
@@ -1569,6 +1683,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrencyDisplay();
   initDashboard();
   loadWidgets();
+  loadDueItems(); // Load due subscriptions and bills
   
   // Add fun entrance animations
   setTimeout(() => {

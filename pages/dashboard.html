@@ -2108,6 +2108,83 @@
       from { opacity: 0; transform: translateX(-16px); }
       to { opacity: 1; transform: translateX(0); }
     }
+
+    /* Due Subscriptions & Bills Section */
+    .due-items-section { margin-bottom: 16px; }
+    .due-items-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .due-items-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+    .due-items-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #8b5cf6, #d8b4fe);
+      flex-shrink: 0;
+    }
+    .due-items-list { display: flex; flex-direction: column; gap: 10px; }
+    .due-item-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInLeft 0.3s ease-out both;
+      cursor: pointer;
+    }
+    .due-item-card:active { transform: scale(0.98); }
+    .due-item-card.subscription { border-left: 4px solid #8b5cf6; }
+    .due-item-card.bill { border-left: 4px solid #f59e0b; }
+    .due-item-card.overdue { border-left: 4px solid #ef4444; background: linear-gradient(135deg, var(--card-bg) 0%, rgba(239,68,68,0.03) 100%); }
+    .due-item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .due-item-card.subscription .due-item-icon { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+    .due-item-card.bill .due-item-icon { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .due-item-card.overdue .due-item-icon { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .due-item-info { flex: 1; min-width: 0; }
+    .due-item-name { font-size: 14px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.1px; }
+    .due-item-details { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .due-item-amount {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      text-align: right;
+    }
+    .due-item-card.subscription .due-item-amount { color: #8b5cf6; }
+    .due-item-card.bill .due-item-amount { color: #f59e0b; }
+    .due-item-card.overdue .due-item-amount { color: #ef4444; }
+    .due-items-empty {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px dashed var(--border-color);
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
@@ -2380,6 +2457,14 @@
         <span id="budgetSpent">GHS 0 spent</span>
         <span id="budgetRemaining">GHS 0 left</span>
       </div>
+    </div>
+
+    <!-- Due Subscriptions & Bills -->
+    <div class="due-items-section" id="dueItemsSection" style="display: none;">
+      <div class="due-items-header">
+        <span class="due-items-title"><i data-lucide="alert-circle" class="icon-inline"></i> Due Soon</span>
+      </div>
+      <div class="due-items-list" id="dueItemsList"></div>
     </div>
 
     <!-- Recent Transactions -->
