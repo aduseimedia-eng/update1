@@ -1578,20 +1578,23 @@ async function loadDueItems() {
       const bills = billsResponse.data || [];
 
       bills.forEach(bill => {
+        // Skip paid bills
+        if (bill.is_paid) return;
+
         // Calculate days until due
         let dueDate = new Date(bill.due_date);
         dueDate.setHours(0, 0, 0, 0);
         const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
 
         // Show bills due in next 3 days or overdue
-        if (bill.status === 'overdue' || bill.status === 'due_soon' || daysUntilDue <= 3) {
+        if (daysUntilDue <= 3 || daysUntilDue < 0) {
           dueItems.push({
             type: 'bill',
             name: bill.title || 'Unnamed Bill',
             amount: bill.amount || 0,
             dueDate: dueDate,
             daysUntilDue: daysUntilDue,
-            isOverdue: bill.status === 'overdue' || daysUntilDue < 0,
+            isOverdue: daysUntilDue < 0,
             icon: '🧾'
           });
         }
@@ -1661,7 +1664,7 @@ async function loadDueItems() {
       }
 
       const amount = item.amount || 0;
-      const symbol = getCurrencySymbol ? getCurrencySymbol() : '₵';
+      const symbol = utils.getCurrencySymbol ? utils.getCurrencySymbol() : '₵';
       const cardClass = item.isOverdue ? `${item.type} overdue` : item.type;
 
       return `
