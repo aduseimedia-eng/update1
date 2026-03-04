@@ -1644,15 +1644,20 @@ async function loadDueItems() {
     section.style.display = 'block';
     list.innerHTML = dueItems.map(item => {
       let dueDateStr;
+      
+      // Format the actual due date
+      const options = { month: 'short', day: 'numeric', weekday: 'short' };
+      const dueDateFormatted = item.dueDate.toLocaleDateString('en-US', options);
+      
       if (item.isOverdue) {
         const daysOverdue = Math.abs(item.daysUntilDue);
-        dueDateStr = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue`;
+        dueDateStr = `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} overdue • ${dueDateFormatted}`;
       } else if (item.daysUntilDue === 0) {
-        dueDateStr = 'Due today';
+        dueDateStr = `Due today • ${dueDateFormatted}`;
       } else if (item.daysUntilDue === 1) {
-        dueDateStr = 'Due tomorrow';
+        dueDateStr = `Due tomorrow • ${dueDateFormatted}`;
       } else {
-        dueDateStr = `Due in ${item.daysUntilDue} day${item.daysUntilDue !== 1 ? 's' : ''}`;
+        dueDateStr = `Due on ${dueDateFormatted}`;
       }
 
       const amount = item.amount || 0;
