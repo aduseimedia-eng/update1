@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
+const path = require('path');
 require('dotenv').config();
 
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -97,6 +98,10 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   app.use(morgan('combined'));
 }
+
+// Serve frontend static files from docs folder
+const docsPath = path.join(__dirname, '../../docs');
+app.use(express.static(docsPath));
 
 // Rate limiting
 app.use('/api/', apiLimiter);
@@ -212,6 +217,16 @@ app.get('/', (req, res) => {
       subscriptions: `${API_VERSION}/subscriptions`
     }
   });
+});
+
+// Fallback: Serve index.html for SPA routing (must be after other routes)
+app.get('*', (req, res) => {
+  // Don't redirect API calls or static files
+  if (req.path.startsWith('/api/') || req.path.includes('.')) {
+    return res.status(404).json({ success: false, error: 'Not found' });
+  }
+  // Serve index.html for all other routes (SPA)
+  res.sendFile(path.join(docsPath, 'index.html'));
 });
 
 // 404 handler
