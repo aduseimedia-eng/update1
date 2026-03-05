@@ -131,6 +131,30 @@ router.get('/history', authenticateToken, async (req, res) => {
   }
 });
 
+// Get challenge stats - MUST be before parametrized routes
+router.get('/stats', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const result = await query(
+      `SELECT 
+        COUNT(*) FILTER (WHERE status = 'completed') as completed_count,
+        COUNT(*) FILTER (WHERE status = 'active') as active_count,
+        COUNT(*) FILTER (WHERE status = 'failed') as failed_count,
+        COUNT(*) FILTER (WHERE status = 'abandoned') as abandoned_count,
+        COALESCE(SUM(xp_earned), 0) as total_xp_from_challenges
+       FROM user_challenges
+       WHERE user_id = $1`,
+      [userId]
+    );
+
+    res.json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch challenge stats' });
+  }
+});
+
 // Join a challenge
 router.post('/:challengeId/join', authenticateToken, async (req, res) => {
   try {
@@ -270,30 +294,6 @@ router.post('/:userChallengeId/abandon', authenticateToken, async (req, res) => 
   } catch (error) {
     console.error('Error abandoning challenge:', error);
     res.status(500).json({ success: false, message: 'Failed to abandon challenge' });
-  }
-});
-
-// Get challenge stats
-router.get('/stats', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    const result = await query(
-      `SELECT 
-        COUNT(*) FILTER (WHERE status = 'completed') as completed_count,
-        COUNT(*) FILTER (WHERE status = 'active') as active_count,
-        COUNT(*) FILTER (WHERE status = 'failed') as failed_count,
-        COUNT(*) FILTER (WHERE status = 'abandoned') as abandoned_count,
-        COALESCE(SUM(xp_earned), 0) as total_xp_from_challenges
-       FROM user_challenges
-       WHERE user_id = $1`,
-      [userId]
-    );
-
-    res.json({ success: true, data: result.rows[0] });
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch challenge stats' });
   }
 });
 
