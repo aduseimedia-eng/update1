@@ -7,6 +7,8 @@ const express = require('express');
 const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const { awardXP } = require('../services/gamificationService');
+const { generateInsights } = require('../services/insightsService');
 
 // Create a custom challenge (saved to DB)
 router.post('/', authenticateToken, async (req, res) => {
@@ -234,15 +236,20 @@ router.post('/:userChallengeId/progress', authenticateToken, async (req, res) =>
 
     // Check if completed
     if (userChallenge.current_progress >= userChallenge.target_progress) {
-      // Get challenge details for XP
+      // Get challenge details for XP and title
       const challengeResult = await query(
-        'SELECT xp_reward FROM savings_challenges WHERE id = $1',
+        'SELECT id, title, xp_reward, challenge_type, difficulty FROM savings_challenges WHERE id = $1',
         [userChallenge.challenge_id]
       );
 
-      const xpReward = challengeResult.rows[0]?.xp_reward || 0;
+      if (challengeResult.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Challenge details not found' });
+      }
 
-      // Mark as completed and award XP
+      const challenge = challengeResult.rows[0];
+      const xpReward = challenge.xp_reward || 0;
+
+      // Mark as completed
       await query(
         `UPDATE user_challenges 
          SET status = 'completed', completed_at = CURRENT_TIMESTAMP, xp_earned = $1
@@ -250,18 +257,55 @@ router.post('/:userChallengeId/progress', authenticateToken, async (req, res) =>
         [xpReward, userChallengeId]
       );
 
-      // Add XP to user
-      await query(
-        `INSERT INTO user_xp (user_id, total_xp, level)
-         VALUES ($1, $2, 1)
-         ON CONFLICT (user_id) DO UPDATE SET total_xp = user_xp.total_xp + $2`,
-        [userId, xpReward]
+      // Award XP using gamificationService (handles level ups and notifications)
+      let xpResult = { newLevel: 1, leveledUp: false };
+      try {
+        xpResult = await awardXP(userId, xpReward, `Challenge completed: ${challenge.title}`);
+      } catch (xpError) {
+        console.error('Error awarding XP:', xpError);
+      }
+
+      // Get user profile for insight generation
+      const userResult = await query(
+        'SELECT username, email FROM users WHERE id = $1',
+        [userId]
       );
+      const userName = userResult.rows[0]?.username || 'User';
+
+      // Create smart insights for challenge completion
+      try {
+        // Generate insights which may include challenge completion insights
+        await generateInsights(userId, {
+          challengeCompleted: {
+            title: challenge.title,
+            type: challenge.challenge_type,
+            difficulty: challenge.difficulty,
+            xpEarned: xpReward,
+            leveledUp: xpResult.leveledUp,
+            newLevel: xpResult.newLevel
+          }
+        });
+      } catch (insightError) {
+        console.error('Error generating insights:', insightError);
+      }
+
+      // Build response message
+      let message = `🎉 Challenge completed! You earned ${xpReward} XP!`;
+      if (xpResult.leveledUp) {
+        message += ` 🚀 You've advanced to level ${xpResult.newLevel}!`;
+      }
 
       return res.json({ 
         success: true, 
-        data: { ...userChallenge, status: 'completed' },
-        message: `Challenge completed! You earned ${xpReward} XP!`
+        data: { 
+          ...userChallenge, 
+          status: 'completed',
+          challengeTitle: challenge.title,
+          xpEarned: xpReward,
+          leveledUp: xpResult.leveledUp,
+          newLevel: xpResult.newLevel
+        },
+        message
       });
     }
 

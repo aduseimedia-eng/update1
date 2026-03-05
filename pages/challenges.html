@@ -1022,11 +1022,19 @@
         if (res.success) {
           closeModal('progressModal');
           if (res.data && res.data.status === 'completed') {
-            showToast(`🎉 Challenge completed! +${res.data.xp_earned || 0} XP`);
+            // Challenge completed - show celebration
+            let celebrationMsg = `🎉 ${res.data.challengeTitle} completed!`;
+            if (res.data.leveledUp) {
+              celebrationMsg += ` 🚀 Level ${res.data.newLevel} unlocked!`;
+            }
+            celebrationMsg += ` +${res.data.xpEarned || 0} XP`;
+            showToast(celebrationMsg, 'success');
+            // Refresh after showing celebration
+            await loadChallenges();
           } else {
-            showToast('Progress updated!');
+            showToast(`Progress updated! +${amount}`);
+            await loadChallenges();
           }
-          await loadChallenges();
         } else {
           showToast(res.message || 'Could not update progress', 'error');
         }
