@@ -852,27 +852,53 @@
         console.log('📋 Loading challenges from API...');
         console.log('API URL:', window.KUDISAVE_API_URL);
         
-        const [availRes, activeRes, statsRes] = await Promise.all([
-          api.get('/challenges'),
-          api.get('/challenges/active'),
-          api.get('/challenges/stats')
-        ]);
-
-        console.log('Available challenges response:', availRes);
-        console.log('Active challenges response:', activeRes);
-        console.log('Stats response:', statsRes);
+        // Load available challenges (public endpoint)
+        let availRes, activeRes = null, statsRes = null;
+        let isAuthenticated = !!localStorage.getItem('token');
+        
+        try {
+          availRes = await api.get('/challenges');
+          console.log('✅ Available challenges response:', availRes);
+        } catch (e) {
+          console.error('❌ Failed to load available challenges:', e.message);
+          availRes = { success: false, message: e.message };
+        }
+        
+        // Load user-specific data only if authenticated
+        if (isAuthenticated) {
+          try {
+            activeRes = await api.get('/challenges/active');
+            console.log('✅ Active challenges response:', activeRes);
+          } catch (e) {
+            console.error('⚠️  Could not load active challenges:', e.message);
+            activeRes = { success: false };
+          }
+          
+          try {
+            statsRes = await api.get('/challenges/stats');
+            console.log('✅ Stats response:', statsRes);
+          } catch (e) {
+            console.error('⚠️  Could not load challenge stats:', e.message);
+            statsRes = { success: false };
+          }
+        } else {
+          console.log('ℹ️  User not authenticated - skipping active challenges and stats');
+        }
 
         // Handle API response format - might be nested
-        challenges = availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
-        activeChallenges = activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
+        challenges = availRes && availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
+        activeChallenges = activeRes && activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
 
-        console.log('Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
+        console.log('✅ Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
 
-        if (statsRes.success) {
+        if (statsRes && statsRes.success) {
           const s = statsRes.data;
           document.getElementById('completedCount').textContent = s.completed_count || 0;
           document.getElementById('activeCount').textContent = s.active_count || 0;
           document.getElementById('totalXP').textContent = s.total_xp_from_challenges || 0;
+        } else if (!isAuthenticated) {
+          // Show message if not authenticated
+          console.log('ℹ️  Stats unavailable - user not logged in');
         }
 
         const activeIds = activeChallenges.map(ac => ac.challenge_id);

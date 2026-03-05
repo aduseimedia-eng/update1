@@ -36,8 +36,8 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all available challenges
-router.get('/', authenticateToken, async (req, res) => {
+// Get all available challenges (PUBLIC - no auth required)
+router.get('/', async (req, res) => {
   try {
     const { difficulty, type } = req.query;
 
