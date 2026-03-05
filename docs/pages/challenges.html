@@ -891,6 +891,8 @@
         activeChallenges = activeRes && activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
 
         console.log('✅ Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
+        console.log('Raw challenges array:', challenges);
+        console.log('First challenge:', challenges[0]);
 
         if (statsRes && statsRes.success) {
           const s = statsRes.data;
@@ -981,11 +983,16 @@
       }
 
       const activeIds = activeChallenges.map(ac => ac.challenge_id);
+      console.log('🔍 Active IDs:', activeIds);
+      console.log('📋 All challenges count:', challenges.length);
+      console.log('All challenges:', challenges);
+      
       const available = challenges.filter(c => !activeIds.includes(c.id));
-
-      console.log('📊 Rendering available challenges:', available.length);
+      console.log('📊 Available after filtering:', available.length);
+      console.log('Available challenges:', available);
 
       if (available.length === 0) {
+        console.log('⚠️  No available challenges - showing empty state');
         container.innerHTML = `
           <div class="empty-state" style="grid-column:span 2;">
             <i data-lucide="check-circle" style="width:48px;height:48px"></i>
@@ -995,14 +1002,22 @@
         return;
       }
 
-      container.innerHTML = available.map(c => `
+      console.log('🎨 Building HTML for', available.length, 'challenges');
+      const html = available.map(c => {
+        console.log('Creating card for:', c.title, 'Type:', c.challenge_type);
+        return `
         <div class="available-card" onclick="showChallengeDetail('${c.id}')">
           <div class="available-icon">${challengeIcons[c.challenge_type] || '⭐'}</div>
           <div class="available-name">${escapeHtml(c.title)}</div>
           <div class="available-xp">+${c.xp_reward} XP</div>
           <span class="difficulty-badge ${c.difficulty}">${c.difficulty}</span>
-        </div>`).join('');
+        </div>`;
+      }).join('');
+      
+      console.log('📝 Generated HTML length:', html.length);
+      container.innerHTML = html;
       console.log('✅ Available challenges rendered to DOM');
+      console.log('Container innerHTML:', container.innerHTML.substring(0, 200));
       lucide.createIcons({ node: container });
     }
 
