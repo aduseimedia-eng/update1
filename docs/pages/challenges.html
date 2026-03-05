@@ -849,14 +849,24 @@
 
     async function loadChallenges() {
       try {
+        console.log('📋 Loading challenges from API...');
+        console.log('API URL:', window.KUDISAVE_API_URL);
+        
         const [availRes, activeRes, statsRes] = await Promise.all([
           api.get('/challenges'),
           api.get('/challenges/active'),
           api.get('/challenges/stats')
         ]);
 
-        challenges = availRes.success ? availRes.data : [];
-        activeChallenges = activeRes.success ? activeRes.data : [];
+        console.log('Available challenges response:', availRes);
+        console.log('Active challenges response:', activeRes);
+        console.log('Stats response:', statsRes);
+
+        // Handle API response format - might be nested
+        challenges = availRes.success ? availRes.data : (Array.isArray(availRes) ? availRes : []);
+        activeChallenges = activeRes.success ? activeRes.data : (Array.isArray(activeRes) ? activeRes : []);
+
+        console.log('Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
 
         if (statsRes.success) {
           const s = statsRes.data;
@@ -873,7 +883,7 @@
         renderAvailableChallenges();
       } catch (e) {
         console.error('Error loading challenges:', e);
-        showToast('Could not load challenges', 'error');
+        showToast('Could not load challenges: ' + (e.message || 'Unknown error'), 'error');
       }
     }
 
