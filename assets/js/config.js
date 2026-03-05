@@ -10,25 +10,24 @@
   
   // PRODUCTION: Set your deployed backend URL here
   // Example: 'https://kudisave-api.onrender.com/api/v1'
-  // Comment this out when developing locally!
-  const PRODUCTION_API_URL = 'https://kudisave-api-production.up.railway.app/api/v1'; // Disabled for local development
+  const PRODUCTION_API_URL = 'https://kudisave-api-production.up.railway.app/api/v1';
   
-  // Detect if on local network (private IP ranges)
-  const isLocalNetwork = /^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(hostname);
+  // Detect if on GitHub Pages
+  const isGitHubPages = hostname.includes('github.io') || hostname.includes('github.com');
 
   // Configure API URL
   if (isLocalhost || isFileProtocol) {
     // Local development on same machine
     window.KUDISAVE_API_URL = 'http://localhost:5000/api/v1';
     console.log('💻 KudiSave: Local development mode');
-  } else if (isLocalNetwork) {
+  } else if (isLocalNetwork && !isGitHubPages) {
     // Local network (mobile device on same WiFi) - use same host IP
     window.KUDISAVE_API_URL = `http://${hostname}:5000/api/v1`;
     console.log('📱 KudiSave: Local network mode');
-  } else if (PRODUCTION_API_URL) {
-    // Production mode - backend deployed
+  } else if (isGitHubPages || PRODUCTION_API_URL) {
+    // Production mode - GitHub Pages or backend deployed
     window.KUDISAVE_API_URL = PRODUCTION_API_URL;
-    console.log('🚀 KudiSave: Production mode');
+    console.log('🚀 KudiSave: Production mode (GitHub Pages)');
   } else {
     // Fallback - try same host with backend port
     window.KUDISAVE_API_URL = `http://${hostname}:5000/api/v1`;
