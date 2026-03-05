@@ -12,6 +12,9 @@
   // Example: 'https://kudisave-api.onrender.com/api/v1'
   const PRODUCTION_API_URL = 'https://kudisave-api-production.up.railway.app/api/v1';
   
+  // Detect if on local network (private IP ranges)
+  const isLocalNetwork = /^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(hostname);
+  
   // Detect if on GitHub Pages
   const isGitHubPages = hostname.includes('github.io') || hostname.includes('github.com');
 
