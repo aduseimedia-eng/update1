@@ -209,6 +209,7 @@
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 12px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -914,7 +915,13 @@
 
     function renderActiveChallenges() {
       const container = document.getElementById('activeChallenges');
+      if (!container) {
+        console.error('❌ Active challenges container not found!');
+        return;
+      }
+
       const active = activeChallenges.filter(c => c.status === 'active');
+      console.log('🔥 Rendering active challenges:', active.length);
 
       if (active.length === 0) {
         container.innerHTML = `
@@ -967,8 +974,15 @@
 
     function renderAvailableChallenges() {
       const container = document.getElementById('availableChallenges');
+      if (!container) {
+        console.error('❌ Available challenges container not found!');
+        return;
+      }
+
       const activeIds = activeChallenges.map(ac => ac.challenge_id);
       const available = challenges.filter(c => !activeIds.includes(c.id));
+
+      console.log('📊 Rendering available challenges:', available.length);
 
       if (available.length === 0) {
         container.innerHTML = `
@@ -987,6 +1001,7 @@
           <div class="available-xp">+${c.xp_reward} XP</div>
           <span class="difficulty-badge ${c.difficulty}">${c.difficulty}</span>
         </div>`).join('');
+      console.log('✅ Available challenges rendered to DOM');
       lucide.createIcons({ node: container });
     }
 
