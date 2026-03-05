@@ -848,14 +848,21 @@
 
     async function loadChallenges() {
       try {
+        console.log('📋 Loading challenges from API...');
         const [availRes, activeRes, statsRes] = await Promise.all([
           api.get('/challenges'),
           api.get('/challenges/active'),
           api.get('/challenges/stats')
         ]);
 
+        console.log('Available challenges response:', availRes);
+        console.log('Active challenges response:', activeRes);
+        console.log('Stats response:', statsRes);
+
         challenges = availRes.success ? availRes.data : [];
         activeChallenges = activeRes.success ? activeRes.data : [];
+
+        console.log('Challenges loaded:', challenges.length, 'Active:', activeChallenges.length);
 
         if (statsRes.success) {
           const s = statsRes.data;
