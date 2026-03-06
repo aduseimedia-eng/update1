@@ -1067,6 +1067,7 @@
 
       console.log('Generated HTML for', challenges.length, 'challenges');
       container.innerHTML = html;
+      lucide.createIcons({ node: container });
       console.log('✅ Rendered', challenges.length, 'challenges to DOM');
     }
 
