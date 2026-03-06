@@ -438,9 +438,12 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
+      padding: 16px;
       padding-bottom: 100px;
       min-width: 100%;
       width: 100%;
+      background: var(--bg-primary);
+      min-height: 200px;
     }
 
     .available-card {
@@ -1032,9 +1035,10 @@
         return;
       }
 
-      console.log('START renderAvailableChallenges');
-      console.log('Total challenges loaded:', challenges);
-      console.log('Challenge count:', challenges ? challenges.length : 0);
+      console.log('🎬 START renderAvailableChallenges');
+      console.log('📊 Total challenges loaded:', challenges.length);
+      console.log('📋 Challenge count:', challenges ? challenges.length : 0);
+      console.log('📄 HTML before render:', container.innerHTML);
 
       if (!challenges || challenges.length === 0) {
         console.log('⚠️ No challenges data - showing empty state');
@@ -1044,7 +1048,7 @@
 
       // Build HTML for each challenge
       let html = '';
-      challenges.forEach(c => {
+      challenges.forEach((c, index) => {
         const icon = challengeIcons[c.challenge_type] || '⭐';
         const difficultyColor = {
           easy: '#10b981',
@@ -1052,6 +1056,8 @@
           hard: '#ef4444',
           legendary: '#8b5cf6'
         }[c.difficulty] || '#6b7280';
+        
+        console.log(`  Challenge ${index + 1}:`, c.title, '| Type:', c.challenge_type, '| Icon:', icon);
         
         html += `<div class="available-card" onclick="showChallengeDetail('${c.id}')">
           <div class="available-icon">${icon}</div>
@@ -1065,10 +1071,12 @@
         </div>`;
       });
 
-      console.log('Generated HTML for', challenges.length, 'challenges');
+      console.log('📝 Generated HTML length:', html.length);
       container.innerHTML = html;
+      console.log('📄 HTML after render:', container.innerHTML.substring(0, 100) + '...');
       lucide.createIcons({ node: container });
       console.log('✅ Rendered', challenges.length, 'challenges to DOM');
+      console.log('✅ Container now has', container.children.length, 'children');
     }
 
     function showChallengeDetail(id) {
