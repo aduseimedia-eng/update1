@@ -1160,6 +1160,7 @@
 
     function signInWithGoogle() {
       if (typeof google !== 'undefined' && google.accounts) {
+        console.log('🔓 Initiating Google Sign-In...');
         // Show loading state on Google buttons
         const googleBtns = document.querySelectorAll('.google-btn');
         googleBtns.forEach(b => { 
@@ -1183,18 +1184,24 @@
 
         google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            console.log('One Tap blocked, using OAuth2 token flow...');
             // One Tap blocked - fall back to OAuth2 token flow
             google.accounts.oauth2.initTokenClient({
               client_id: GOOGLE_CLIENT_ID,
               scope: 'email profile',
               callback: async (response) => {
                 if (response.access_token) {
+                  console.log('✅ OAuth2 access token received');
                   await sendGoogleToken(null, response.access_token);
                 } else {
+                  console.error('❌ No access token from OAuth2');
                   resetBtns();
                 }
               },
-              error_callback: () => { resetBtns(); }
+              error_callback: (error) => { 
+                console.error('❌ OAuth2 error:', error);
+                resetBtns();
+              }
             }).requestAccessToken();
           }
         });
@@ -1202,6 +1209,7 @@
         // Timeout reset in case prompt is dismissed
         setTimeout(resetBtns, 30000);
       } else {
+        console.error('❌ Google Sign-In library not loaded');
         showToast('Google Sign-In is loading. Please try again in a moment.', 'warning');
       }
     }
@@ -1216,11 +1224,20 @@
       const googleBtn = document.querySelectorAll('.google-btn');
       googleBtn.forEach(b => { b.disabled = true; b.style.opacity = '0.7'; });
       try {
+        console.log('🔐 Sending Google token to backend...');
+        console.log('Using credential:', credential ? 'ID Token' : 'Access Token');
         const result = await api.googleAuth(credential, accessToken);
+        console.log('✅ Google auth successful:', result);
         completeGoogleLogin(result.data);
       } catch (error) {
-        console.error('Google sign-in error:', error);
-        showToast(error.message || 'Google sign-in failed. Please try again.', 'error');
+        console.error('❌ Google sign-in error:', error);
+        const errorMsg = error.message || 'Google sign-in failed. Please try again.';
+        console.error('Error details:', {
+          message: errorMsg,
+          status: error.status,
+          response: error.response
+        });
+        showToast(errorMsg, 'error');
       } finally {
         googleBtn.forEach(b => { b.disabled = false; b.style.opacity = ''; });
       }
