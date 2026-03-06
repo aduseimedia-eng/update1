@@ -722,11 +722,6 @@
     <!-- Available Challenges Section -->
     <div class="section-title">✨ Available Challenges</div>
     
-    <!-- TEST BOX - DELETE THIS IF WORKING -->
-    <div style="background: red; padding: 20px; margin: 10px; color: white; font-weight: bold;">
-      🔴 TEST BOX - If you see this, the page is working!
-    </div>
-    
     <div class="available-grid" id="availableChallenges">
       <!-- Rendered dynamically -->
     </div>
@@ -1005,21 +1000,32 @@
         return;
       }
 
-      // Build simple HTML for each challenge
+      // Build HTML for each challenge
       let html = '';
       challenges.forEach(c => {
         const icon = challengeIcons[c.challenge_type] || '⭐';
-        console.log('Adding challenge:', c.title, 'Icon:', icon);
-        html += `<div class="available-card" style="background: red; padding: 20px;">
-<div style="font-size: 32px;">${icon}</div>
-<div style="font-weight: bold;">${c.title}</div>
-<div>+${c.xp_reward} XP</div>
-</div>`;
+        const difficultyColor = {
+          easy: '#10b981',
+          medium: '#f59e0b',
+          hard: '#ef4444',
+          legendary: '#8b5cf6'
+        }[c.difficulty] || '#6b7280';
+        
+        html += `<div class="available-card" onclick="showChallengeDetail('${c.id}')">
+          <div class="available-icon">${icon}</div>
+          <div class="available-name">${escapeHtml(c.title)}</div>
+          <div class="available-desc" style="font-size: 12px; color: #6b7280; margin: 6px 0; line-height: 1.3;">${escapeHtml(c.description || '')}</div>
+          <div class="available-xp">+${c.xp_reward} XP</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px; width: 100%;">
+            <span class="difficulty-badge" style="background: ${difficultyColor}22; color: ${difficultyColor}; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;">${c.difficulty}</span>
+            ${c.target_days ? `<span style="font-size: 11px; color: #9ca3af;">${c.target_days}d</span>` : ''}
+          </div>
+        </div>`;
       });
 
-      console.log('Final HTML:', html.substring(0, 100));
+      console.log('Generated HTML for', challenges.length, 'challenges');
       container.innerHTML = html;
-      console.log('✅ Rendered to DOM');
+      console.log('✅ Rendered', challenges.length, 'challenges to DOM');
     }
 
     function showChallengeDetail(id) {
