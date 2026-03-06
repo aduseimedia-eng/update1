@@ -853,6 +853,17 @@
     let selectedChallenge = null;
     let currentProgressId = null; // user_challenges.id
 
+    // Initialize API service
+    const api = new APIService();
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     // Auto-detect challenges from app data\n    function checkChallengeProgress() {\n      const expenses = JSON.parse(localStorage.getItem('expenses')) || [];\n      const goals = JSON.parse(localStorage.getItem('goals')) || [];\n      const today = new Date();\n      today.setHours(0, 0, 0, 0);\n      \n      const todayExpenses = expenses.filter(e => {\n        const eDate = new Date(e.date);\n        eDate.setHours(0, 0, 0, 0);\n        return eDate.getTime() === today.getTime();\n      });\n      \n      const monthStart = new Date();\n      monthStart.setDate(1);\n      monthStart.setHours(0, 0, 0, 0);\n      const monthExpenses = expenses.filter(e => new Date(e.date) >= monthStart);\n      const totalSpent = monthExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);\n      \n      const completedGoals = goals.filter(g => g.completed);\n      \n      return {\n        'no_spend': todayExpenses.length === 0,\n        'save_amount': totalSpent < 5000,\n        'streak': completedGoals.length > 0\n      };\n    }\n\n    document.addEventListener('DOMContentLoaded', () => {\n      loadChallenges();\n      setInterval(checkChallengeProgress, 60000);\n    });
 
     async function loadChallenges() {
