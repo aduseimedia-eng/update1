@@ -380,15 +380,15 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
 
     .mtn-header-spacer {
-      /* Dynamic height: adapts to different phones and notches */
-      height: auto;
-      min-height: calc(310px + env(safe-area-inset-top, 0px));
-      display: contents; /* Let header be positioned naturally */
+      /* Creates physical spacing below fixed header for content flow */
+      display: block;
+      height: 310px;
+      width: 100%;
     }
 
-    /* Override default body padding-top since we use spacer */
+    /* Body should not have extra padding-top since spacer handles it */
     body {
-      padding-top: env(safe-area-inset-top, 0px) !important;
+      padding-top: 0 !important;
     }
     
     /* Ensure fixed header accounts for safe area */
