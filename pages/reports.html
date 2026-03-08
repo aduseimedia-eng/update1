@@ -806,7 +806,7 @@
     .mtn-header::before, .mtn-header::after { pointer-events: none; }
     .mtn-header-curve { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--bg-primary, #f5f6fa); border-radius: 16px 16px 0 0; opacity: 0.35; }
     [data-theme="dark"] .mtn-header-curve { background: var(--bg-primary, #0f172a); opacity: 0.25; }
-    .mtn-header-spacer { display: block; height: 160px; width: 100%; }
+    .mtn-header-spacer { display: block; height: calc(160px + env(safe-area-inset-top, 0px)); width: 100%; }
 
     /* Header shimmer sweep */
     .mtn-header-shimmer { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%); z-index: 0; animation: headerShimmer 6s ease-in-out infinite; pointer-events: none; }
