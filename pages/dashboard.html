@@ -380,12 +380,21 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
 
     .mtn-header-spacer {
-      height: 310px !important;
+      /* Dynamic height: adapts to different phones and notches */
+      height: auto;
+      min-height: calc(310px + env(safe-area-inset-top, 0px));
+      display: contents; /* Let header be positioned naturally */
     }
 
     /* Override default body padding-top since we use spacer */
     body {
-      padding-top: 0 !important;
+      padding-top: env(safe-area-inset-top, 0px) !important;
+    }
+    
+    /* Ensure fixed header accounts for safe area */
+    .mtn-header {
+      height: auto;
+      min-height: calc(310px + env(safe-area-inset-top, 0px));
     }
 
     /* Balance Card - Glass Morphism */
