@@ -204,10 +204,13 @@
     [data-theme="dark"] .mtn-header-curve { background: var(--dark-bg); opacity: 0.25; }
 
     .mtn-header-spacer {
-      height: 250px;
+      /* Creates physical spacing below fixed header + safe area */
+      display: block;
+      height: calc(310px + env(safe-area-inset-top, 0px));
+      width: 100%;
     }
 
-    /* Override default body padding-top since we use spacer */
+    /* Body should not have extra padding since spacer handles it */
     body {
       padding-top: 0 !important;
     }
